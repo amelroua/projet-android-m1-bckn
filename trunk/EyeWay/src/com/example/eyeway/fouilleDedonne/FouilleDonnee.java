@@ -1,4 +1,8 @@
-package com.example.eyeway;
+package com.example.eyeway.fouilleDedonne;
+
+import com.example.eyeway.R;
+import com.example.eyeway.R.layout;
+import com.example.eyeway.R.menu;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -7,18 +11,18 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.support.v4.app.NavUtils;
 
-public class RealiteAugmente extends Activity {
+public class FouilleDonnee extends Activity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("etape","realite");
-        setContentView(R.layout.activity_realite_augmente);
+        Log.d("etape","fouille");
+        setContentView(R.layout.activity_fouille_donnee);
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.activity_realite_augmente, menu);
+        getMenuInflater().inflate(R.menu.activity_fouille_donnee, menu);
         return true;
     }
 

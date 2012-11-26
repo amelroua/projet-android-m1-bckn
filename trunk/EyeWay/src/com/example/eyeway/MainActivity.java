@@ -1,5 +1,9 @@
 package com.example.eyeway;
 
+import com.example.eyeway.Map.Map;
+import com.example.eyeway.fouilleDedonne.FouilleDonnee;
+import com.example.eyeway.realiteAugmente.RealiteAugmente;
+
 import android.os.Bundle;
 import android.app.Activity;
 import android.content.Intent;
