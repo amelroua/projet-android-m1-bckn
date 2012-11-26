@@ -21,6 +21,34 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <activity
+            android:name=".RealiteAugmente"
+            android:label="@string/title_activity_realite_augmente" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
+            android:name=".Map"
+            android:label="@string/title_activity_map" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+      
+        <activity
+            android:name=".FouilleDonnee"
+            android:label="@string/title_activity_fouille_donnee" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
     </application>
 <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"></uses-permission>
 <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"></uses-permission>
