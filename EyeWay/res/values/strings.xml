@@ -4,5 +4,11 @@
     <string name="hello_world">Hello world!</string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">MainActivity</string>
+    <string name="realiteAugmente"> Réalité augmentée</string>
+    <string name="map"> Map </string>
+    <string name="fouille">Fouille de données</string>
+    <string name="title_activity_realite_augmente">RealiteAugmente</string>
+    <string name="title_activity_map">Map</string>
+    <string name="title_activity_fouille_donnee">Fouille De Donnee</string>
 
 </resources>
