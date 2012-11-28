@@ -10,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.Point;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
@@ -26,6 +27,10 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
 public class RealiteAugmente extends Activity implements LocationListener{
+	
+	//The "x" and "y" position of the "Show Button" on screen.
+	Point p;
+
 	private SensorManager sensorMngr;
 	private SensorEventListener sensorLstr;
 	private int mScreenWidth;
@@ -47,6 +52,8 @@ public class RealiteAugmente extends Activity implements LocationListener{
 		initialisionEcouteurAccelerometre();
 
 	}
+
+
 
 	/**
 	 * Permet d'écouter l'accelerometre
@@ -378,4 +385,7 @@ public class RealiteAugmente extends Activity implements LocationListener{
 		// TODO Auto-generated method stub
 
 	}
+	
+	
+	
 }
