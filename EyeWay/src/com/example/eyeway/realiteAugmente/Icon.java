@@ -3,18 +3,23 @@ package com.example.eyeway.realiteAugmente;
 
 
 
+import java.util.ArrayList;
+
 import com.example.eyeway.R;
 import com.google.android.maps.GeoPoint;
-import com.example.eyeway.realiteAugmente.RealiteAugmente;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.app.Dialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.Button;
+import android.view.WindowManager;
+
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.PopupWindow;
@@ -32,16 +37,25 @@ public class Icon extends LinearLayout{
 	private GeoPoint geoPoint ;
 	private Context ctx ;
 	private View layout ;
+	private String name ;
 	
 	public Icon(Context context, Activity a) {
 		super(context);
 	}
 	
 	
+	
+	/// TEST ///
+	
+	
+	
+	//////////////////
+	
 	public Icon(Context c , String name , double latitude , double longitude, Location myLocation){
 		
 		
 		super(c);
+		this.name = name + "- Les fruits de Mer" ;
 		ctx = c ;
 		label = new TextView(c);
 		icon = new ImageView(c);
@@ -64,16 +78,13 @@ public class Icon extends LinearLayout{
 			
 			public void onClick(View v) {
 				
-				//Open popup window
-			       if (p != null){
 			    	   
-			    	   showPopup(p);   
-			       }
-			    	   
-			//	Toast.makeText(ctx, "Cliquable l'image", Toast.LENGTH_SHORT).show();
+			    	   showBoiteInformation();
+			    
 
 			}
 		});
+		
 		
 		if (name.equalsIgnoreCase("restaurant")) {
 
@@ -83,11 +94,11 @@ public class Icon extends LinearLayout{
 
 			icon.setBackgroundResource(R.drawable.img_epingle);
 		}
-
 		this.addView(icon);
 		this.addView(label);
 
 	}
+	
 	
 	private void modifierLabel(double distance){
 		
@@ -123,6 +134,103 @@ public class Icon extends LinearLayout{
 	// ---------- Essai PopPup ---------
 	
 	
+	
+	void showBoiteChoix(){
+		
+	    final ArrayList<Integer> mSelectedItems = new ArrayList<Integer>();  // Where we track the selected items
+
+	    
+	  //On instancie notre layout en tant que View
+        LayoutInflater factory = LayoutInflater.from(ctx);
+       //final View alertDialogView = factory.inflate(R.layout.pop_pup_choix, null);
+ 
+
+       
+        //Création de l'AlertDialog
+        AlertDialog.Builder adb = new AlertDialog.Builder(ctx );
+        
+        //adb.setView(alertDialogView);
+      
+        //On affecte la vue personnalisé que l'on a crée à notre AlertDialog
+        //adb.setView(alertDialogView);
+ 
+        //On donne un titre à l'AlertDialog
+        adb.setTitle("Choix Itinéraire");
+ 
+        //On modifie l'icône de l'AlertDialog pour le fun ;)
+        adb.setIcon(R.drawable.info);
+        
+    
+       
+      //  adb.setCancelable(true);
+        String [] choix = {"Map","Réalité Augmentée"};
+        
+      
+        adb.setItems(choix, new DialogInterface.OnClickListener() {
+            public void onClick(DialogInterface dialog, int which) {
+           
+            	dialog.dismiss();
+        }
+        });
+
+        adb.show();
+	}
+	
+	
+	void showBoiteInformation() {
+		
+		//On instancie notre layout en tant que View
+        LayoutInflater factory = LayoutInflater.from(ctx);
+        final View alertDialogView = factory.inflate(R.layout.popup_layout, null);
+ 
+         
+        //Création de l'AlertDialog
+        AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
+ 
+        //On affecte la vue personnalisé que l'on a crée à notre AlertDialog
+        adb.setView(alertDialogView);
+ 
+        //On donne un titre à l'AlertDialog
+        adb.setTitle("Informations");
+ 
+        //On modifie l'icône de l'AlertDialog pour le fun ;)
+        adb.setIcon(R.drawable.info);
+        
+        TextView text = (TextView) alertDialogView.findViewById(R.id.titre);
+        text.setText(name);
+        
+        
+        text = (TextView) alertDialogView.findViewById(R.id.description);
+        text.setText("Petit resto sympa en bord de mer \n A NE PAS LOUPER Petit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPER");
+
+        
+        text = (TextView) alertDialogView.findViewById(R.id.distance);
+        text.setText(this.label.getText());
+       
+      //  adb.setCancelable(true);
+        	
+        adb.setPositiveButton("Itinéraire", new DialogInterface.OnClickListener() {
+ 			public void onClick(DialogInterface dialog, int which) {
+ 				
+ 				showBoiteChoix();
+ 				
+ 			}
+ 		});
+        // On crée un bouton "Annuler" à notre AlertDialog et on lui affecte un
+     		// évènement
+     		adb.setNegativeButton("Fermer", new DialogInterface.OnClickListener() {
+     			public void onClick(DialogInterface dialog, int which) {
+     				
+     				
+     				
+     			}
+     		});
+        
+        adb.show();
+		
+		
+	}
+	
 	// Get the x and y position after the button is draw on screen
 	// (It's important to note that we can't get the position in the onCreate(),
 	// because at that stage most probably the view isn't drawn yet, so it will return (0, 0))
@@ -143,8 +251,8 @@ public class Icon extends LinearLayout{
 	
 	// The method that displays the popup.
 		void showPopup(Point p) {
-	   int popupWidth = 200;
-	   int popupHeight = 150;
+	   int popupWidth = 400;
+	   int popupHeight = 300;
 
 	   // Inflate the popup_layout.xml
 	   LinearLayout viewGroup = (LinearLayout) ((Activity) ctx).findViewById(R.id.popup);
@@ -168,7 +276,7 @@ public class Icon extends LinearLayout{
 
 	   // Displaying the popup at the specified location, + offsets.
 	   popup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
-
+/*
 	   // Getting a reference to Close button, and close the popup when clicked.
 	   Button close = (Button) layout.findViewById(R.id.close);
 	   close.setOnClickListener(new OnClickListener() {
@@ -178,6 +286,7 @@ public class Icon extends LinearLayout{
 	       popup.dismiss();
 	     }
 	   });
+	   */
 	}
 	// ------------- GETTERS AND SETTERS --------------------
 	
