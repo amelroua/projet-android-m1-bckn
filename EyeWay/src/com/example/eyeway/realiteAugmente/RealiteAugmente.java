@@ -28,8 +28,7 @@ import android.widget.FrameLayout.LayoutParams;
 
 public class RealiteAugmente extends Activity implements LocationListener{
 	
-	//The "x" and "y" position of the "Show Button" on screen.
-	Point p;
+	
 
 	private SensorManager sensorMngr;
 	private SensorEventListener sensorLstr;
