@@ -27,8 +27,8 @@ import android.widget.FrameLayout;
 import android.widget.FrameLayout.LayoutParams;
 
 public class RealiteAugmente extends Activity implements LocationListener{
-	
-	
+
+
 
 	private SensorManager sensorMngr;
 	private SensorEventListener sensorLstr;
@@ -39,7 +39,7 @@ public class RealiteAugmente extends Activity implements LocationListener{
 	private LocationManager locationManager;
 	private ArrayList<Icon> icons;
 	private boolean creation = true ;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -86,7 +86,7 @@ public class RealiteAugmente extends Activity implements LocationListener{
 
 		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 				& !locationManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+				.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
 			boiteDedialog();
 
@@ -162,7 +162,7 @@ public class RealiteAugmente extends Activity implements LocationListener{
 				startActivityForResult(
 						new Intent(
 								android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS),
-						0);
+								0);
 
 			}
 		});
@@ -220,6 +220,24 @@ public class RealiteAugmente extends Activity implements LocationListener{
 	}
 
 	@Override
+	protected void onResume(){
+		super.onResume() ;
+		sensorMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		sensorMngr.registerListener(sensorLstr,
+				sensorMngr.getDefaultSensor(Sensor.TYPE_ORIENTATION),
+				SensorManager.SENSOR_DELAY_UI);
+	}
+
+	@Override 
+	protected void onPause(){
+
+		super.onPause();
+		sensorMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
+		sensorMngr.unregisterListener(sensorLstr,
+				sensorMngr.getDefaultSensor(Sensor.TYPE_ORIENTATION));
+	}
+
+	@Override
 	protected void onStop() {
 		super.onStop();
 		sensorMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
@@ -233,19 +251,19 @@ public class RealiteAugmente extends Activity implements LocationListener{
 		Location location = new Location("LOCATION_SERVICE");
 
 		try {
-			
+
 			location.setLatitude(p.getLatitudeE6());
 			location.setLongitude(p.getLatitudeE6());
-			
+
 		} catch (Exception e) {
 		}
-		
+
 		return _me.bearingTo(location);
 	}
 
 	public final static double angleDirection(double spotAngle, double direction) {
 		double angle;
-		
+
 		if (spotAngle > 0) {
 
 			if (direction < spotAngle - 180)
@@ -274,20 +292,20 @@ public class RealiteAugmente extends Activity implements LocationListener{
 	public final static void moveSpot(Context c, View tv, GeoPoint p,
 			float azimut, Location me, int screenWidth, float roll,
 			int screenHeight, float pitch) {
-		
+
 		int angle = (int) (angleDirection(getSpotAngle(c, p, me), azimut));
 
 		LayoutParams lp = new FrameLayout.LayoutParams(
 				FrameLayout.LayoutParams.WRAP_CONTENT,
 				FrameLayout.LayoutParams.WRAP_CONTENT);
 		int marginTop;
-		
+
 		if (pitch < screenHeight / 2)
-			
+
 			marginTop = (int) ((roll - 90) / 90 * screenHeight);
-		
+
 		else
-			
+
 			marginTop = -(int) ((roll - 90) / 90 * screenHeight);
 
 		lp.setMargins(angle * screenWidth / 90, marginTop, 0, 0);
@@ -352,16 +370,16 @@ public class RealiteAugmente extends Activity implements LocationListener{
 
 		// On met notre localisation à jour
 		myLocation = location;
-		
+
 		if(creation){
-			
+
 			creation = false ;
 			// Si on a pas encore créé notre fenêtre 
 			initialisationFenetre();
-		
-			
+
+
 		}
-		
+
 		// Permet de recalculer la distance en ma position et celle
 		// de mes icons
 		recalculerDistance();
@@ -384,7 +402,7 @@ public class RealiteAugmente extends Activity implements LocationListener{
 		// TODO Auto-generated method stub
 
 	}
-	
-	
-	
+
+
+
 }
