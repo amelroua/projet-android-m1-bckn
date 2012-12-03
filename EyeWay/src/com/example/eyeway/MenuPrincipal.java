@@ -12,7 +12,7 @@ public class MenuPrincipal extends Activity {
 
 	private ListView list_menu;
 	private ArrayAdapter<String> list_menu_adapter;
-	
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -23,7 +23,7 @@ public class MenuPrincipal extends Activity {
         liste_fonctions.add("Navigation instantannée");
         liste_fonctions.add("Gérer les points d'intérêt");
         liste_fonctions.add("Rechercher dans une zone");
-        list_menu_adapter=new ArrayAdapter<String>(this,R.layout.ligne_menu,liste_fonctions);
+        list_menu_adapter=new ArrayAdapter<String>(this,R.layout.ligne_menu,R.id.texte_ligne,liste_fonctions);
         list_menu.setAdapter(list_menu_adapter);
     }
 
