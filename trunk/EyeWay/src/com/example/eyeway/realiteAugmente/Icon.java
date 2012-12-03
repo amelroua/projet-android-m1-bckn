@@ -6,15 +6,18 @@ package com.example.eyeway.realiteAugmente;
 import java.util.ArrayList;
 
 import com.example.eyeway.R;
+import com.example.eyeway.Map.Map;
 import com.google.android.maps.GeoPoint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.graphics.Point;
 import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -55,7 +58,7 @@ public class Icon extends LinearLayout{
 		
 		
 		super(c);
-		this.name = name + "- Les fruits de Mer" ;
+		this.name = name ;
 		ctx = c ;
 		label = new TextView(c);
 		icon = new ImageView(c);
@@ -137,12 +140,9 @@ public class Icon extends LinearLayout{
 	
 	void showBoiteChoix(){
 		
-	    final ArrayList<Integer> mSelectedItems = new ArrayList<Integer>();  // Where we track the selected items
 
 	    
-	  //On instancie notre layout en tant que View
-        LayoutInflater factory = LayoutInflater.from(ctx);
-       //final View alertDialogView = factory.inflate(R.layout.pop_pup_choix, null);
+	 
  
 
        
@@ -168,11 +168,14 @@ public class Icon extends LinearLayout{
       
         adb.setItems(choix, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int which) {
-           
+              	Intent monIntent = new Intent(ctx,Map.class);
+            	ctx.startActivity(monIntent);
             	dialog.dismiss();
         }
         });
+        
 
+  
         adb.show();
 	}
 	
