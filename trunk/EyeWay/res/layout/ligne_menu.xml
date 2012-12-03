@@ -1,7 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<TextView xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/ligne_menu"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent"
+    >
+<ImageView
+    android:id="@+id/icon_action"
+    android:layout_width="70dip"
+    android:layout_height="70dip"
+    android:src="@drawable/default_image"
+    android:layout_alignParentLeft="true"/>
+<TextView
+    android:id="@+id/texte_ligne"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_toRightOf="@+id/icon_action"
+    android:layout_toLeftOf="@+id/arrow"
     android:padding="10dp">
 </TextView>
+<ImageView
+    android:id="@+id/arrow"
+    android:layout_width="30dip"
+    android:layout_height="30dip"
+    android:src="@drawable/arrow"
+    android:layout_alignParentRight="true"
+    android:layout_centerVertical="true"
+    />
+</RelativeLayout>
