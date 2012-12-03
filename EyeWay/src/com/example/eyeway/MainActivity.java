@@ -11,14 +11,27 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.support.v4.app.NavUtils;
 
 public class MainActivity extends Activity implements android.view.View.OnClickListener{
-
+	private Button realite;
+	private Button map;
+	private Button fouille;
+	private Button linterface;
+	
     @Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
+        realite=(Button) findViewById(R.id.realite);
+        map=(Button) findViewById(R.id.map);
+        fouille=(Button) findViewById(R.id.fouille);
+        linterface=(Button) findViewById(R.id.linterface);
+        realite.setOnClickListener(this);
+        map.setOnClickListener(this);
+        fouille.setOnClickListener(this);
+        linterface.setOnClickListener(this);
     }
 
     @Override
@@ -26,30 +39,26 @@ public class MainActivity extends Activity implements android.view.View.OnClickL
         getMenuInflater().inflate(R.menu.activity_main, menu);
         return true;
     }
-    	
-    public void onClickRealite(View arg0){
-    	
-    	Intent monIntent = new Intent(this,RealiteAugmente.class);
-    	startActivity(monIntent);
-    }
- 
-   public void onClickMap(View arg0){
-    	
-	   Intent monIntent = new Intent(this,Map.class);
-	   startActivity(monIntent);
-    }
     
-   public void onClickFouille(View arg0){
-   	
-	   Intent monIntent = new Intent(this,FouilleDonnee.class);
-	   startActivity(monIntent);  
-	   
-   }
-   
 	@Override
-	public void onClick(View arg0) {
-
+	public void onClick(View v) {
+		if(v.getId()==realite.getId()){
+			Intent monIntent = new Intent(this,RealiteAugmente.class);
+	    	startActivity(monIntent);
+		}
+		if(v.getId()==map.getId()){
+			 Intent monIntent = new Intent(this,Map.class);
+			 startActivity(monIntent);
+		}
+		if(v.getId()==fouille.getId()){
+			Intent monIntent = new Intent(this,FouilleDonnee.class);
+			startActivity(monIntent);  
+			
+		}
+		if(v.getId()==linterface.getId()){
+			 Intent monIntent = new Intent(this,MenuPrincipal.class);
+			 startActivity(monIntent);  
+		}
 	}
 
-    
 }

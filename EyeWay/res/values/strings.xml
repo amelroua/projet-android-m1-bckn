@@ -10,7 +10,10 @@
     <string name="title_activity_realite_augmente">RealiteAugmente</string>
     <string name="title_activity_map">Map</string>
     <string name="title_activity_fouille_donnee">Fouille De Donnee</string>
-	<string name="descriptionPopPup"> Description </string>
-	<string name="descriptionImagePopPup">icon</string>
-	<string name ="distancePopPup">Distance </string>
+    <string name="descriptionPopPup"> Description </string>
+    <string name="descriptionImagePopPup">icon</string>
+    <string name="distancePopPup">Distance </string>
+    <string name="title_activity_menu_principal">MenuPrincipal</string>
+    <string name="linterface">Interface</string>
+
 </resources>
