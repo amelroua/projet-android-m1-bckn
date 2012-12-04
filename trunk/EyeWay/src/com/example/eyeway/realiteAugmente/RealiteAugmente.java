@@ -594,8 +594,11 @@ public class RealiteAugmente extends Activity implements LocationListener , OnLo
 		           // im.setImageDrawable(new BitmapDrawable(ctx.getResources() , yourSelectedImage));
 		            //im.refreshDrawableState();
 		           // (new BitmapDrawable(ctx.getResources() , yourSelectedImage))
-		            BitmapDrawable b =(new BitmapDrawable(ctx.getResources() , yourSelectedImage)); 
-		           // im.setBackground();
+		            //BitmapDrawable b =(new BitmapDrawable(ctx.getResources() , yourSelectedImage)); 
+		            //Drawable d = (Drawable)b ;
+		             //im.setBackground(d);
+		            im.setBackgroundDrawable(new BitmapDrawable(ctx.getResources() , yourSelectedImage));
+		        
 		        }
 		    }
 
