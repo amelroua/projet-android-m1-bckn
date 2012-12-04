@@ -1,5 +1,6 @@
 package com.example.eyeway.realiteAugmente;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.example.eyeway.R;
@@ -10,23 +11,43 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.database.Cursor;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
+import android.graphics.Canvas;
+import android.graphics.ColorFilter;
+import android.graphics.Matrix;
 import android.graphics.Point;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.hardware.Sensor;
 import android.hardware.SensorEvent;
 import android.hardware.SensorEventListener;
 import android.hardware.SensorManager;
+import android.location.Address;
+import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.net.Uri;
 import android.os.Bundle;
+import android.provider.MediaStore;
+import android.text.InputFilter.LengthFilter;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.view.View.OnClickListener;
+import android.view.View.OnLongClickListener;
+import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ImageView;
+import android.widget.TextView;
 import android.widget.FrameLayout.LayoutParams;
+import android.widget.Toast;
 
-public class RealiteAugmente extends Activity implements LocationListener{
+public class RealiteAugmente extends Activity implements LocationListener , OnLongClickListener{
 
 
 
@@ -39,14 +60,19 @@ public class RealiteAugmente extends Activity implements LocationListener{
 	private LocationManager locationManager;
 	private ArrayList<Icon> icons;
 	private boolean creation = true ;
-
+	private  Bitmap yourSelectedImage ;
+	int rotation = 0 ;
+	 ImageView im ;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
 
+
 		setContentView(R.layout.activity_realite_augmente);
 
+		FrameLayout l = (FrameLayout) findViewById(R.id.main);
+		l.setOnLongClickListener(this);
 		initialisationEcouteursGPS();
 		initialisionEcouteurAccelerometre();
 
@@ -105,26 +131,29 @@ public class RealiteAugmente extends Activity implements LocationListener{
 	 *            - Lattitude du point GPS
 	 * @return - Retourne une nouvelle icone dans un linearLayout
 	 */
-	public Icon newIcons(String name, double longitude, double latitude) {
+	public Icon newIcons(String name, String description, double longitude, double latitude) {
 
-		return new Icon(ctx, name, latitude, longitude, myLocation);
+		return new Icon(ctx, name,description, latitude, longitude, myLocation);
 
 	}
 
 	public void initialisationFenetre() {
 
 		this.icons = new ArrayList<Icon>();
-
+		
 		// On récupère le context
 		ctx = this;
 
-		Icon icon = newIcons("Restaurant", 1.89756, 47.86541);
-
+		Icon icon = newIcons("Restaurant","Mcdonalds", 1.89756, 47.86541);
+		// Load a bitmap from a drawable, make sure this drawable exists in your project
+	
+		
 		FrameLayout layoutMain = (FrameLayout) findViewById(R.id.main);
+		
 		layoutMain.addView(icon);
 		this.icons.add(icon);
 
-		icon = newIcons("Stade Omnisport", 1.9429176719970656,
+		icon = newIcons("Stade Omnisport","sport", 1.9429176719970656,
 				47.842080636471515);
 
 		layoutMain.addView(icon);
@@ -134,9 +163,17 @@ public class RealiteAugmente extends Activity implements LocationListener{
 		mScreenHeight = getScreenHeight();
 
 	}
+	
+	public void ajoutIcon(Icon icon){
+		
+		FrameLayout layoutMain = (FrameLayout) findViewById(R.id.main);
+		layoutMain.addView(icon);
+		icons.add(icon );
+
+	}
 
 	public void boiteDedialog() {
-
+		
 		// On instancie notre layout en tant que View
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View alertDialogView = factory.inflate(R.layout.boitedialogue,
@@ -328,7 +365,9 @@ public class RealiteAugmente extends Activity implements LocationListener{
 				if (evt.sensor.getType() == Sensor.TYPE_ORIENTATION) {
 
 					if (myLocation != null) {
-
+						
+						
+						
 						final float vals[] = evt.values;
 						final float azimut = vals[0] - 270;
 						final float roll = vals[2];
@@ -344,6 +383,23 @@ public class RealiteAugmente extends Activity implements LocationListener{
 									mScreenHeight, pitch);
 
 						}
+						
+						/*
+						Bitmap sprite = BitmapFactory.decodeResource(ctx.getResources(),
+						        R.drawable.fleche);
+
+						// Create two matrices that will be used to rotate the bitmap
+						Matrix rotateRight = new Matrix();	
+						// Set the matrices with the desired rotation 90 or -90 degrees
+						rotation += 5 ;
+						rotateRight.preRotate(rotation);
+						
+						Bitmap rSprite = Bitmap.createBitmap(sprite, 0, 0,
+						        sprite.getWidth(), sprite.getHeight(), rotateRight, true);
+						
+						ImageView v = (ImageView) findViewById(R.id.fleche);
+						v.setImageDrawable(new BitmapDrawable(ctx.getResources() , rSprite));
+						*/
 					}
 				}
 			}
@@ -372,7 +428,7 @@ public class RealiteAugmente extends Activity implements LocationListener{
 		myLocation = location;
 
 		if(creation){
-
+			Log.d("Localisé","true");
 			creation = false ;
 			// Si on a pas encore créé notre fenêtre 
 			initialisationFenetre();
@@ -401,6 +457,188 @@ public class RealiteAugmente extends Activity implements LocationListener{
 	public void onStatusChanged(String provider, int status, Bundle extras) {
 		// TODO Auto-generated method stub
 
+	}
+
+
+		private void ajouterNouveauPoint(){
+			//On instancie notre layout en tant que View
+	        LayoutInflater factory = LayoutInflater.from(this);
+	        final View alertDialogView = factory.inflate(R.layout.nouveau_point, null);
+	 
+	         
+	        //Création de l'AlertDialog
+	        AlertDialog.Builder adb = new AlertDialog.Builder(this);
+	 
+	        //On affecte la vue personnalisé que l'on a crée à notre AlertDialog
+	        adb.setView(alertDialogView);
+	        
+			im = (ImageView) alertDialogView.findViewById(R.id.image);
+			
+			im.setClickable(true);
+			im.setOnClickListener(new OnClickListener() {
+				
+				public void onClick(View v) {
+					
+				    	   
+					Intent intent = new Intent();
+					intent.setType("image/*");
+					intent.setAction(Intent.ACTION_GET_CONTENT);//
+			        final int ACTIVITY_SELECT_IMAGE = 1234;
+					startActivityForResult(Intent.createChooser(intent, "Select Picture"),ACTIVITY_SELECT_IMAGE);
+
+					
+				}
+			});
+	        //On donne un titre à l'AlertDialog
+	        adb.setTitle("Ajout Du Point D'Intêret");
+	 
+	        //On modifie l'icône de l'AlertDialog pour le fun ;)
+	        adb.setIcon(R.drawable.ajouter);
+	        
+	        EditText edit = (EditText) alertDialogView.findViewById(R.id.modifAdresse);
+	        Geocoder geoCoder = new Geocoder(this);
+	        try {
+	        	
+	        	
+	        	Address adresse = geoCoder.getFromLocation(myLocation.getLatitude(), myLocation.getLongitude(), 1).get(0);
+	        	
+	        	
+	        	int taille = adresse.getMaxAddressLineIndex();
+	        	String ad ="";
+	        	String tmp ;
+	        	for(int i=0 ; i < taille ; i++){
+	        		
+	        		tmp = adresse.getAddressLine(i) ;
+	        		if(tmp != null){
+	        			
+	        			ad+=tmp +" ";
+	        		}
+	        	}
+	        	edit.setText(ad);
+	        } catch (IOException e) {
+				Log.d("erreur","geoCoder");
+	        	// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+	        /*
+	         *    TextView text = (TextView) alertDialogView.findViewById(R.id.distance);
+	        text.setText("0 m");
+	        text.setText(name);
+	        
+	        
+	        text = (TextView) alertDialogView.findViewById(R.id.description);
+	        text.setText("Petit resto sympa en bord de mer \n A NE PAS LOUPER Petit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPER");
+
+	        
+	        text = (TextView) alertDialogView.findViewById(R.id.distance);
+	        text.setText(this.label.getText());
+	       */
+	      //  adb.setCancelable(true);
+	        	
+	        adb.setPositiveButton("Enregister", new DialogInterface.OnClickListener() {
+	 			public void onClick(DialogInterface dialog, int which) {
+	 					
+	 				
+	 				TextView nom = (TextView) alertDialogView.findViewById(R.id.titre);
+	 				TextView description =(TextView)alertDialogView.findViewById(R.id.description);
+	 				Icon i = new Icon(ctx,nom.getText().toString(),description.getText().toString(), myLocation.getLatitude(), myLocation.getLongitude(), myLocation);
+	 				ajoutIcon(i);
+	 				
+	 			}
+	 		});
+	        // On crée un bouton "Annuler" à notre AlertDialog et on lui affecte un
+	     		// évènement
+	     		adb.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
+	     			public void onClick(DialogInterface dialog, int which) {
+	     				
+	     				
+	     				
+	     			}
+	     		});
+	        
+	        adb.show();
+		}
+		
+		@SuppressWarnings("deprecation")
+		protected void onActivityResult(int requestCode, int resultCode, Intent data) 
+		{
+		    super.onActivityResult(requestCode, resultCode, data); 
+
+		    switch(requestCode) { 
+		    case 1234:
+		        if(resultCode == RESULT_OK){  
+		            Uri selectedImage = data.getData();
+		            String[] filePathColumn = {MediaStore.Images.Media.DATA};
+
+		            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
+		            cursor.moveToFirst();
+
+		            int columnIndex = cursor.getColumnIndex(filePathColumn[0]);
+		            String filePath = cursor.getString(columnIndex);
+		            cursor.close();
+
+		            /*
+		             * 
+		            Matrix rotateRight = new Matrix();	
+					// Set the matrices with the desired rotation 90 or -90 degrees
+					rotation = 90 ;
+					rotateRight.preRotate(rotation);
+					
+					yourSelectedImage = Bitmap.createBitmap(BitmapFactory.decodeFile(filePath), 0, 0,
+							BitmapFactory.decodeFile(filePath).getWidth(), BitmapFactory.decodeFile(filePath).getHeight(), rotateRight, true);
+		             */
+		            yourSelectedImage = BitmapFactory.decodeFile(filePath);
+		            /* Now you have choosen image in Bitmap format in object "yourSelectedImage". You can use it in way you want! */
+		           // im.setBackgroundResource(0);
+		          //  im.setBackground((new BitmapDrawable(ctx.getResources() , yourSelectedImage)));
+		           // im.setImageDrawable(new BitmapDrawable(ctx.getResources() , yourSelectedImage));
+		            //im.refreshDrawableState();
+		           // (new BitmapDrawable(ctx.getResources() , yourSelectedImage))
+		            BitmapDrawable b =(new BitmapDrawable(ctx.getResources() , yourSelectedImage)); 
+		           // im.setBackground();
+		        }
+		    }
+
+		};
+		private void showEnregistrerPoint(){
+		
+			// Création de l'AlertDialog
+			AlertDialog.Builder adb = new AlertDialog.Builder(this);
+
+			
+			// On donne un titre à l'AlertDialog
+			adb.setTitle("Nouveau point d'intêret");
+			
+			adb.setMessage("Voulez vous enregistrer la position actuelle comme nouveau point d'intêret");
+			// On modifie l'icône de l'AlertDialog pour le fun ;)
+			adb.setIcon(R.drawable.ajouter);
+			// On affecte un bouton "OK" à notre AlertDialog et on lui affecte un
+			// évènement
+			adb.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					ajouterNouveauPoint();
+				}
+			});
+
+			// On crée un bouton "Annuler" à notre AlertDialog et on lui affecte un
+			// évènement
+			adb.setNegativeButton("Non", new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+
+					// On retourne à l'application
+
+				}
+			});
+
+			// On affiche la boite de dialogue
+			adb.show();
+		}
+		
+		
+	@Override
+	public boolean onLongClick(View v) {
+		showEnregistrerPoint();
+		return false;
 	}
 
 

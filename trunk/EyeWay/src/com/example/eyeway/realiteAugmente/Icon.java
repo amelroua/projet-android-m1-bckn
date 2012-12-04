@@ -41,7 +41,7 @@ public class Icon extends LinearLayout{
 	private Context ctx ;
 	private View layout ;
 	private String name ;
-	
+	private String description ;
 	public Icon(Context context, Activity a) {
 		super(context);
 	}
@@ -54,15 +54,15 @@ public class Icon extends LinearLayout{
 	
 	//////////////////
 	
-	public Icon(Context c , String name , double latitude , double longitude, Location myLocation){
+	public Icon(Context c , String name , String description , double latitude , double longitude, Location myLocation){
 		
 		
 		super(c);
+		this.description = description ;
 		this.name = name ;
 		ctx = c ;
 		label = new TextView(c);
 		icon = new ImageView(c);
-		
 		
 		
 		// On ajoute notre nouveau point GPS
@@ -204,7 +204,7 @@ public class Icon extends LinearLayout{
         
         
         text = (TextView) alertDialogView.findViewById(R.id.description);
-        text.setText("Petit resto sympa en bord de mer \n A NE PAS LOUPER Petit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPERPetit resto sympa en bord de mer \n A NE PAS LOUPER");
+        text.setText(description);
 
         
         text = (TextView) alertDialogView.findViewById(R.id.distance);
