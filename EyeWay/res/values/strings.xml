@@ -16,4 +16,6 @@
     <string name="title_activity_menu_principal">MenuPrincipal</string>
     <string name="linterface">Interface</string>
 
+	<string name ="adresse">Adresse </string>
+	<string name="nom">Nom</string>
 </resources>
