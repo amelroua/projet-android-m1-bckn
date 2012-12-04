@@ -26,7 +26,7 @@ public class FouilleDonnee {
 	public static String PLACE_APIKEY="AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs";
 
 	/**
-	 * Nearby Search Requests
+	 * Nearby Search Requests de type
 	 * 
 	 * récupere un json des lieux de type @type 
 	 * et au environ de @distance autour du point ( @lat, @lng)
@@ -35,7 +35,7 @@ public class FouilleDonnee {
 	 * @param type
 	 * @param distance en metre
 	 */
-	public void getLieuProximite(double lat,double lng,String type,int distance) {
+	public void getLieuProximiteParType(double lat,double lng,String type,int distance) {
 
 		distance=10;
 		//Url pour la requête
@@ -43,7 +43,29 @@ public class FouilleDonnee {
 				"location="+lat+","+lng+
 				"&radius="+distance+
 				"&types="+type +
-				"language=fr" +
+				"&slanguage=fr" +
+				"&sensor=true"; // Utilisation du GPS -> true
+
+		
+		queryPlace(url);
+	}
+	/**
+	 * Nearby Search Requests de tous type
+	 * 
+	 * récupere un json des lieux
+	 * et au environ de @distance autour du point ( @lat, @lng)
+	 * @param lat
+	 * @param lng
+	 * @param distance en metre
+	 */
+	public void getLieuProximite(double lat,double lng,int distance) {
+
+		distance=10;
+		//Url pour la requête
+		String url = "https://maps.googleapis.com/maps/api/place/search/json?"+
+				"location="+lat+","+lng+
+				"&radius="+distance+
+				"&language=fr" +
 				"&sensor=true"; // Utilisation du GPS -> true
 
 		
@@ -53,13 +75,14 @@ public class FouilleDonnee {
 	/**
 	 * Text Search Requests
 	 * match query avec n'importe quel champs
+	 * Ex : pizza in New York
 	 * 
 	 * @param lat
 	 * @param lng
 	 * @param query
 	 * @param distance
 	 */
-	public void getLieuParNom(double lat,double lng,String query, int distance) {
+	public void getLieuParRecherche(double lat,double lng,String query, int distance) {
 		String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"+
 				"query="+query+
 				"&location="+lat+","+lng+
