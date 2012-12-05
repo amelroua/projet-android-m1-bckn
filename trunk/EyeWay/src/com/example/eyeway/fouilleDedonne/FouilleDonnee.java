@@ -4,6 +4,9 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
+
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.StatusLine;
@@ -11,6 +14,9 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -23,19 +29,22 @@ public class FouilleDonnee {
 	 * - Améliorer le code ...
 	 */
 	
-	public static String PLACE_APIKEY="AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs";
+	private static String PLACE_APIKEY="AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs";
+	
 
 	/**
 	 * Nearby Search Requests de type
 	 * 
-	 * récupere un json des lieux de type @type 
-	 * et au environ de @distance autour du point ( @lat, @lng)
-	 * @param lat
-	 * @param lng
-	 * @param type
+	 * récupere un json des lieux de type 
+	 * et au environ de distance autour du point ( lat, lng)
+	 * @param latitude
+	 * @param longitude
+	 * @param type de batiement
 	 * @param distance en metre
+	 * @return 
+	 * @return une liste de Lieu
 	 */
-	public void getLieuProximiteParType(double lat,double lng,String type,int distance) {
+	public List<Lieu> getLieuProximiteParType(double lat,double lng,String type,int distance) {
 
 		distance=10;
 		//Url pour la requête
@@ -47,18 +56,21 @@ public class FouilleDonnee {
 				"&sensor=true"; // Utilisation du GPS -> true
 
 		
-		queryPlace(url);
+		String reponse = queryPlace(url);
+		return JsonToLieu(reponse);
 	}
 	/**
 	 * Nearby Search Requests de tous type
 	 * 
 	 * récupere un json des lieux
-	 * et au environ de @distance autour du point ( @lat, @lng)
-	 * @param lat
-	 * @param lng
+	 * et au environ de distance autour du point ( lat, lng)
+	 * @param latitude
+	 * @param longitude
 	 * @param distance en metre
+	 * @return 
+	 * @return une liste de Lieu
 	 */
-	public void getLieuProximite(double lat,double lng,int distance) {
+	public List<Lieu> getLieuProximite(double lat,double lng,int distance) {
 
 		distance=10;
 		//Url pour la requête
@@ -69,7 +81,8 @@ public class FouilleDonnee {
 				"&sensor=true"; // Utilisation du GPS -> true
 
 		
-		queryPlace(url);
+		String reponse = queryPlace(url);
+		return JsonToLieu(reponse);
 	}
 	
 	/**
@@ -77,12 +90,13 @@ public class FouilleDonnee {
 	 * match query avec n'importe quel champs
 	 * Ex : pizza in New York
 	 * 
-	 * @param lat
-	 * @param lng
-	 * @param query
-	 * @param distance
+	 * @param latitude
+	 * @param longitude
+	 * @param question
+	 * @param distance en metre
+	 * @return une liste de Lieu
 	 */
-	public void getLieuParRecherche(double lat,double lng,String query, int distance) {
+	public List<Lieu> getLieuParRecherche(double lat,double lng,String query, int distance) {
 		String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?"+
 				"query="+query+
 				"&location="+lat+","+lng+
@@ -90,7 +104,8 @@ public class FouilleDonnee {
 				"&sensor=true"+
 				"&language=fr";
 		
-		queryPlace(url);
+		String reponse = queryPlace(url);
+		return JsonToLieu(reponse);
 	}
 	
 	/**
@@ -100,11 +115,78 @@ public class FouilleDonnee {
 	public void getDetails(String reference) {
 		String url = "https://maps.googleapis.com/maps/api/place/details/json?" +
 				"reference="+reference+
-				"&sensor=true";
+				"&sensor=true"+
+				"&language=fr";
 		
-		queryPlace(url);
+		String reponse = queryPlace(url);
 	}
-	
+	/**
+	 * Parse un Json en une liste de lieu
+	 * @param jsonString
+	 * @return liste de Lieu
+	 */
+	private List<Lieu> JsonToLieu(String jsonString) {
+		List<Lieu> lesLieux=new ArrayList<Lieu>();
+		try {
+			JSONObject jObject = new JSONObject(jsonString);
+			JSONArray results = jObject.getJSONArray("results"); 
+			JSONObject result, location, laPhoto;
+			JSONArray jPhotos,jTypes;
+			
+			double lat,lng;
+			String icon,id,name,reference,vicinity;
+
+
+			for(int i=0;i<results.length();i++) {
+				//Un résultat
+				result=results.getJSONObject(i);
+				
+				//Position GPS
+				location=result.getJSONObject("geometry")
+						.getJSONObject("location");
+				lat=location.getLong("lat");
+				lng=location.getLong("lng");
+				
+				//L'icone
+				icon=result.getString("icon");
+				//ID
+				id=result.getString("id");
+				//Le nom
+				name=result.getString("name");
+				//reference
+				reference=result.getString("reference");
+				//vicinity
+				vicinity=result.getString("vicinity");
+				
+			
+		
+				//Les photos
+				List <Photo> photos=new ArrayList<Photo>();
+				jPhotos = result.getJSONArray("photos");
+				for(int p=0;p<jPhotos.length();p++) {
+					laPhoto=jPhotos.getJSONObject(i);
+					String photo_reference;
+					int height,width;
+					height=laPhoto.getInt("height");
+					width=laPhoto.getInt("width");
+					photo_reference=laPhoto.getString("photo_reference");
+					
+					photos.add(new Photo(photo_reference, height, width));
+				}
+				//les types
+				List <String> types = new ArrayList<String>();
+				jTypes = result.getJSONArray("types");
+				for(int t=0;t<jTypes.length();t++) {
+					types.add(jTypes.getString(t));
+				}
+				
+				lesLieux.add(new Lieu(lat, lng, icon, id, name, photos, reference, types, vicinity));
+			}		
+		} catch (JSONException e) {
+			e.printStackTrace();
+		} 
+		return lesLieux;
+	}
 	
 	/**
 	 * faire la requete sur google maps api
@@ -143,4 +225,12 @@ public class FouilleDonnee {
 		}
 		return builder.toString();
 	}
+	
+//	public static void main(String[] args) {
+//		FouilleDonnee fd=new FouilleDonnee();
+//		List<Lieu> Lieux = fd.getLieuProximite(47.845489, 1.939776, 10);
+//		for(Lieu l : Lieux) {
+//			l.toString();
+//		}
+//	}
 }
