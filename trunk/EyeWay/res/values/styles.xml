@@ -1,7 +1,21 @@
 <resources xmlns:android="http://schemas.android.com/apk/res/android">
-	<style name="list_a">
-		<item name="android:background">#BBBBBB</item>
-	    <item name="android:dividerHeight">2dip</item>
+	<!--
+    <style name="list_a">
+        <item name="android:background">#BBBBBB</item>
+        <item name="android:dividerHeight">2dip</item>
+        <item name="android:footerDividersEnabled">false</item>
+        <item name="android:scrollbarAlwaysDrawVerticalTrack">true</item>
+        <item name="android:scrollbarAlwaysDrawHorizontalTrack">true</item>
+        <item name="android:scrollbars">vertical</item>
+        <item name="android:layout_margin">10dp</item>
+    </style>
+	-->
+    <style name="list_item_a">
+        <item name="android:background">#CCCCCC</item>
+        <item name="android:focusable">true</item>
+        <item name="android:clickable">true</item>
+    </style>
+	<style name="icon_style">
+	    <item name="android:padding">5dp</item>	    
 	</style>
-	
 </resources>
