@@ -1,5 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <attr name="pageMargin" format="reference|dimension" />
-    <attr format="reference" name="list"/>
+    <attr name="list" format="reference"/>
+    <attr name="listItem" format="reference"/>
+    <attr name="icon" format="reference"/>
 </resources>

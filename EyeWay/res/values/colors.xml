@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="default_color">#6064E3</color>
+    <color name="border1_start">#5875B1</color>
+    <color name="border1_end">#ACBAD8</color>
+    <color name="text_clear">#CFCFCF</color>
     <color name="plus_clair">#5875B1</color>
     <color name="error">#8B0C21</color>
 </resources>
