@@ -1,7 +1,10 @@
-package com.example.eyeway;
+package com.example.eyeway.menuPrincipal;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+
+import com.example.eyeway.R;
+import com.example.eyeway.R.id;
  
 import android.app.Activity;
 import android.content.Context;
