@@ -1,4 +1,4 @@
-package com.example.eyeway;
+package com.example.eyeway.menuPrincipal;
 
 public class Fonctionnalite {
 	public int icon;

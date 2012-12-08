@@ -54,7 +54,7 @@
             android:label="@string/title_activity_fouille_donnee" >
         </activity>
         <activity
-            android:name=".MenuPrincipal"
+            android:name=".interfaceGraphique.MenuPrincipal"
             android:label="@string/title_activity_menu_principal">
         </activity>
     </application>
