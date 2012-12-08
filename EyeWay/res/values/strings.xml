@@ -2,7 +2,7 @@
     <string name="app_name">EyeWay</string>
     <string name ="defaut">Default text </string>
     <string name="menu_settings">Settings</string>
-    <string name="title_activity_main">MainActivity</string>
+    <string name="title_activity_main">Eye Way</string>
     <string name="realiteAugmente"> Réalité augmentée</string>
     <string name="map"> Map </string>
     <string name="fouille">Fouille de données</string>

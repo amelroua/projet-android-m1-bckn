@@ -1,6 +1,8 @@
 package com.example.eyeway.realiteAugmente;
 
+import java.io.FileNotFoundException;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.ArrayList;
 
 import com.example.eyeway.R;
@@ -60,7 +62,6 @@ public class RealiteAugmente extends Activity implements LocationListener , OnLo
 	private LocationManager locationManager;
 	private ArrayList<Icon> icons;
 	private boolean creation = true ;
-	private  Bitmap yourSelectedImage ;
 	int rotation = 0 ;
 	 ImageView im ;
 	@Override
@@ -133,7 +134,7 @@ public class RealiteAugmente extends Activity implements LocationListener , OnLo
 	 */
 	public Icon newIcons(String name, String description, double longitude, double latitude) {
 
-		return new Icon(ctx, name,description, latitude, longitude, myLocation);
+		return new Icon(ctx,null, name,description, latitude, longitude, myLocation);
 
 	}
 
@@ -168,7 +169,7 @@ public class RealiteAugmente extends Activity implements LocationListener , OnLo
 		
 		FrameLayout layoutMain = (FrameLayout) findViewById(R.id.main);
 		layoutMain.addView(icon);
-		icons.add(icon );
+		icons.add(icon);
 
 	}
 
@@ -514,7 +515,9 @@ public class RealiteAugmente extends Activity implements LocationListener , OnLo
 	        			ad+=tmp +" ";
 	        		}
 	        	}
+	        
 	        	edit.setText(ad);
+	        
 	        } catch (IOException e) {
 				Log.d("erreur","geoCoder");
 	        	// TODO Auto-generated catch block
@@ -541,7 +544,7 @@ public class RealiteAugmente extends Activity implements LocationListener , OnLo
 	 				
 	 				TextView nom = (TextView) alertDialogView.findViewById(R.id.titre);
 	 				TextView description =(TextView)alertDialogView.findViewById(R.id.description);
-	 				Icon i = new Icon(ctx,nom.getText().toString(),description.getText().toString(), myLocation.getLatitude(), myLocation.getLongitude(), myLocation);
+	 				Icon i = new Icon(ctx,im,nom.getText().toString(),description.getText().toString(), myLocation.getLatitude(), myLocation.getLongitude(), myLocation);
 	 				ajoutIcon(i);
 	 				
 	 			}
@@ -558,16 +561,39 @@ public class RealiteAugmente extends Activity implements LocationListener , OnLo
 	        
 	        adb.show();
 		}
-		
-		@SuppressWarnings("deprecation")
+
 		protected void onActivityResult(int requestCode, int resultCode, Intent data) 
-		{
+		{	
+
 		    super.onActivityResult(requestCode, resultCode, data); 
 
 		    switch(requestCode) { 
 		    case 1234:
 		        if(resultCode == RESULT_OK){  
-		            Uri selectedImage = data.getData();
+		          
+		        	Uri selectedImage = data.getData();
+		            InputStream imageStream;
+					try {
+						imageStream = getContentResolver().openInputStream(selectedImage);
+			            Bitmap yourSelectedImage = BitmapFactory.decodeStream(imageStream);
+			            
+							imageStream.close();
+						
+			            im.setBackgroundDrawable(new BitmapDrawable(ctx.getResources() , yourSelectedImage));
+
+					} catch (FileNotFoundException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					
+					}catch (IOException e) {
+						// TODO Auto-generated catch block
+						e.printStackTrace();
+					
+					} catch (Exception e) {
+					// TODO Auto-generated catch block
+						e.printStackTrace();
+				}
+		        	/*  Uri selectedImage = data.getData();
 		            String[] filePathColumn = {MediaStore.Images.Media.DATA};
 
 		            Cursor cursor = getContentResolver().query(selectedImage, filePathColumn, null, null, null);
@@ -587,7 +613,12 @@ public class RealiteAugmente extends Activity implements LocationListener , OnLo
 					yourSelectedImage = Bitmap.createBitmap(BitmapFactory.decodeFile(filePath), 0, 0,
 							BitmapFactory.decodeFile(filePath).getWidth(), BitmapFactory.decodeFile(filePath).getHeight(), rotateRight, true);
 		             */
-		            yourSelectedImage = BitmapFactory.decodeFile(filePath);
+					//Toast.makeText(ctx, BitmapFactory.decodeFile(filePath) + "", Toast.LENGTH_LONG).show();
+					// Bitmap bit = null ;
+				//	Bitmap yourSelectedImage = BitmapFactory.decodeFile(filePath);
+			            
+		         //  yourSelectedImage = BitmapFactory.decodeFile(filePath);
+		            
 		            /* Now you have choosen image in Bitmap format in object "yourSelectedImage". You can use it in way you want! */
 		           // im.setBackgroundResource(0);
 		          //  im.setBackground((new BitmapDrawable(ctx.getResources() , yourSelectedImage)));
@@ -597,8 +628,7 @@ public class RealiteAugmente extends Activity implements LocationListener , OnLo
 		            //BitmapDrawable b =(new BitmapDrawable(ctx.getResources() , yourSelectedImage)); 
 		            //Drawable d = (Drawable)b ;
 		             //im.setBackground(d);
-		            im.setBackgroundDrawable(new BitmapDrawable(ctx.getResources() , yourSelectedImage));
-		        
+		         //   im.setRotation(4);
 		        }
 		    }
 
