@@ -142,8 +142,7 @@ public class FouilleDonnee {
 				result=results.getJSONObject(i);
 				
 				//Position GPS
-				location=result.getJSONObject("geometry")
-						.getJSONObject("location");
+				location=result.getJSONObject("geometry").getJSONObject("location");
 				lat=location.getLong("lat");
 				lng=location.getLong("lng");
 				
