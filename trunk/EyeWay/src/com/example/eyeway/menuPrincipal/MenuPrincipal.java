@@ -5,6 +5,7 @@ import com.example.eyeway.Map.Map;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
 import com.example.eyeway.realiteAugmente.RealiteAugmente;
 
+import android.location.GpsStatus;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
@@ -28,10 +29,14 @@ import android.widget.AdapterView.OnItemClickListener;
  *
  */
 
-public class MenuPrincipal extends Activity implements OnClickListener,OnItemClickListener {
+public class MenuPrincipal extends Activity implements OnClickListener,OnItemClickListener, GpsStatus.Listener {
 	private Button gps_status;
 	private ListView list_menu;
 	private LocationManager locationManager;
+	private GpsStatus.Listener mGpsListener;
+	private final int GPS_READY=0;
+	private final int GPS_OFF_LINE=1;
+	private final int GPS_ON_LINE=2;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -57,8 +62,19 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 		gps_status.setOnClickListener(this);
 		locationManager= (LocationManager) getSystemService(LOCATION_SERVICE);
 	}
-	public void changerAffichageGpsStatus(){
-		
+	/**
+	 * Méthode qui sera appellée pour changer l'affichage du bouton en fonction du status du GPS
+	 * @param status
+	 */
+	public void changerAffichageGpsStatus(int status){
+		switch(status){
+		case GPS_READY : 
+			break;
+		case GPS_OFF_LINE :
+			break;
+		case GPS_ON_LINE :
+			break;
+		}
 		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
 			gps_status.setText("Gps Activé");
 			gps_status.setTextColor(R.color.plus_clair);
@@ -121,5 +137,30 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 				break;  
 			}	
 		}
+	}
+	
+	@Override
+	public void onGpsStatusChanged(int event) {
+		/*
+		switch (event) {
+        case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
+        	boolean isGPSFix=false;
+        	if (mLastLocation != null){
+             isGPSFix = (SystemClock.elapsedRealtime() - mLastLocationMillis) < 3000;
+        	}
+            if (isGPSFix) { // A fix has been acquired.
+                changerAffichageGpsStatus(GPS_ON_LINE);
+            	// Do something.
+            } else { // The fix has been lost.
+            	changerAffichageGpsStatus(GPS_OFF_LINE);
+            	// Do something.
+            }
+
+            break;
+        case GpsStatus.GPS_EVENT_FIRST_FIX:
+            // Do something.
+        	 changerAffichageGpsStatus(GPS_ON_LINE);
+            break;
+    }*/
 	}
 }

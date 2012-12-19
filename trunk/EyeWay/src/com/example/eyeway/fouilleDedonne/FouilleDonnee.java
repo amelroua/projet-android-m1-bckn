@@ -93,11 +93,11 @@ public class FouilleDonnee {
 	 */
 	//Exemple de requete qui marche : https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 	public DetailLieu getDetails(String reference) {
-		DetailLieu d;
+
 		String url = "https://maps.googleapis.com/maps/api/place/details/json?reference="+reference;
 		completePlaceQuery(url);
 		String reponse = executeQuery(url);
-		d=parseDetailResult(reponse);
+		DetailLieu d=parseDetailResult(reponse);
 		return d;
 	}
 	/**
@@ -184,11 +184,13 @@ public class FouilleDonnee {
 	 * @param jsonString
 	 * @return LieuDetaille
 	 */
+	//Testée avec succès avec cette requete : https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 	private DetailLieu parseDetailResult(String jsonString) {
-
+		Log.i("testFouille","debut de parseDetail");
 		try {
 			JSONObject jObject = new JSONObject(jsonString);
-			JSONObject result = jObject.getJSONObject("result");
+			JSONObject result = jObject.getJSONObject("result"); //cette instruction bug , pkoi ?
+			Log.i("testFouille","apres recup result");
 			JSONArray address_components = result.getJSONArray("address_components"); 
 			String street_number=""; //707
 			String route=""; //Avenue de Verdun
@@ -198,32 +200,35 @@ public class FouilleDonnee {
 			String country=""; //FR
 			String postal_code=""; //45160
 			String phone_number="";
-			//Pour chaque entrée dans le tableau : 
+			//Pour chaque entrée dans le tableau :
 			for(int i=0;i<address_components.length();i++) {
-				//
-				JSONArray types = result.getJSONArray("types");
+				//Java est capricieux et ne veux pas retourner vrai avec une comparaison de string == , obliger de faire .equals
+				JSONObject un_composant=address_components.getJSONObject(i);
+				JSONArray types = un_composant.getJSONArray("types");
 				String type=types.getString(0);
-				if(type=="street_number"){
+				if(type.equals(new String("street_number"))){
 					street_number=address_components.getJSONObject(i).getString("long_name");
-				}else if(type=="route"){
+				}else if(type.equals(new String("route"))){
 					route=address_components.getJSONObject(i).getString("long_name");
-				}else if(type=="locality"){
+				}else if(type.equals(new String("locality"))){
 					locality=address_components.getJSONObject(i).getString("long_name");
-				}else if(type=="administrative_area_level_2"){
+				}else if(type.equals(new String("administrative_area_level_2"))){
 					administrative_area_level_2=address_components.getJSONObject(i).getString("long_name");
-				}else if(type=="administrative_area_level_1"){
+				}else if(type.equals(new String("administrative_area_level_1"))){
 					administrative_area_level_1=address_components.getJSONObject(i).getString("long_name");
 				}
-				else if(type=="country"){
+				else if(type.equals(new String("country"))){
 					country=address_components.getJSONObject(i).getString("long_name");
-				}else if(type=="postal_code"){
+				}else if(type.equals(new String("postal_code"))){
 					postal_code=address_components.getJSONObject(i).getString("long_name");
-				}else if(type=="phone_number"){
+				}else if(type.equals(new String("phone_number"))){
 					phone_number=address_components.getJSONObject(i).getString("long_name");
 				}
 			}
-			return new DetailLieu( street_number, route,  locality,  administrative_area_level_2,  administrative_area_level_1, country,  postal_code,  phone_number);
+			return new DetailLieu(street_number, route,  locality,  administrative_area_level_2,  administrative_area_level_1, country,  postal_code,  phone_number);
+
 		} catch (JSONException e) {
+			Log.i("testFouille", "Exeception recuperee "+e.getMessage()+" , cause : "+e.getCause());
 			e.printStackTrace();
 		}
 		return null;
@@ -240,7 +245,7 @@ public class FouilleDonnee {
 	 * @param url
 	 * @return json résultat
 	 */
-	private String executeQuery(String url) {
+	public String executeQuery(String url) {
 		StringBuilder builder = new StringBuilder();
 		HttpClient client = new DefaultHttpClient();
 		HttpGet httpGet = new HttpGet(url);
@@ -267,19 +272,5 @@ public class FouilleDonnee {
 			e.printStackTrace();
 		}
 		return builder.toString();
-	}
-
-	public static void main(String[] args) {
-		
-		FouilleDonnee fd=new FouilleDonnee();
-		/*
-		List<Lieu> Lieux = fd.getLieuProximite(47.845489, 1.939776, 10);
-		for(Lieu l : Lieux) {
-			l.toString();
-		}
-		*/
-		
-		DetailLieu d=fd.getDetails("https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs");
-		System.out.println(d);
 	}
 }
