@@ -54,8 +54,8 @@
             android:label="@string/title_activity_menu_principal" >
         </activity>
         <activity
-            android:name=".fouilleDedonne.TestFouille"
-            android:label="@string/title_activity_test_fouille" >
+            android:name=".FouilleTest"
+            android:label="@string/title_activity_fouille_test" >
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 

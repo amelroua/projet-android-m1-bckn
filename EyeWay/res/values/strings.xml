@@ -22,5 +22,6 @@
     <string name="titre_menu_principal">Menu principal :</string>
     <string name="hello_world">Hello world!</string>
     <string name="title_activity_test_fouille">TestFouille</string>
+    <string name="title_activity_fouille_test">FouilleTest</string>
 
 </resources>

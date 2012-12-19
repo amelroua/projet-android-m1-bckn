@@ -16,8 +16,7 @@
     </uses-permission>
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
-    
-    
+
     <uses-feature android:name="android.hardware.camera" />
     <uses-feature android:name="android.hardware.camera.autofocus" />
 
@@ -39,26 +38,31 @@
         <activity
             android:name=".realiteAugmente.RealiteAugmente"
             android:label="@string/title_activity_realite_augmente"
-
             android:screenOrientation="landscape"
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
- 
         </activity>
         <activity
             android:name=".Map.Map"
             android:label="@string/title_activity_map" >
-
         </activity>
         <activity
             android:name=".fouilleDedonne.FouilleDonnee"
             android:label="@string/title_activity_fouille_donnee" >
         </activity>
         <activity
-            android:name=".MenuPrincipal"
-            android:label="@string/title_activity_menu_principal">
+            android:name=".menuPrincipal.MenuPrincipal"
+            android:label="@string/title_activity_menu_principal" >
+        </activity>
+        <activity
+            android:name=".FouilleTest"
+            android:label="@string/title_activity_fouille_test" >
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
         </activity>
     </application>
-
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" >
     </uses-permission>
@@ -66,4 +70,5 @@
     </uses-permission>
     <uses-permission android:name="android.permission.INTERNET" >
     </uses-permission>
+
 </manifest>
