@@ -1,6 +1,7 @@
 <resources>
+
     <string name="app_name">EyeWay</string>
-    <string name ="defaut">Default text </string>
+    <string name="defaut">Default text </string>
     <string name="menu_settings">Settings</string>
     <string name="title_activity_main">Eye Way</string>
     <string name="realiteAugmente"> Réalité augmentée</string>
@@ -14,9 +15,12 @@
     <string name="descriptionImagePopPup">icon</string>
     <string name="distancePopPup">Distance </string>
     <string name="linterface">Interface</string>
-	<string name ="adresse">Adresse </string>
-	<string name="nom">Nom</string>
-	<string name="gps_status_offline">Gps inactif</string>
-	<string name="gps_status_online">Gps actif</string>
-	<string name="titre_menu_principal">Menu principal :</string>
+    <string name="adresse">Adresse </string>
+    <string name="nom">Nom</string>
+    <string name="gps_status_offline">Gps inactif</string>
+    <string name="gps_status_online">Gps actif</string>
+    <string name="titre_menu_principal">Menu principal :</string>
+    <string name="hello_world">Hello world!</string>
+    <string name="title_activity_test_fouille">TestFouille</string>
+
 </resources>
