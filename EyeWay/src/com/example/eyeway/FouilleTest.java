@@ -1,7 +1,10 @@
 package com.example.eyeway;
 
+import java.util.ArrayList;
+
 import com.example.eyeway.fouilleDedonne.DetailLieu;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
+import com.example.eyeway.fouilleDedonne.Lieu;
 
 import android.os.Bundle;
 import android.app.Activity;
@@ -16,6 +19,8 @@ public class FouilleTest extends Activity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_fouille_test);
         //testgetDetails(); //fonctionne
+        //testgetLieuParProximite();
+        testgetLieuParRecherche();
     }
     //Fonctionne
     public void testgetDetails(){
@@ -35,15 +40,43 @@ public class FouilleTest extends Activity {
     }
     //Pas testé TODO
     public void testgetLieuParProximite(){
-    	// FouilleDonnee fd=new FouilleDonnee();
-    	//List<Lieu> Lieux = fd.getLieuProximite(47.845489, 1.939776, 10);
-		//for(Lieu l : Lieux) {
-		//	l.toString();
-		//}
+    	FouilleDonnee fd=new FouilleDonnee();
+    	ArrayList<Lieu> Lieux = fd.getLieuProximiteParType(47.845489, 1.939776,"", 10);
+		/*
+    	for(Lieu l : Lieux) {
+			l.toString();
+		}
+		*/
+    	AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Resultat de la requete...");
+        alertDialog.setMessage(Lieux.get(0).toString());
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int which) {
+              // here you can add functions
+           }
+        });
+        //alertDialog.setIcon(R.drawable.icon);
+        alertDialog.show();
     }
     //Pas testé TODO
     public void testgetLieuParRecherche(){
-    	
+    	FouilleDonnee fd=new FouilleDonnee();
+    	ArrayList<Lieu> Lieux = fd.getLieuParRecherche("restaurant olivet");
+		/*
+    	for(Lieu l : Lieux) {
+			l.toString();
+		}
+		*/
+    	AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+        alertDialog.setTitle("Resultat de la requete...");
+        alertDialog.setMessage(Lieux.get(0).toString());
+        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
+           public void onClick(DialogInterface dialog, int which) {
+              // here you can add functions
+           }
+        });
+        //alertDialog.setIcon(R.drawable.icon);
+        alertDialog.show();
     }
 
     @Override
