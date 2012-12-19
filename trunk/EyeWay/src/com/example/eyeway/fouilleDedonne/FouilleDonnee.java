@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Scanner;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -44,14 +45,14 @@ public class FouilleDonnee {
 	 * @return une liste de Lieu
 	 */
 	//Exemple d'une requete qui marche : les restaurants près du Courtepaille : lat =47.8686030 lng =1.9124340 
-
-	public List<Lieu> getLieuProximiteParType(double lat,double lng,String type,int distance) {
+	//Testé , ok
+	public ArrayList<Lieu> getLieuProximiteParType(double lat,double lng,String type,int distance) {
 		//Url pour la requête
 		String url = "https://maps.googleapis.com/maps/api/place/search/json?location="+lat+","+lng+"&radius="+distance;
-		if(type!=""){
+		if(!type.equals(new String(""))){
 			url+="&types="+type; 
 		}
-		completePlaceQuery(url);
+		url=completePlaceQuery(url);
 		String reponse = executeQuery(url);
 		return JsonToLieu(reponse);
 	}
@@ -69,15 +70,27 @@ public class FouilleDonnee {
 	 */
 	//Exemple d'une requete qui marche : les restaurants d'olivet
 	//https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurant+olivet&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
-	public List<Lieu> getLieuParRecherche(String query,double lat,double lng, int distance) {
-		String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query="+query;
+	public ArrayList<Lieu> getLieuParRecherche(String query) { //,double lat,double lng, int distance
+		//construire la chaine qui va etre mise dans l'url
+		//parce que la chaine en paremetre est le texte saisi par l'utilisateur : ex : restaurant olivet
+		//et dans l'url on doit mettre restaurant+olivet
+		String queryFormated="";
+		Scanner s = new Scanner(query).useDelimiter(" ");
+		//TODO trouver le pattern qui reconnait un espace entre deux mots
+		while(s.hasNext()){
+			queryFormated+=s.next()+"+";
+		}
+		//enlever le + du dernier parametre
+		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
+		String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query="+queryFormated;
+		/*
 		if(lat!=0 && lng !=0){
 			url+="&location="+lat+","+lng;
 		}
 		if(distance!=0){
 			url+="&radius="+distance;
-		}
-		completePlaceQuery(url);
+		}*/
+		url=completePlaceQuery(url);
 		String reponse = executeQuery(url);
 		return JsonToLieu(reponse);
 	}
@@ -95,7 +108,7 @@ public class FouilleDonnee {
 	public DetailLieu getDetails(String reference) {
 
 		String url = "https://maps.googleapis.com/maps/api/place/details/json?reference="+reference;
-		completePlaceQuery(url);
+		url=completePlaceQuery(url);
 		String reponse = executeQuery(url);
 		DetailLieu d=parseDetailResult(reponse);
 		return d;
@@ -105,8 +118,8 @@ public class FouilleDonnee {
 	 * @param jsonString
 	 * @return liste de Lieu
 	 */
-	private List<Lieu> JsonToLieu(String jsonString) {
-		List<Lieu> lesLieux=new ArrayList<Lieu>();
+	private ArrayList<Lieu> JsonToLieu(String jsonString) {
+		ArrayList<Lieu> lesLieux=new ArrayList<Lieu>();
 		try {
 			JSONObject jObject = new JSONObject(jsonString);
 			JSONArray results = jObject.getJSONArray("results"); 
@@ -234,9 +247,9 @@ public class FouilleDonnee {
 		return null;
 	}
 
-	private void completePlaceQuery(String url){
+	private String completePlaceQuery(String url){
 		//Ajout de la APIKey, du sensor, de la langue
-		url+="&sensor=true&language=fr&key="+PLACE_APIKEY;
+		return url+="&sensor=true&language=fr&key="+PLACE_APIKEY;
 	}
 
 
