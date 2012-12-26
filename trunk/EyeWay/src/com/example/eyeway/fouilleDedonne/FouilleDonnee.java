@@ -92,6 +92,7 @@ public class FouilleDonnee {
 		}*/
 		url=completePlaceQuery(url);
 		String reponse = executeQuery(url);
+		Log.d("Reponse", reponse);
 		return JsonToLieu(reponse);
 	}
 
@@ -133,7 +134,9 @@ public class FouilleDonnee {
 			String reference="";
 			String vicinity="";
 
+			
 			for(int i=0;i<results.length();i++) {
+				
 				//Un résultat
 				result=results.getJSONObject(i);
 
@@ -167,7 +170,7 @@ public class FouilleDonnee {
 				if(result.has("photos")){
 					jPhotos = result.getJSONArray("photos");
 					for(int p=0;p<jPhotos.length();p++) {
-						laPhoto=jPhotos.getJSONObject(i);
+						laPhoto=jPhotos.getJSONObject(p);
 						String photo_reference;
 						int height,width;
 						height=laPhoto.getInt("height");
@@ -188,8 +191,11 @@ public class FouilleDonnee {
 				lesLieux.add(new Lieu(lat, lng, icon, id, name, photos, reference, types, vicinity));
 			}		
 		} catch (JSONException e) {
+			Log.d("Il y a une erreur",e.toString());
 			e.printStackTrace();
 		} 
+		
+		
 		return lesLieux;
 	}
 	/**
