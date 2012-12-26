@@ -22,14 +22,104 @@ import org.json.JSONObject;
 import android.util.Log;
 
 public class FouilleDonnee {
-
-	/*
-	 * TODO :
-	 * 
-	 * - parse le json de retour (en objet lieu ?)
-	 * - Améliorer le code ...
-	 */
-
+	public enum types {
+		accounting,
+		airport,
+		amusement_park,
+		aquarium,
+		art_gallery,
+		atm,
+		bakery,
+		bank,
+		bar,
+		beauty_salon,
+		bicycle_store,
+		book_store,
+		bowling_alley,
+		bus_station,
+		cafe,
+		campground,
+		car_dealer,
+		car_rental,
+		car_repair,
+		car_wash,
+		casino,
+		cemetery,
+		church,
+		city_hall,
+		clothing_store,
+		convenience_store,
+		courthouse,
+		dentist,
+		department_store,
+		doctor,
+		electrician,
+		electronics_store,
+		embassy,
+		establishment,
+		finance,
+		fire_station,
+		florist,
+		food,
+		funeral_home,
+		furniture_store,
+		gas_station,
+		general_contractor,
+		grocery_or_supermarket,
+		gym,
+		hair_care,
+		hardware_store,
+		health,
+		hindu_temple,
+		home_goods_store,
+		hospital,
+		insurance_agency,
+		jewelry_store,
+		laundry,
+		lawyer,
+		library,
+		liquor_store,
+		local_government_office,
+		locksmith,
+		lodging,
+		meal_delivery,
+		meal_takeaway,
+		mosque,
+		movie_rental,
+		movie_theater,
+		moving_company,
+		museum,
+		night_club,
+		painter,
+		park,
+		parking,
+		pet_store,
+		pharmacy,
+		physiotherapist,
+		place_of_worship,
+		plumber,
+		police,
+		post_office,
+		real_estate_agency,
+		restaurant,
+		roofing_contractor,
+		rv_park,
+		school,
+		shoe_store,
+		shopping_mall,
+		spa,
+		stadium,
+		storage,
+		store,
+		subway_station,
+		synagogue,
+		taxi_stand,
+		train_station,
+		travel_agency,
+		university,
+		veterinary_care,
+		zoo
+	};
 	private static String PLACE_APIKEY="AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs";
 
 	/**
@@ -45,6 +135,7 @@ public class FouilleDonnee {
 	 * @return une liste de Lieu
 	 */
 	//Exemple d'une requete qui marche : les restaurants près du Courtepaille : lat =47.8686030 lng =1.9124340 
+	//https://maps.googleapis.com/maps/api/place/search/json?location=47.8686030,1.9124340&radius=100&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 	//Testé , ok
 	public ArrayList<Lieu> getLieuProximiteParType(double lat,double lng,String type,int distance) {
 		//Url pour la requête
@@ -57,7 +148,7 @@ public class FouilleDonnee {
 		return JsonToLieu(reponse);
 	}
 
-
+	
 	/**
 	 * Text Search Requests : recherche d'un lieu grace a des mots clés
 	 * match query avec n'importe quel champs
@@ -71,15 +162,7 @@ public class FouilleDonnee {
 	//Exemple d'une requete qui marche : les restaurants d'olivet
 	//https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurant+olivet&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 	public ArrayList<Lieu> getLieuParRecherche(String query) { //,double lat,double lng, int distance
-		//construire la chaine qui va etre mise dans l'url
-		//parce que la chaine en paremetre est le texte saisi par l'utilisateur : ex : restaurant olivet
-		//et dans l'url on doit mettre restaurant+olivet
-		String queryFormated="";
-		Scanner s = new Scanner(query).useDelimiter(" ");
-		//TODO trouver le pattern qui reconnait un espace entre deux mots
-		while(s.hasNext()){
-			queryFormated+=s.next()+"+";
-		}
+		String queryFormated=chaineFormatUrl(query);
 		//enlever le + du dernier parametre
 		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
 		String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query="+queryFormated;
@@ -134,15 +217,15 @@ public class FouilleDonnee {
 			String reference="";
 			String vicinity="";
 
-			
+
 			for(int i=0;i<results.length();i++) {
-				
+
 				//Un résultat
 				result=results.getJSONObject(i);
 
 				//Position GPS
 				location=result.getJSONObject("geometry").getJSONObject("location");
-				
+
 				lat=location.getDouble("lat");
 				lng=location.getDouble("lng");
 
@@ -195,8 +278,8 @@ public class FouilleDonnee {
 			Log.d("Il y a une erreur",e.toString());
 			e.printStackTrace();
 		} 
-		
-		
+
+
 		return lesLieux;
 	}
 	/**
@@ -253,12 +336,25 @@ public class FouilleDonnee {
 		}
 		return null;
 	}
-
+	/****************************
+	 * UTIL 
+	 * **************************/
 	private String completePlaceQuery(String url){
 		//Ajout de la APIKey, du sensor, de la langue
 		return url+="&sensor=true&language=fr&key="+PLACE_APIKEY;
 	}
-
+	String chaineFormatUrl(String query){
+		//construire la chaine qui va etre mise dans l'url
+		//parce que la chaine en paremetre est le texte saisi par l'utilisateur : ex : restaurant olivet
+		//et dans l'url on doit mettre restaurant+olivet
+		String queryFormated="";
+		Scanner s = new Scanner(query).useDelimiter(" ");
+		//TODO trouver le pattern qui reconnait un espace entre deux mots
+		while(s.hasNext()){
+			queryFormated+=s.next()+"+";
+		}
+		return queryFormated;
+	}
 
 	/**
 	 * Faire la requete sur google maps api
