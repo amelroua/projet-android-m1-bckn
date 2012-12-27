@@ -174,7 +174,8 @@ public class FouilleDonnee {
 			String name="";
 			String reference="";
 			String vicinity="";
-
+			
+			Log.d("taille",""+	 results.length());
 
 			for(int i=0;i<results.length();i++) {
 
