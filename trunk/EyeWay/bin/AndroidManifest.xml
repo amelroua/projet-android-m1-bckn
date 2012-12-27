@@ -56,20 +56,12 @@
         <activity
             android:name=".FouilleTest"
             android:label="@string/title_activity_fouille_test" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+         
         </activity>
         <activity
             android:name=".menuPrincipal.RecherchePerimetre"
             android:label="@string/title_activity_recherche_perimetre" >
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
+           
         </activity>
     </application>
 
