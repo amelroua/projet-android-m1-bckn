@@ -20,30 +20,10 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:text="@string/titre_menu_principal" />
-		
-        <RelativeLayout
-            android:id="@+id/gpsStatusLayout"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            
-            android:layout_alignParentBottom="true"
-            android:layout_centerHorizontal="true"
-            android:background="@drawable/border1" >
-            <Button
-                android:id="@+id/gpsStatus"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:background="@drawable/background_button1"
-                android:padding="2dp"
-                android:textSize="22sp"
-                android:text="@string/gps_status_offline"
-                android:textColor="@color/error" />
-        </RelativeLayout>
         
         <ListView
             android:id="@+id/liste_fonctions"
             android:layout_below="@id/titre_menu_principal"
-            android:layout_above="@id/gpsStatusLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dip"

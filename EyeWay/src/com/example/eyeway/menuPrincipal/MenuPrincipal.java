@@ -1,5 +1,7 @@
 package com.example.eyeway.menuPrincipal;
 
+import java.util.ArrayList;
+
 import com.example.eyeway.R;
 import com.example.eyeway.Map.Map;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
@@ -29,57 +31,28 @@ import android.widget.AdapterView.OnItemClickListener;
  *
  */
 
-public class MenuPrincipal extends Activity implements OnClickListener,OnItemClickListener, GpsStatus.Listener {
+public class MenuPrincipal extends Activity implements OnClickListener,OnItemClickListener {
 	private Button gps_status;
 	private ListView list_menu;
-	private LocationManager locationManager;
-	private GpsStatus.Listener mGpsListener;
-	private final int GPS_READY=0;
-	private final int GPS_OFF_LINE=1;
-	private final int GPS_ON_LINE=2;
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		//setTheme(R.style.Theme_perso);
 		setContentView(R.layout.activity_menu_principal);
-		Fonctionnalite tab_fonctionnalite []= new Fonctionnalite[]{
-				new Fonctionnalite(R.drawable.text_field,"Saisir destination"),
-				new Fonctionnalite(R.drawable.eye,"Navigation instantannée"),
-				new Fonctionnalite(R.drawable.star,"Gérer les points d'intérêt"),
-				new Fonctionnalite(R.drawable.find_area,"Rechercher dans une zone"),
-				new Fonctionnalite(R.drawable.default_image,"Realite"),
-				new Fonctionnalite(R.drawable.default_image,"Map"),
-				new Fonctionnalite(R.drawable.default_image,"Fouille")
-		};
-		ListAdapter adapter= new ListAdapter(this,R.layout.ligne_menu,tab_fonctionnalite);
+		ArrayList<Fonctionnalite> tab_fonctionnalite =new ArrayList<Fonctionnalite>();
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.text_field,"Recherche par mot clé"));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.find_area,"Recherche dans une zone"));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.eye,"Navigation instantannée"));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.star,"Gérer les points d'intérêt"));
+		ListAdapter adapter=new ListAdapter(this,R.layout.ligne_menu,tab_fonctionnalite);
 		list_menu = (ListView)findViewById(R.id.liste_fonctions);
 		//View header = (View)getLayoutInflater().inflate(R.layout.ligne_menu, null);
 		//list_menu.addHeaderView(header);
 		list_menu.setAdapter(adapter);
-		list_menu.setOnItemClickListener(this);
-		gps_status=(Button)findViewById(R.id.gpsStatus);
-		gps_status.setOnClickListener(this);
-		locationManager= (LocationManager) getSystemService(LOCATION_SERVICE);
+		list_menu.setOnItemClickListener(this);	
 	}
-	/**
-	 * Méthode qui sera appellée pour changer l'affichage du bouton en fonction du status du GPS
-	 * @param status
-	 */
-	public void changerAffichageGpsStatus(int status){
-		switch(status){
-		case GPS_READY : 
-			break;
-		case GPS_OFF_LINE :
-			break;
-		case GPS_ON_LINE :
-			break;
-		}
-		if (locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-			gps_status.setText("Gps Activé");
-			gps_status.setTextColor(R.color.plus_clair);
-		}
-	}
+	
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_menu_principal, menu);
@@ -89,24 +62,11 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 	@Override
 	public void onClick(View v) {
 		// TODO Auto-generated method stub
-		if(v.getId()==gps_status.getId()){
-			//différents cas :
-			//Le gps peut etre activé ou non
-			//Si le gps n'est pas activé
-			if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)){
-				startActivityForResult(new Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS),0);
-			}else 
-			//le gps est activé
-			{
-				Toast.makeText(getApplicationContext(), "GPS deja activé", Toast.LENGTH_SHORT).show();
-				
-			}
-		}
+		
 	}
 
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
-		// TODO Auto-generated method stub
 		if(arg0.getId()==list_menu.getId()){
 			//if(v.getId()==R.id.gpsStatus.getId()){
 			Intent monIntent;
@@ -115,7 +75,8 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 				Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
 				break;
 			case 1 : 
-				Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
+				monIntent= new Intent(this,RecherchePerimetre.class);
+				startActivity(monIntent);
 				break;
 			case 2 : 
 				Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
@@ -123,44 +84,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 			case 3 : 
 				Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
 				break;
-			case 4 : 
-				monIntent  = new Intent(this,RealiteAugmente.class);
-				startActivity(monIntent);
-				break;
-			case 5 : 
-				monIntent = new Intent(this,Map.class);
-				startActivity(monIntent);
-				break;
-			case 6 : 
-				monIntent = new Intent(this,FouilleDonnee.class);
-				startActivity(monIntent);
-				break;  
-			}	
+			}
 		}
-	}
-	
-	@Override
-	public void onGpsStatusChanged(int event) {
-		/*
-		switch (event) {
-        case GpsStatus.GPS_EVENT_SATELLITE_STATUS:
-        	boolean isGPSFix=false;
-        	if (mLastLocation != null){
-             isGPSFix = (SystemClock.elapsedRealtime() - mLastLocationMillis) < 3000;
-        	}
-            if (isGPSFix) { // A fix has been acquired.
-                changerAffichageGpsStatus(GPS_ON_LINE);
-            	// Do something.
-            } else { // The fix has been lost.
-            	changerAffichageGpsStatus(GPS_OFF_LINE);
-            	// Do something.
-            }
-
-            break;
-        case GpsStatus.GPS_EVENT_FIRST_FIX:
-            // Do something.
-        	 changerAffichageGpsStatus(GPS_ON_LINE);
-            break;
-    }*/
 	}
 }

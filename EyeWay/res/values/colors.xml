@@ -2,7 +2,7 @@
 <resources>
     <color name="border1_start">#5875B1</color>
     <color name="border1_end">#ACBAD8</color>
-    <color name="text_clear">#CFCFCF</color>
+    <color name="text_clear">#0097C5</color>
     <color name="plus_clair">#5875B1</color>
     <color name="error">#8B0C21</color>
 </resources>

@@ -1,0 +1,129 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="fill_parent"
+    android:layout_height="fill_parent" >
+	
+    <include
+        android:id="@+id/titlebar"
+        layout="@layout/titlebar" />
+	<!-- Layout inutile qui sert juste a recuperer le focus, pour empecher que l'edit text gagne le focus dès le lancement -->
+	<LinearLayout
+    android:focusable="true"
+    android:focusableInTouchMode="true"
+    android:layout_width="0px"
+    android:layout_height="0px"/>
+    	
+    <RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_below="@id/titlebar"
+        android:background="@drawable/background_application" >
+		<TextView
+            android:id="@+id/titre_recherche_perimetre"
+            android:textColor="#5440A4"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/titre_recherche_perimetre" />
+		
+        <TableLayout
+            android:id="@+id/table_formulaire"
+            android:layout_margin="10dp"
+            android:layout_below="@id/titre_recherche_perimetre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" >
+
+            <TableRow
+                android:id="@+id/tableRow1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/texte_choix_position"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:maxWidth="100dp"
+                    android:text="@string/titre_choix_position" />
+
+                <Spinner
+                    android:id="@+id/spinner_choix_position"
+                    android:layout_width="200dip"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/array_choix_position" />
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    android:id="@+id/texte_distance"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/titre_distance" />
+                <!-- Impossible de definir une max width en pourcentage de la width totale ... -->
+
+                <EditText
+                    android:id="@+id/editText1"
+                    android:nextFocusUp="@id/editText1"
+                    android:nextFocusLeft="@id/editText1"
+                    android:layout_width="200dip"
+                    android:layout_height="wrap_content"
+                    android:inputType="number" >
+                </EditText>
+            </TableRow>
+
+            <TableRow
+                android:id="@+id/tableRow3"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content" >
+
+                <TextView
+                    
+                    android:id="@+id/texte_ajout_type"
+                    android:text="@string/titre_ajout_type"
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content" />
+				<RelativeLayout
+				    android:layout_width="200dip"
+                	android:layout_height="wrap_content"
+                	>
+                <Spinner
+                    android:id="@+id/spinner_selection_type"
+                    android:singleLine="false"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:entries="@array/array_type" />
+
+                <Button
+                    android:id="@+id/bouton_ajout_type"
+                    android:layout_toRightOf="@id/spinner_selection_type"
+                    android:text="@string/bouton_ajout_type"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content" />
+				</RelativeLayout>
+            </TableRow>
+        </TableLayout>
+        <ListView
+                    android:id="@+id/liste_types"
+                    android:layout_below="@id/table_formulaire"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:background="@drawable/border1"
+                    android:divider="#A3B5FB"
+                    android:dividerHeight="1dip"
+                    android:drawSelectorOnTop="false"
+                    android:headerDividersEnabled="true"
+                    android:overScrollHeader="#F7F2B2" >
+                </ListView>
+
+        <Button
+            android:id="@+id/bouton_validation_formulaire"
+            android:text="@string/action_rechercher"
+            android:layout_below="@id/liste_types"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+    </RelativeLayout>
+
+</RelativeLayout>
