@@ -17,6 +17,7 @@ import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.view.Menu;
@@ -103,7 +104,44 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 			getMenuInflater().inflate(R.menu.activity_menu_principal, menu);
 			return true;
 		}
+		
+		/**
+		 * Boite de dialogue qui s'ouvre lors du clic sur le calcul d'itinéraire
+		 */
+		void showBoiteChoix() {
 
+			// Création de l'AlertDialog
+			AlertDialog.Builder adb = new AlertDialog.Builder(this);
+
+			// On donne un titre à l'AlertDialog
+			adb.setTitle("Choix Visualisation");
+
+			// On modifie l'icône de l'AlertDialog pour le fun ;)
+			adb.setIcon(R.drawable.info);
+
+			// adb.setCancelable(true);
+			String[] choix = { "Map", "Réalité augmenté"};
+
+			adb.setItems(choix, new DialogInterface.OnClickListener() {
+				public void onClick(DialogInterface dialog, int which) {
+					Intent intent ;
+					if(which == 0){
+						
+						intent = new Intent(getApplicationContext(), Map.class);
+					}else{
+					intent = new Intent(getApplicationContext(),RealiteAugmente.class);
+					intent.putExtra("methode", "proximite");
+					intent.putExtra("distance", distance);
+					intent.putExtra("types", getArrayListeTypes());
+					}
+					startActivity(intent);
+					
+					dialog.dismiss();
+				}
+			});
+
+			adb.show();
+		}
 		@Override
 		public void onClick(View v) {
 			// TODO Auto-generated method stub
@@ -115,6 +153,8 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 				Toast.makeText(getApplicationContext(),type_selectionne,Toast.LENGTH_LONG).show();
 				adapter_list_view_types.add(new Fonctionnalite(R.drawable.delete,type_selectionne));
 			}else if(v.getId()==R.id.bouton_validation_formulaire){
+			
+			
 				/**
 				 * Recuperer toutes les valeurs du formulaire et les soumettre a la requete : 
 				 */
@@ -130,32 +170,23 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 					lat =47.8686030;
 					lng =1.9124340; 
 				}
+				try{
 				distance=Integer.parseInt(edit_text_distance.getText().toString());
+				}catch(NumberFormatException e){
+					Toast.makeText(getApplicationContext(), "Entrer un entier pour la distance", Toast.LENGTH_SHORT).show();
+				}
 				//convertir la liste des types en concaténation dans une string
 				ArrayList<String> types_saisis=getArrayListeTypes();
 				//Faire la requete
-				FouilleDonnee fd=new FouilleDonnee();
-				ArrayList<Lieu> Lieux=fd.getLieuProximiteParType(lat,lng,types_saisis,distance);
-				if(Lieux.size()==0){
-					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-			        alertDialog.setTitle("Resultat de la requete");
-			        alertDialog.setMessage("Aucun resultat correspondant aux critères n'a été trouvé.");
-			        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			              // here you can add functions
-			           }
-			        });
-			        alertDialog.show();
+				
+				
+				if(types_saisis.size()==0){
+					
+					Toast.makeText(getApplicationContext(), "Entrer au moins un type de batiment", Toast.LENGTH_SHORT).show();
+
 				}else {
-					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-			        alertDialog.setTitle("Resultat de la requete");
-			        alertDialog.setMessage("Aucun resultat correspondant aux critères n'a été trouvé.");
-			        alertDialog.setButton("OK", new DialogInterface.OnClickListener() {
-			           public void onClick(DialogInterface dialog, int which) {
-			              // here you can add functions
-			           }
-			        });
-			        alertDialog.show();
+					
+					showBoiteChoix();
 				}
 				//				
 			}

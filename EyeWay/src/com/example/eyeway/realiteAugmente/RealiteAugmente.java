@@ -26,6 +26,7 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -48,8 +49,12 @@ public class RealiteAugmente extends Activity implements LocationListener,
 	private ArrayList<Icon> icons;
 	private boolean creation = true;
 	int rotation = 0;
+	private int distance ;
 	ImageView im;
-
+	ArrayList<Lieu> lieux; 
+	ArrayList<String> types ;
+	private String methode ;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -57,12 +62,19 @@ public class RealiteAugmente extends Activity implements LocationListener,
 
 		// On lie notre classe au layout
 		setContentView(R.layout.activity_realite_augmente);
-
+		Bundle b = getIntent().getExtras();
+		methode = b.getString("methode");
+		
+		types = (ArrayList<String>) b.get("types");
+		distance = b.getInt("distance");
+		
+		
 		FrameLayout l = (FrameLayout) findViewById(R.id.main);
 
 		// On rend notre écran cliquable avec taphold
 		l.setOnLongClickListener(this);
-
+		
+		
 		// On initialise nos écouteurs
 		initialisationEcouteursGPS();
 		initialisionEcouteurAccelerometre();
@@ -82,7 +94,7 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		// On initialise avec un temps suffisant pour le jeu
 		sensorMngr.registerListener(sensorLstr,
 				sensorMngr.getDefaultSensor(Sensor.TYPE_ORIENTATION),
-				SensorManager.SENSOR_DELAY_GAME);
+				SensorManager.SENSOR_DELAY_UI);
 	}
 
 	/**
@@ -139,27 +151,32 @@ public class RealiteAugmente extends Activity implements LocationListener,
 	public void initialisationFenetre() {
 
 		this.icons = new ArrayList<Icon>();
-
+		
 		FouilleDonnee fd = new FouilleDonnee();
-		ArrayList<String> types=new ArrayList<String>();
-		types.add(new String("restaurant"));
-		// On récupère les lieux à proximité
-		ArrayList<Lieu> lieux = fd.getLieuProximiteParType(
+		
+		if(methode.equals("proximite")){
+		
+			lieux = fd.getLieuProximiteParType(
 				myLocation.getLatitude(), myLocation.getLongitude(),
-				types, 30000);
+				types, distance);
+		}
+		
 		Lieu l;
 		Icon ic;
 
 		// On récupère le context
-		ctx = this;
-
-		StringBuffer type;
+				ctx = this;
+				
+		if(lieux.size() == 0){
+			
+			Toast.makeText(ctx, "Aucun résultat pour votre recherche", Toast.LENGTH_SHORT).show();
+		}
+		
 
 		// Pour tous les lieux
 		for (int i = 0; i < lieux.size(); i++) {
 
-			type = new StringBuffer("");
-
+			
 			// On récupère le lieu
 			l = lieux.get(i);
 			
@@ -442,7 +459,7 @@ public class RealiteAugmente extends Activity implements LocationListener,
 					if (myLocation != null) {
 
 						final float vals[] = evt.values;
-						final float azimut = vals[0];
+						final float azimut = vals[0] - 180;
 						final float roll = vals[2];
 						final float pitch = Math.abs(vals[1]);
 						Icon ic;
