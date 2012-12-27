@@ -127,11 +127,9 @@ public class RealiteAugmente extends Activity implements LocationListener,
 	 *            - Lattitude du point GPS
 	 * @return - Retourne une nouvelle icone dans un linearLayout
 	 */
-	public Icon newIcons(String name, String type ,String description, double longitude,
-			double latitude) {
+	public Icon newIcons(Lieu l) {
 
-		return new Icon(ctx, null, name, description, type, latitude, longitude,
-				myLocation);
+		return new Icon(ctx,null,l,myLocation);
 
 	}
 
@@ -163,17 +161,9 @@ public class RealiteAugmente extends Activity implements LocationListener,
 
 			// On récupère le lieu
 			l = lieux.get(i);
-
-			// On récupère son type
-			for (int j = 0; j < l.getTypes().size(); j++) {
-
-				type.append(l.getTypes().get(j) + " ");
-
-			}
-
+			
 			// On créer un nouvel icon
-			ic = newIcons(l.getNom(), type.toString(),"", l.getLongitude(),
-					l.getLatitude());
+			ic = newIcons(l);
 
 			ajoutIcon(ic);
 		}
@@ -595,8 +585,11 @@ public class RealiteAugmente extends Activity implements LocationListener,
 						TextView description = (TextView) alertDialogView
 								.findViewById(R.id.description);
 						
+						EditText edit = (EditText) alertDialogView
+								.findViewById(R.id.modifAdresse);
+						
 						Icon i = new Icon(ctx, im, nom.getText().toString(),
-								description.getText().toString(),"nouveau", myLocation
+								description.getText().toString(),"nouveau",edit.getText().toString(), myLocation
 										.getLatitude(), myLocation
 										.getLongitude(), myLocation);
 						ajoutIcon(i);
