@@ -23,15 +23,24 @@ public class ListAdapter extends ArrayAdapter<Fonctionnalite> {
     private static LayoutInflater inflater=null;
     Context context; 
     int layoutResourceId;    
-    Fonctionnalite data[] = null;
+    ArrayList<Fonctionnalite> data= null;
     
-    public ListAdapter(Context context, int layoutResourceId, Fonctionnalite[] data) {
+    public ListAdapter(Context context, int layoutResourceId, ArrayList<Fonctionnalite> data) {
         super(context, layoutResourceId, data);
         this.layoutResourceId = layoutResourceId;
         this.context = context;
         this.data = data;
     }
- 	
+ 	public void add(Fonctionnalite f){
+ 		if(!data.contains(f)){
+ 			data.add(f);
+ 			notifyDataSetChanged();
+ 		}
+ 	}
+ 	public void remove(int index){
+ 		data.remove(index);
+ 		notifyDataSetChanged();
+ 	}
     public View getView(int position, View convertView, ViewGroup parent) {
         View row=convertView;
         FonctionnaliteHolder holder=null;
@@ -43,12 +52,11 @@ public class ListAdapter extends ArrayAdapter<Fonctionnalite> {
         	holder.txtTitle=(TextView)row.findViewById(R.id.texte_ligne);
         	row.setTag(holder);
         }
-        else {
-        	
+        else {	
         	holder=(FonctionnaliteHolder)row.getTag();
         }
         
-        Fonctionnalite f=data[position];
+        Fonctionnalite f=data.get(position);
         holder.txtTitle.setText(f.title);
         holder.imgIcon.setImageResource(f.icon);   
         return row;
