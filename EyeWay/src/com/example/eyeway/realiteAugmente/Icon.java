@@ -17,6 +17,9 @@ import android.widget.Toast;
 
 import com.example.eyeway.R;
 import com.example.eyeway.Map.Map;
+import com.example.eyeway.fouilleDedonne.DetailLieu;
+import com.example.eyeway.fouilleDedonne.FouilleDonnee;
+import com.example.eyeway.fouilleDedonne.Lieu;
 import com.google.android.maps.GeoPoint;
 
 public class Icon extends LinearLayout {
@@ -28,7 +31,9 @@ public class Icon extends LinearLayout {
 	private Context ctx;
 	private String name;
 	private String description;
-
+	private String adresse ;
+	private Lieu lieu ;
+	
 	public Icon(Context context, Activity a) {
 		super(context);
 	}
@@ -47,12 +52,36 @@ public class Icon extends LinearLayout {
 	 * @param myLocation
 	 */
 	public Icon(Context context, ImageView Imview, String name,
-			String description,String type, double latitude, double longitude,
+			String description,String type,String adresse, double latitude, double longitude,
 			Location myLocation) {
 		
 		super(context);
+		this.adresse = adresse;
 		this.description = description;
 		this.name = name;
+		this.lieu = null ;
+		creerIcon(context, Imview, latitude, longitude, myLocation, type);
+	}
+
+	public Icon(Context context, ImageView im , Lieu l , Location myLocation){
+		super(context);
+	
+		lieu = l ;
+		StringBuffer type = new StringBuffer("");
+		// On récupère son type
+		for (int j = 0; j < l.getTypes().size(); j++) {
+
+			type.append(l.getTypes().get(j) + " ");
+
+		}
+		
+		creerIcon(context, im, l.getLatitude(), l.getLongitude(), myLocation, type.toString());
+		
+	}
+	
+	private void creerIcon(Context context, ImageView Imview, double latitude, double longitude,
+			Location myLocation,String type){
+		
 		ctx = context;
 		label = new TextView(context);
 
@@ -100,8 +129,8 @@ public class Icon extends LinearLayout {
 		// On ajoute l'icon et son label à la vue
 		this.addView(icon);
 		this.addView(label);
-
 	}
+	
 
 	/**
 	 * Permet de choisir l'image de l'icon en fonction de son type
@@ -230,11 +259,8 @@ public class Icon extends LinearLayout {
 		adb.setIcon(R.drawable.info);
 
 		ImageView image = (ImageView) alertDialogView.findViewById(R.id.image);
-
-		// image.setBackgroundResource(R.drawable.ajouterpop);
-		Toast.makeText(ctx, (photoDescription == null) + "", Toast.LENGTH_LONG)
-				.show();
-		// image.setBackgroundDrawable(photoDescription.getDrawable());
+		
+		
 		image.setImageDrawable(photoDescription.getBackground());
 		TextView text = (TextView) alertDialogView.findViewById(R.id.titre);
 		text.setText(name);
@@ -244,9 +270,17 @@ public class Icon extends LinearLayout {
 
 		text = (TextView) alertDialogView.findViewById(R.id.distance);
 		text.setText(this.label.getText());
+		text = (TextView) alertDialogView.findViewById(R.id.adresse);
 
-		// adb.setCancelable(true);
-
+		if(lieu != null){
+			FouilleDonnee fd = new FouilleDonnee();
+			DetailLieu detail = fd.getDetails(lieu.getReference());
+			text.setText(detail.toString());
+		}else{
+		
+			text.setText(this.adresse);
+		}
+		
 		adb.setPositiveButton("Itinéraire",
 				new DialogInterface.OnClickListener() {
 					public void onClick(DialogInterface dialog, int which) {
