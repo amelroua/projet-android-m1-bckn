@@ -1,130 +1,140 @@
 package com.example.eyeway.realiteAugmente;
 
+import java.util.StringTokenizer;
 
-
-
-
-
-import com.example.eyeway.R;
-import com.example.eyeway.Map.Map;
-import com.google.android.maps.GeoPoint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
-import android.graphics.Point;
-import android.graphics.drawable.BitmapDrawable;
 import android.location.Location;
-
-import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
-
-
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.PopupWindow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eyeway.R;
+import com.example.eyeway.Map.Map;
+import com.google.android.maps.GeoPoint;
 
-public class Icon extends LinearLayout{
+public class Icon extends LinearLayout {
 
+	private TextView label;
+	private ImageView icon;
+	private ImageView photoDescription;
+	private GeoPoint geoPoint;
+	private Context ctx;
+	private String name;
+	private String description;
 
-
-	//The "x" and "y" position of the "Show Button" on screen.
-	Point p;
-	private TextView label ;
-	private ImageView icon ;
-	private ImageView photoDescription ;
-	private GeoPoint geoPoint ;
-	private Context ctx ;
-	private View layout ;
-	private String name ;
-	private String description ;
 	public Icon(Context context, Activity a) {
 		super(context);
 	}
 
-
-
-	/// TEST ///
-
-
-
-	//////////////////
-
-
-	public Icon(Context c , ImageView Imview ,String name , String description , double latitude , double longitude, Location myLocation){
-
-
-		super(c);
-		this.description = description ;
-		this.name = name ;
-		ctx = c ;
-		label = new TextView(c);
-
-
+	/**
+	 * Permet de créer un icon en fonction de tout les paramètres
+	 * 
+	 * @param context
+	 *            - Context de l'application
+	 * @param Imview
+	 *            -
+	 * @param name
+	 * @param description
+	 * @param latitude
+	 * @param longitude
+	 * @param myLocation
+	 */
+	public Icon(Context context, ImageView Imview, String name,
+			String description,String type, double latitude, double longitude,
+			Location myLocation) {
+		
+		super(context);
+		this.description = description;
+		this.name = name;
+		ctx = context;
+		label = new TextView(context);
 
 		// On ajoute notre nouveau point GPS
-		geoPoint = new GeoPoint((int) (latitude * 100000), (int) (longitude * 100000)) ;
+		geoPoint = new GeoPoint((int) (latitude * 100000),
+				(int) (longitude * 100000));
 		Location location = new Location("myprovider");
 		location.setLatitude(latitude);
 		location.setLongitude(longitude);
 
+		// On calcule la distance entre nous et le POI
 		double distance = calculDistance(myLocation, location);
 
+		// On modifie le label
 		this.modifierLabel(distance);
-		icon = new ImageView(c);
+		icon = new ImageView(context);
+
+		StringTokenizer tok = new StringTokenizer(type, " ");
+		String typeTemp = tok.nextToken();
 		
-	
+		photoDescription = new ImageView(context);
 
+		if (Imview == null) {
 
+			// On choisi l'icon en fonction du type
+			choixIcon(typeTemp);
+			photoDescription = icon;
+
+		} else {
 			
+			icon.setBackgroundResource(R.drawable.favorite);
+			photoDescription = icon;
 
-			if (name.equalsIgnoreCase("restaurant")) {
+		}
 
-				icon.setBackgroundResource(R.drawable.restaurant);
-
-			} else {
-				
-				icon.setBackgroundResource(R.drawable.img_epingle);
-			}
-
-			photoDescription = new ImageView(c);
-		
-			if(Imview == null){
-				
-				
-				photoDescription = icon;
-			
-				}else{
-
-				photoDescription = Imview;
-			
-			}
-		
 		icon.setClickable(true);
 
 		icon.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-
-
 				showBoiteInformation();
-
-
 			}
 		});
 
+		// On ajoute l'icon et son label à la vue
 		this.addView(icon);
 		this.addView(label);
 
 	}
 
+	/**
+	 * Permet de choisir l'image de l'icon en fonction de son type
+	 * 
+	 * @param type
+	 *            - Type du POI
+	 */
+	private void choixIcon(String type) {
 
-	private void modifierLabel(double distance){
+		if (type.equalsIgnoreCase("restaurant")) {
+
+			icon.setBackgroundResource(R.drawable.restaurant);
+
+		} else {
+
+			if (type.equalsIgnoreCase("Bar")) {
+
+				icon.setBackgroundResource(R.drawable.cocktail);
+
+			} else {
+				icon.setBackgroundResource(R.drawable.img_epingle);
+			}
+		}
+	}
+
+	/**
+	 * Permet de modifier le label de l'icon Le label correspond à la distance
+	 * entre nous et le POI
+	 * 
+	 * @param distance
+	 *            - Distance entre nous et le POI
+	 */
+	private void modifierLabel(double distance) {
 
 		if (distance > 1000) {
 
@@ -138,194 +148,133 @@ public class Icon extends LinearLayout{
 
 	}
 
+	/**
+	 * Permet de mettre à jour le label à l'aide de notre nouvelle localisation
+	 * 
+	 * @param myLocation
+	 *            - La localisation actuelle de l'utilisateur
+	 */
 	public void miseAJourLabel(Location myLocation) {
 
 		Location l = new Location("myProvider");
-		l.setLatitude(this.getLatitude() / 100000);
-		l.setLongitude(this.getLongitude() / 100000);
+		l.setLatitude(this.getLatitude() / 100000.0);
+		l.setLongitude(this.getLongitude() / 100000.0);
 
-		double distance = calculDistance(myLocation,l);
+		double distance = calculDistance(myLocation, l);
 		modifierLabel(distance);
 	}
 
+	/**
+	 * Calcul la distance entre deux localisations
+	 * 
+	 * @param a
+	 *            - Premiere localisation
+	 * @param b
+	 *            - Seconde localisation
+	 * @return - Distance entre les deux localisations
+	 */
 	public static double calculDistance(Location a, Location b) {
 
 		return a.distanceTo(b);
 
 	}
 
+	/**
+	 * Boite de dialogue qui s'ouvre lors du clic sur le calcul d'itinéraire
+	 */
+	void showBoiteChoix() {
 
-	// ---------- Essai PopPup ---------
+		// Création de l'AlertDialog
+		AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
 
-
-
-	void showBoiteChoix(){
-
-
-
-
-
-
-
-		//Création de l'AlertDialog
-		AlertDialog.Builder adb = new AlertDialog.Builder(ctx );
-
-		//adb.setView(alertDialogView);
-
-		//On affecte la vue personnalisé que l'on a crée à notre AlertDialog
-		//adb.setView(alertDialogView);
-
-		//On donne un titre à l'AlertDialog
+		// On donne un titre à l'AlertDialog
 		adb.setTitle("Choix Itinéraire");
 
-		//On modifie l'icône de l'AlertDialog pour le fun ;)
+		// On modifie l'icône de l'AlertDialog pour le fun ;)
 		adb.setIcon(R.drawable.info);
 
-
-
-		//  adb.setCancelable(true);
-		String [] choix = {"Map","Réalité Augmentée"};
-
+		// adb.setCancelable(true);
+		String[] choix = { "Map" };
 
 		adb.setItems(choix, new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-				Intent monIntent = new Intent(ctx,Map.class);
+				Intent monIntent = new Intent(ctx, Map.class);
 				ctx.startActivity(monIntent);
 				dialog.dismiss();
 			}
 		});
 
-
-
 		adb.show();
 	}
 
-
+	/**
+	 * Permet d'afficher les informations d'une icon
+	 */
 	void showBoiteInformation() {
 
-		//On instancie notre layout en tant que View
+		// On instancie notre layout en tant que View
 		LayoutInflater factory = LayoutInflater.from(ctx);
-		final View alertDialogView = factory.inflate(R.layout.popup_layout, null);
+		final View alertDialogView = factory.inflate(R.layout.popup_layout,
+				null);
 
-
-		//Création de l'AlertDialog
+		// Création de l'AlertDialog
 		AlertDialog.Builder adb = new AlertDialog.Builder(ctx);
 
-		//On affecte la vue personnalisé que l'on a crée à notre AlertDialog
+		// On affecte la vue personnalisé que l'on a crée à notre AlertDialog
 		adb.setView(alertDialogView);
-		
-		//On donne un titre à l'AlertDialog
+
+		// On donne un titre à l'AlertDialog
 		adb.setTitle("Informations");
 
-		//On modifie l'icône de l'AlertDialog pour le fun ;)
+		// On modifie l'icône de l'AlertDialog pour le fun ;)
 		adb.setIcon(R.drawable.info);
-		
+
 		ImageView image = (ImageView) alertDialogView.findViewById(R.id.image);
-	
-		//image.setBackgroundResource(R.drawable.ajouterpop);
-		Toast.makeText(ctx, (photoDescription == null) + "", Toast.LENGTH_LONG).show();
-		//image.setBackgroundDrawable(photoDescription.getDrawable());
+
+		// image.setBackgroundResource(R.drawable.ajouterpop);
+		Toast.makeText(ctx, (photoDescription == null) + "", Toast.LENGTH_LONG)
+				.show();
+		// image.setBackgroundDrawable(photoDescription.getDrawable());
 		image.setImageDrawable(photoDescription.getBackground());
 		TextView text = (TextView) alertDialogView.findViewById(R.id.titre);
 		text.setText(name);
 
-
 		text = (TextView) alertDialogView.findViewById(R.id.description);
 		text.setText(description);
-
 
 		text = (TextView) alertDialogView.findViewById(R.id.distance);
 		text.setText(this.label.getText());
 
-		//  adb.setCancelable(true);
+		// adb.setCancelable(true);
 
-		adb.setPositiveButton("Itinéraire", new DialogInterface.OnClickListener() {
-			public void onClick(DialogInterface dialog, int which) {
+		adb.setPositiveButton("Itinéraire",
+				new DialogInterface.OnClickListener() {
+					public void onClick(DialogInterface dialog, int which) {
 
-				showBoiteChoix();
+						showBoiteChoix();
 
-			}
-		});
+					}
+				});
 		// On crée un bouton "Annuler" à notre AlertDialog et on lui affecte un
 		// évènement
 		adb.setNegativeButton("Fermer", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 
-
-
 			}
 		});
 
 		adb.show();
 
-
 	}
 
-	// Get the x and y position after the button is draw on screen
-	// (It's important to note that we can't get the position in the onCreate(),
-	// because at that stage most probably the view isn't drawn yet, so it will return (0, 0))
-	@Override
-	public void onWindowFocusChanged(boolean hasFocus) {
-
-		int[] location = new int[2];
-
-		// Get the x, y location and store it in the location[] array
-		// location[0] = x, location[1] = y.
-		icon.getLocationOnScreen(location);
-
-		//Initialize the Point with x, and y positions
-		p = new Point();
-		p.x = location[0];
-		p.y = location[1];
-	}
-
-	// The method that displays the popup.
-	void showPopup(Point p) {
-		int popupWidth = 400;
-		int popupHeight = 300;
-
-		// Inflate the popup_layout.xml
-		LinearLayout viewGroup = (LinearLayout) ((Activity) ctx).findViewById(R.id.popup);
-		LayoutInflater layoutInflater = (LayoutInflater) ctx
-				.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		layout = layoutInflater.inflate(R.layout.popup_layout, viewGroup);
-
-		// Creating the PopupWindow
-		final PopupWindow popup = new PopupWindow(ctx);
-		popup.setContentView(layout);
-		popup.setWidth(popupWidth);
-		popup.setHeight(popupHeight);
-		popup.setFocusable(true);
-
-		// Some offset to align the popup a bit to the right, and a bit down, relative to button's position.
-		int OFFSET_X = 30;
-		int OFFSET_Y = 30;
-
-		// Clear the default translucent background
-		popup.setBackgroundDrawable(new BitmapDrawable());
-
-		// Displaying the popup at the specified location, + offsets.
-		popup.showAtLocation(layout, Gravity.NO_GRAVITY, p.x + OFFSET_X, p.y + OFFSET_Y);
-		/*
-	   // Getting a reference to Close button, and close the popup when clicked.
-	   Button close = (Button) layout.findViewById(R.id.close);
-	   close.setOnClickListener(new OnClickListener() {
-
-	     @Override
-	     public void onClick(View v) {
-	       popup.dismiss();
-	     }
-	   });
-		 */
-	}
 	// ------------- GETTERS AND SETTERS --------------------
 
-	public double getLatitude(){
+	public double getLatitude() {
 
 		return this.geoPoint.getLatitudeE6();
 	}
 
-	public double getLongitude(){
+	public double getLongitude() {
 
 		return this.geoPoint.getLongitudeE6();
 	}
@@ -361,6 +310,5 @@ public class Icon extends LinearLayout{
 	public void setCtx(Context ctx) {
 		this.ctx = ctx;
 	}
-
 
 }
