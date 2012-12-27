@@ -45,7 +45,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 		int distance;
 		String types;
 		//
-		private ArrayList<Fonctionnalite> ensemble_types;
+		private ArrayList<Fonctionnalite> ensemble_types;//ne pas faire de add sur ce tableau, mais sur le listAdapter
 		private EditText edit_text_distance;
 		private ListView list_types_selectionnes;
 		private Button bouton_ajout_type;
@@ -53,10 +53,10 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 		private ListAdapter adapter_list_view_types;
 		//la liste des choix pour le centre du perimetre : Autour de ma position, Autour d'une position donnée
 		//pour ce spinner, on reagit directement a l'evenement de selection
-		private  Spinner spinner_choix_position; 
+		private Spinner spinner_choix_position; 
 		//la liste des choix de types : Restaurant, Piscine ...
 		//Pour ce spinner, on ne reagit pas directement a la selection mais apres clique sur le bouton bouton_ajout_type on recupere la valeur selectionnée
-		private  Spinner spinner_selection_type;
+		private Spinner spinner_selection_type;
 		//private ArrayAdapter adapter_spinner_selection_type;
 		//private ArrayAdapter adapter_spinner_types;
 		@Override
@@ -70,7 +70,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 			 */
 			//ensemble_types=new HashSet<Fonctionnalite>();
 			ensemble_types =new ArrayList<Fonctionnalite>();
-			adapter_list_view_types= new ListAdapter(this,R.layout.ligne_menu,ensemble_types);
+			adapter_list_view_types= new ListAdapter(this,R.layout.ligne_liste_type,ensemble_types); //A CHANGER
 			list_types_selectionnes = (ListView)findViewById(R.id.liste_types);
 			edit_text_distance=(EditText) findViewById(R.id.editText1);
 			//View header = (View)getLayoutInflater().inflate(R.layout.ligne_menu, null);
@@ -84,8 +84,15 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 			bouton_validation_formulaire=(Button) findViewById(R.id.bouton_validation_formulaire);
 			bouton_validation_formulaire.setOnClickListener(this);
 			//
+			
 			spinner_choix_position = (Spinner) findViewById(R.id.spinner_choix_position);
+			/**
+			 * La liste déroulante des types de lieux : on recupere le contenu dans FouilleDonnee
+			 */
 			spinner_selection_type = (Spinner) findViewById(R.id.spinner_selection_type);
+			ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,android.R.layout.simple_spinner_item,FouilleDonnee.types_place_fr);
+			dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+			spinner_selection_type.setAdapter(dataAdapter);
 			//adapter_spinner_selection_type = new ArrayAdapter(this,android.R.layout.simple_spinner_item, array_spinner);
 			//spinner_selection_type.setAdapter(adapter);
 			spinner_choix_position.setOnItemSelectedListener(this);
@@ -117,7 +124,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 				if(centre==centre_perimetre.Autour_De_Ma_Position){
 					//TODO mettre de vraies valeurs pour la position actuelle
 					lat =47.8686030;
-					lng =1.9124340; 
+					lng =1.9124340;
 				}else if(centre==centre_perimetre.Autour_Dune_autre_position){
 					//TODO envoyer l'utilisateur vers la carte et lui faire selectionner un point
 					lat =47.8686030;
@@ -125,7 +132,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 				}
 				distance=Integer.parseInt(edit_text_distance.getText().toString());
 				//convertir la liste des types en concaténation dans une string
-				String types_saisis=convertirListeTypes();
+				ArrayList<String> types_saisis=getArrayListeTypes();
 				//Faire la requete
 				FouilleDonnee fd=new FouilleDonnee();
 				ArrayList<Lieu> Lieux=fd.getLieuProximiteParType(lat,lng,types_saisis,distance);
@@ -149,18 +156,15 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 			           }
 			        });
 			        alertDialog.show();
-					
 				}
-				//
-				
+				//				
 			}
 		}
-		public String convertirListeTypes(){
-			String res="";
+		public ArrayList<String> getArrayListeTypes(){
+			ArrayList<String> res=new ArrayList<String>();
 			for(int i=0; i<adapter_list_view_types.getCount(); i++){
-				res+=adapter_list_view_types.getItem(i).title+" "; //je sépare les types par un espaces, donc on aura :
+				res.add(adapter_list_view_types.getItem(i).title);//je sépare les types par un espaces, donc on aura :
 				//res = Bar Restaurant Discothèque ... Ensuite FouilleDonnee va s'occuper de convertir en Bar+Restaurant+Discotèque
-				//
 			}
 			return res;	
 		}
@@ -171,7 +175,8 @@ public class RecherchePerimetre extends Activity implements OnClickListener,OnIt
 			if(arg0.getId()==R.id.liste_types){
 				//Idée : possibilité de mettre une dialog pour demander la confirmation a l'utilisateur
 				//Ou bien créer un toast pour afficher qu'on a bien supprimé cet item
-				ensemble_types.remove(arg2);
+				adapter_list_view_types.remove(arg2);
+				//list_types_selectionnes.getAdapter().no
 			}
 		}
 
