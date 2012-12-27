@@ -33,7 +33,7 @@ public class Icon extends LinearLayout {
 	private String description;
 	private String adresse ;
 	private Lieu lieu ;
-	
+
 	public Icon(Context context, Activity a) {
 		super(context);
 	}
@@ -54,7 +54,7 @@ public class Icon extends LinearLayout {
 	public Icon(Context context, ImageView Imview, String name,
 			String description,String type,String adresse, double latitude, double longitude,
 			Location myLocation) {
-		
+
 		super(context);
 		this.adresse = adresse;
 		this.description = description;
@@ -65,8 +65,10 @@ public class Icon extends LinearLayout {
 
 	public Icon(Context context, ImageView im , Lieu l , Location myLocation){
 		super(context);
-	
+
 		lieu = l ;
+		this.adresse = "";
+		this.name="";
 		StringBuffer type = new StringBuffer("");
 		// On récupère son type
 		for (int j = 0; j < l.getTypes().size(); j++) {
@@ -74,14 +76,14 @@ public class Icon extends LinearLayout {
 			type.append(l.getTypes().get(j) + " ");
 
 		}
-		
+
 		creerIcon(context, im, l.getLatitude(), l.getLongitude(), myLocation, type.toString());
-		
+
 	}
-	
+
 	private void creerIcon(Context context, ImageView Imview, double latitude, double longitude,
 			Location myLocation,String type){
-		
+
 		ctx = context;
 		label = new TextView(context);
 
@@ -101,7 +103,7 @@ public class Icon extends LinearLayout {
 
 		StringTokenizer tok = new StringTokenizer(type, " ");
 		String typeTemp = tok.nextToken();
-		
+
 		photoDescription = new ImageView(context);
 
 		if (Imview == null) {
@@ -111,7 +113,7 @@ public class Icon extends LinearLayout {
 			photoDescription = icon;
 
 		} else {
-			
+
 			icon.setBackgroundResource(R.drawable.favorite);
 			photoDescription = icon;
 
@@ -126,11 +128,13 @@ public class Icon extends LinearLayout {
 			}
 		});
 
+
+
 		// On ajoute l'icon et son label à la vue
 		this.addView(icon);
 		this.addView(label);
 	}
-	
+
 
 	/**
 	 * Permet de choisir l'image de l'icon en fonction de son type
@@ -259,36 +263,44 @@ public class Icon extends LinearLayout {
 		adb.setIcon(R.drawable.info);
 
 		ImageView image = (ImageView) alertDialogView.findViewById(R.id.image);
-		
-		
+
+
 		image.setImageDrawable(photoDescription.getBackground());
+
+
+
+		if(lieu != null && adresse.equals("")){
+			FouilleDonnee fd = new FouilleDonnee();
+			DetailLieu detail = fd.getDetails(lieu.getReference());
+			this.adresse = detail.toString();
+			this.name = lieu.getNom();
+			this.description = "Pas de description";
+
+		}
+
 		TextView text = (TextView) alertDialogView.findViewById(R.id.titre);
 		text.setText(name);
 
 		text = (TextView) alertDialogView.findViewById(R.id.description);
 		text.setText(description);
 
+	
 		text = (TextView) alertDialogView.findViewById(R.id.distance);
 		text.setText(this.label.getText());
 		text = (TextView) alertDialogView.findViewById(R.id.adresse);
 
-		if(lieu != null){
-			FouilleDonnee fd = new FouilleDonnee();
-			DetailLieu detail = fd.getDetails(lieu.getReference());
-			text.setText(detail.toString());
-		}else{
-		
-			text.setText(this.adresse);
-		}
-		
+
+
+		text.setText(this.adresse);
+
 		adb.setPositiveButton("Itinéraire",
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
+			public void onClick(DialogInterface dialog, int which) {
 
-						showBoiteChoix();
+				showBoiteChoix();
 
-					}
-				});
+			}
+		});
 		// On crée un bouton "Annuler" à notre AlertDialog et on lui affecte un
 		// évènement
 		adb.setNegativeButton("Fermer", new DialogInterface.OnClickListener() {
