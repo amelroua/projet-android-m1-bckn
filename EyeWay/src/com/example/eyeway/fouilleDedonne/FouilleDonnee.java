@@ -76,6 +76,32 @@ public class FouilleDonnee {
 		"Magasin",
 		"Université"
 	};
+
+	private ArrayList<String> convertirArrayListTypes(ArrayList<String> array){
+
+		for(int i=0; i<array.size(); i++){
+			array.set(i,stringTypeLieuCorrespondant(array.get(i)));
+		}
+		return array;
+	}
+	/**
+	 * @param type_francais : par exemple "Université"
+	 * @return  le type correspondant dans l'autre tableau, par exemple : "University"
+	 */
+	private String stringTypeLieuCorrespondant(String type_francais){
+		String res="";
+		int indiceChaine=-1;
+		for(int i=0;i<types_place_fr.length; i++){
+			if(types_place_fr[i].equals(type_francais)){
+				indiceChaine=i;
+			}
+		}
+		if(indiceChaine!=-1){
+			res=types_place_api[indiceChaine];
+		}
+		return res;
+	}
+
 	private static String PLACE_APIKEY="AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs";
 
 	/**
@@ -93,12 +119,13 @@ public class FouilleDonnee {
 	//Exemple d'une requete qui marche : les restaurants près du Courtepaille : lat =47.8686030 lng =1.9124340 
 	//https://maps.googleapis.com/maps/api/place/search/json?location=47.8686030,1.9124340&radius=100&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 	//Testé , ok
-	public ArrayList<Lieu> getLieuProximiteParType(double lat,double lng,String types,int distance) {
+	public ArrayList<Lieu> getLieuProximiteParType(double lat,double lng,ArrayList<String> types,int distance) {
 		//Url pour la requête
+		types=convertirArrayListTypes(types);
 		String url = "https://maps.googleapis.com/maps/api/place/search/json?location="+lat+","+lng+"&radius="+distance;
 		String types_format_url="";
-		if(!types.equals(new String(""))){
-			types_format_url="&types="+chaineFormatUrl(types);
+		if(types.size()!=0){
+			types_format_url="&types="+typesFormatUrl(types);
 			url+=types_format_url;
 		}
 		url=completePlaceQuery(url);
@@ -106,7 +133,7 @@ public class FouilleDonnee {
 		return JsonToLieu(reponse);
 	}
 
-	
+
 	/**
 	 * Text Search Requests : recherche d'un lieu grace a des mots clés
 	 * match query avec n'importe quel champs
@@ -122,7 +149,7 @@ public class FouilleDonnee {
 	public ArrayList<Lieu> getLieuParRecherche(String query) { //,double lat,double lng, int distance
 		String queryFormated=chaineFormatUrl(query);
 		//enlever le + du dernier parametre
-		
+
 		String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query="+queryFormated;
 		/*
 		if(lat!=0 && lng !=0){
@@ -301,6 +328,14 @@ public class FouilleDonnee {
 	private String completePlaceQuery(String url){
 		//Ajout de la APIKey, du sensor, de la langue
 		return url+="&sensor=true&language=fr&key="+PLACE_APIKEY;
+	}
+	String typesFormatUrl(ArrayList<String> types){
+		String queryFormated="";
+		for(int i=0; i<types.size(); i++){
+			queryFormated+=types.get(i)+"+";
+		}
+		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
+		return queryFormated;
 	}
 	String chaineFormatUrl(String query){
 		//construire la chaine qui va etre mise dans l'url

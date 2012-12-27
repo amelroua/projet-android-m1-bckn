@@ -13,5 +13,10 @@ public class Fonctionnalite {
 		this.icon = icon;
 		this.title = title;
 	}
+	@Override
+	public boolean equals(Object o) {
+		Fonctionnalite f=(Fonctionnalite)o;
+		return this.icon==f.icon && this.title.equals(f.title);
+	}
 
 }

@@ -141,11 +141,12 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		this.icons = new ArrayList<Icon>();
 
 		FouilleDonnee fd = new FouilleDonnee();
-
+		ArrayList<String> types=new ArrayList<String>();
+		types.add(new String("restaurant"));
 		// On récupère les lieux à proximité
 		ArrayList<Lieu> lieux = fd.getLieuProximiteParType(
 				myLocation.getLatitude(), myLocation.getLongitude(),
-				"restaurant", 30000);
+				types, 30000);
 		Lieu l;
 		Icon ic;
 

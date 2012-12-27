@@ -41,7 +41,8 @@ public class FouilleTest extends Activity {
     //Pas testé TODO
     public void testgetLieuParProximite(){
     	FouilleDonnee fd=new FouilleDonnee();
-    	ArrayList<Lieu> Lieux = fd.getLieuProximiteParType(47.845489, 1.939776,"", 10);
+    	ArrayList<String> types=new ArrayList<String> ();
+    	ArrayList<Lieu> Lieux = fd.getLieuProximiteParType(47.845489, 1.939776,types, 10);
 		/*
     	for(Lieu l : Lieux) {
 			l.toString();
