@@ -277,7 +277,6 @@ public class FouilleDonnee {
 	 * Demande les details du lieu
 	 * @param reference : l'identifiant unique du lieu
 	 */
-
 	public PlaceDetails getDetails(String reference) {
 		/* il nous faut une classe qui contienne les champs de l'adresse tels que numero de rue, nom de la rue...
 		 *
