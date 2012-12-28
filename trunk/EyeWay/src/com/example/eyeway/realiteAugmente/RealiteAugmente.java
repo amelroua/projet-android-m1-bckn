@@ -34,6 +34,7 @@ import android.widget.TextView;
 import com.example.eyeway.R;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
 import com.example.eyeway.fouilleDedonne.Lieu;
+import com.example.eyeway.fouilleDedonne.ListeLieu;
 import com.google.android.maps.GeoPoint;
 
 public class RealiteAugmente extends Activity implements LocationListener,
@@ -51,7 +52,7 @@ public class RealiteAugmente extends Activity implements LocationListener,
 	int rotation = 0;
 	private int distance ;
 	ImageView im;
-	ArrayList<Lieu> lieux; 
+	ListeLieu lieux; 
 	ArrayList<String> types ;
 	private String methode ;
 	private String motCle ;
@@ -200,18 +201,18 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		// On récupère le context
 				ctx = this;
 				
-		if(lieux.size() == 0){
+		if(lieux.results.size() == 0){
 			
 			Toast.makeText(ctx, "Aucun résultat pour votre recherche", Toast.LENGTH_SHORT).show();
 		}
 		
 
 		// Pour tous les lieux
-		for (int i = 0; i < lieux.size(); i++) {
+		for (int i = 0; i < lieux.results.size(); i++) {
 
 			
 			// On récupère le lieu
-			l = lieux.get(i);
+			l = lieux.results.get(i);
 			
 			// On créer un nouvel icon
 			ic = newIcons(l);
