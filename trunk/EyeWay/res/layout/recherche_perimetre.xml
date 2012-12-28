@@ -6,6 +6,7 @@
 	android:background="@drawable/background_application" 
 	>
 
+    
     <include
         android:id="@+id/titlebar"
         layout="@layout/titlebar" />

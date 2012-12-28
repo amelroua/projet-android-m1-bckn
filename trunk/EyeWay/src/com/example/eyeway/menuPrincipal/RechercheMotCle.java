@@ -31,6 +31,7 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.ImageView;
 import android.widget.ListView;
 import android.widget.Spinner;
 import android.widget.Toast;
@@ -47,7 +48,7 @@ public class RechercheMotCle extends Activity implements OnClickListener
 
 	
 	private EditText edit_text_mot_cle;
-	private Button bouton_validation_formulaire;
+	private ImageView bouton_validation_formulaire;
 
 
 
@@ -58,7 +59,7 @@ public class RechercheMotCle extends Activity implements OnClickListener
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_recherche_motcle);
 		
-		bouton_validation_formulaire = (Button) findViewById(R.id.bouton_validation_formulaire);
+		bouton_validation_formulaire = (ImageView) findViewById(R.id.bouton_validation_formulaire);
 		bouton_validation_formulaire.setOnClickListener(this);
 		
 		edit_text_mot_cle = (EditText) findViewById(R.id.editText1);
