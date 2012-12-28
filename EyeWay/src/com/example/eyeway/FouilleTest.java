@@ -36,7 +36,7 @@ public class FouilleTest extends Activity {
 		setContentView(R.layout.activity_fouille_test1);
 		lv = (ListView) findViewById(R.id.list);
 		
-		new TestLieu().execute("recherche");
+		new TestLieu().execute("proximite");
 	}
 
 	@Override
@@ -104,7 +104,7 @@ public class FouilleTest extends Activity {
 		public void testgetLieuParProximite(){
 			FouilleDonnee fd=new FouilleDonnee();
 			ArrayList<String> types=new ArrayList<String> ();
-			Lieux = fd.getLieuProximiteParType(47.845489, 1.939776,types, 10);
+			Lieux = fd.getLieuProximiteParType(47.845489, 1.939776,types, 100);
 
 		}
 		//Pas testé TODO
