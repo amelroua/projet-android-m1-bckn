@@ -6,6 +6,7 @@ import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 import java.util.Scanner;
 
 import org.apache.http.HttpEntity;
@@ -24,6 +25,9 @@ import android.util.Log;
 public class FouilleDonnee {
 	//Attention si ce tableau est modifié, il faut modifier aussi le tableau des string en francais aussi
 	//et garder le meme ordre dans les deux tableaux
+	
+	private static String PLACE_APIKEY="AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs";
+	
 	public static String [] types_place_api= {
 		"bank",
 		"bar",
@@ -76,6 +80,11 @@ public class FouilleDonnee {
 		"Magasin",
 		"Université"
 	};
+	
+	
+	/****************************
+	 * UTIL 
+	 * **************************/
 
 	private ArrayList<String> convertirArrayListTypes(ArrayList<String> array){
 
@@ -102,8 +111,52 @@ public class FouilleDonnee {
 		return res;
 	}
 
-	private static String PLACE_APIKEY="AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs";
+	/**
+	 * Ajout de la APIKey, du sensor, de la langue. INDISPENSABLE
+	 * @param url non complétée
+	 * @return url complétée
+	 */
+	private String completePlaceQuery(String url){
+		return url+="&sensor=true&language=fr&key="+PLACE_APIKEY;
+	}
+	
+	
+	/**
+	 * Formatte la liste de type afin de l'utiliser lors de la requête
+	 * @param liste de types
+	 * @return type1|type2|...
+	 */
+	String typesFormatUrl(ArrayList<String> types){
+		String queryFormated="";
+		for(int i=0; i<types.size(); i++){
+			queryFormated+=types.get(i)+"|";
+		}
+		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
+		return queryFormated;
+	}
+	
+	
+	String chaineFormatUrl(String query){
+		//construire la chaine qui va etre mise dans l'url
+		//parce que la chaine en paremetre est le texte saisi par l'utilisateur : ex : restaurant olivet
+		//et dans l'url on doit mettre restaurant+olivet
+		String queryFormated="";
+		Scanner s = new Scanner(query).useDelimiter(" ");
+		//TODO trouver le pattern qui reconnait un espace entre deux mots
+		while(s.hasNext()){
+			queryFormated+=s.next()+"+";
+		}
+		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
+		return queryFormated;
+	}
 
+	
+	/****************************
+	 * GOOGLE
+	 * **************************/
+	
+
+	
 	/**
 	 * Nearby Search Requests de type
 	 * 
@@ -116,11 +169,12 @@ public class FouilleDonnee {
 	 * @param distance en metre (parametre facultatif)
 	 * @return une liste de Lieu
 	 */
-	//Exemple d'une requete qui marche : les restaurants près du Courtepaille : lat =47.8686030 lng =1.9124340 
-	//https://maps.googleapis.com/maps/api/place/search/json?location=47.8686030,1.9124340&radius=100&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
-	//Testé , ok
 	public ArrayList<Lieu> getLieuProximiteParType(double lat,double lng,ArrayList<String> types,int distance) {
-		//Url pour la requête
+		/*
+		 * Exemple d'une requete qui marche : les restaurants près du Courtepaille : lat =47.8686030 lng =1.9124340 
+		 * https://maps.googleapis.com/maps/api/place/search/json?location=47.8686030,1.9124340&radius=100&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
+		 * Testé , ok		
+		 */
 		types=convertirArrayListTypes(types);
 		String url = "https://maps.googleapis.com/maps/api/place/search/json?location="+lat+","+lng+"&radius="+distance;
 		String types_format_url="";
@@ -139,49 +193,43 @@ public class FouilleDonnee {
 	 * match query avec n'importe quel champs
 	 * Ex : pizza in New York
 	 * @param query : les mots clés (parametre requis)
-	 * @param latitude A quoi sert ce parametre ici ?
-	 * @param longitude A quoi sert ce parametre ici ?
-	 * @param distance en metre A quoi sert ce parametre ici ?
 	 * @return une liste de Lieu 
 	 */
-	//Exemple d'une requete qui marche : les restaurants d'olivet
-	//https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurant+olivet&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
-	public ArrayList<Lieu> getLieuParRecherche(String query) { //,double lat,double lng, int distance
-		String queryFormated=chaineFormatUrl(query);
-		//enlever le + du dernier parametre
-
-		String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query="+queryFormated;
+	public ArrayList<Lieu> getLieuParRecherche(String query) { 
 		/*
-		if(lat!=0 && lng !=0){
-			url+="&location="+lat+","+lng;
-		}
-		if(distance!=0){
-			url+="&radius="+distance;
-		}*/
+		 * Exemple d'une requete qui marche : les restaurants d'olivet
+		 * https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurant+olivet&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
+		 */		
+		String queryFormated=chaineFormatUrl(query);
+		String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query="+queryFormated;
 		url=completePlaceQuery(url);
 		String reponse = executeQuery(url);
 		Log.d("Reponse", reponse);
 		return JsonToLieu(reponse);
 	}
 
-	//il nous faut une classe qui contienne les champs de l'adresse tels que numero de rue, nom de la rue...
-	/*
-	 * J'ai hésité a utiliser reverse geocoding pour faire ceci mais il ne faut pas : reverse geocoding fais une approximation a partir des coordonnées et renvoie plusieurs résultats
-	 * alors que place/details travail sur la référence (qui est unique) et ne retourne qu'un resultat
-	 */
+
 	/**
 	 * Demande les details du lieu
 	 * @param reference : l'identifiant unique du lieu
 	 */
-	//Exemple de requete qui marche : https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
+	
 	public DetailLieu getDetails(String reference) {
-
+		/* il nous faut une classe qui contienne les champs de l'adresse tels que numero de rue, nom de la rue...
+		*
+		 * J'ai hésité a utiliser reverse geocoding pour faire ceci mais il ne faut pas : reverse geocoding fais une approximation a partir des coordonnées et renvoie plusieurs résultats
+		 * alors que place/details travail sur la référence (qui est unique) et ne retourne qu'un resultat
+		 *
+		 * Exemple de requete qui marche : 
+		 * https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
+		 */
 		String url = "https://maps.googleapis.com/maps/api/place/details/json?reference="+reference;
 		url=completePlaceQuery(url);
 		String reponse = executeQuery(url);
 		DetailLieu d=parseDetailResult(reponse);
 		return d;
 	}
+	
 	/**
 	 * Parse un Json en une liste de lieu
 	 * @param jsonString
@@ -273,8 +321,8 @@ public class FouilleDonnee {
 	 * @param jsonString
 	 * @return LieuDetaille
 	 */
-	//Testée avec succès avec cette requete : https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 	private DetailLieu parseDetailResult(String jsonString) {
+		//Testée avec succès avec cette requete : https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 		Log.i("testFouille","debut de parseDetail");
 		try {
 			JSONObject jObject = new JSONObject(jsonString);
@@ -321,34 +369,6 @@ public class FouilleDonnee {
 			e.printStackTrace();
 		}
 		return null;
-	}
-	/****************************
-	 * UTIL 
-	 * **************************/
-	private String completePlaceQuery(String url){
-		//Ajout de la APIKey, du sensor, de la langue
-		return url+="&sensor=true&language=fr&key="+PLACE_APIKEY;
-	}
-	String typesFormatUrl(ArrayList<String> types){
-		String queryFormated="";
-		for(int i=0; i<types.size(); i++){
-			queryFormated+=types.get(i)+"+";
-		}
-		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
-		return queryFormated;
-	}
-	String chaineFormatUrl(String query){
-		//construire la chaine qui va etre mise dans l'url
-		//parce que la chaine en paremetre est le texte saisi par l'utilisateur : ex : restaurant olivet
-		//et dans l'url on doit mettre restaurant+olivet
-		String queryFormated="";
-		Scanner s = new Scanner(query).useDelimiter(" ");
-		//TODO trouver le pattern qui reconnait un espace entre deux mots
-		while(s.hasNext()){
-			queryFormated+=s.next()+"+";
-		}
-		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
-		return queryFormated;
 	}
 
 	/**
