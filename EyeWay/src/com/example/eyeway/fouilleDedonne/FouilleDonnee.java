@@ -5,9 +5,6 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.Scanner;
 
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
@@ -137,17 +134,26 @@ public class FouilleDonnee {
 	
 	
 	String chaineFormatUrl(String query){
-		//construire la chaine qui va etre mise dans l'url
-		//parce que la chaine en paremetre est le texte saisi par l'utilisateur : ex : restaurant olivet
-		//et dans l'url on doit mettre restaurant+olivet
-		String queryFormated="";
-		Scanner s = new Scanner(query).useDelimiter(" ");
-		//TODO trouver le pattern qui reconnait un espace entre deux mots
-		while(s.hasNext()){
-			queryFormated+=s.next()+"+";
-		}
-		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
-		return queryFormated;
+		/*
+		 * construire la chaine qui va etre mise dans l'url
+		 * parce que la chaine en paremetre est le texte saisi par l'utilisateur : ex : restaurant olivet
+		 * et dans l'url on doit mettre restaurant+olivet
+		 * 
+		 */
+
+//		String queryFormated="";
+//		Scanner s = new Scanner(query).useDelimiter(" ");
+//		//TODO trouver le pattern qui reconnait un espace entre deux mots
+//		while(s.hasNext()){
+//			queryFormated+=s.next()+"+";
+//		}
+//		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
+		
+		// Ou tout simplement 
+		
+		query.replace(' ', '+');
+		
+		return query;
 	}
 
 	
