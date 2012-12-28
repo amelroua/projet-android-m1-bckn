@@ -24,14 +24,16 @@
     <string name="title_activity_test_fouille">TestFouille</string>
     <string name="title_activity_fouille_test">FouilleTest</string>
     <string name="titre_recherche_perimetre">Recherche dans une zone</string>
+    <string name="title_activity_recherche_par_mot_cle"> Recherche par mot clé</string>
     <string name="title_activity_recherche_perimetre">RecherchePerimetre</string>
     <string name="titre_choix_position">Centre du perimetre</string>
 	<string name="titre_distance">Distance de recherche</string>
 	<string name="titre_ajout_type">Types de lieu</string>
 	 <string name="bouton_ajout_type">Ajouter</string>
 	<string name="action_rechercher">Rechercher</string>
-	<string name="text_distance">distance en mètre</string>
-	
+	<string name="text_distance">Distance en mètre</string>
+	<string name="titre_recherche_motCle">Recherche par mot clé</string>
+	<string name="text_motCle">Ex: restaurant olivet</string>
 	<string-array name="array_choix_position">
         <item>Autour de ma position</item>
         <item>Autour d\'une autre position</item>

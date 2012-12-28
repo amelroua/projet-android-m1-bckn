@@ -72,7 +72,8 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 			Intent monIntent;
 			switch(arg2){
 			case 0 : 
-				Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
+				monIntent= new Intent(this,RechercheMotCle.class);
+				startActivity(monIntent);
 				break;
 			case 1 : 
 				monIntent= new Intent(this,RecherchePerimetre.class);

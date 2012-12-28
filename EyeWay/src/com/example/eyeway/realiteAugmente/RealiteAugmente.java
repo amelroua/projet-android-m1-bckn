@@ -54,6 +54,7 @@ public class RealiteAugmente extends Activity implements LocationListener,
 	ArrayList<Lieu> lieux; 
 	ArrayList<String> types ;
 	private String methode ;
+	private String motCle ;
 	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
@@ -65,9 +66,15 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		Bundle b = getIntent().getExtras();
 		methode = b.getString("methode");
 		
+		if(methode.equalsIgnoreCase("proximite")){
 		types = (ArrayList<String>) b.get("types");
 		distance = b.getInt("distance");
 		
+		}else{
+			
+		motCle = b.getString("motCle"); 
+				
+		}
 		
 		FrameLayout l = (FrameLayout) findViewById(R.id.main);
 
@@ -159,6 +166,9 @@ public class RealiteAugmente extends Activity implements LocationListener,
 			lieux = fd.getLieuProximiteParType(
 				myLocation.getLatitude(), myLocation.getLongitude(),
 				types, distance);
+		}else{
+			
+			lieux = fd.getLieuParRecherche(motCle);
 		}
 		
 		Lieu l;
