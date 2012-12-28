@@ -1,16 +1,21 @@
 package com.example.eyeway.fouilleDedonne;
 
-public class Photo {
-	
-	private int height;
-	private int width;
-	private String photo_reference;
+import java.io.Serializable;
 
-	public Photo(String ref, int h,int w) {
-		height=h;
-		width=w;
-		photo_reference=ref;
-	}
+import com.google.api.client.util.Key;
+
+public class Photo implements Serializable {
+
+	private static final long serialVersionUID = 3797759086960210431L;
+
+	@Key
+	public int height;
+	
+	@Key
+	public int width;
+	
+	@Key
+	public String photo_reference;
 	
 	public int getHeight() {
 		return height;
