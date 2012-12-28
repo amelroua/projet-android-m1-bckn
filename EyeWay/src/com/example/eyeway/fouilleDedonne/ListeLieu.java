@@ -18,6 +18,9 @@ public class ListeLieu implements Serializable {
 
 	@Key
     public String status;
+	
+	@Key
+	public String next_page_token;
  
     @Key
     public List<Lieu> results;

@@ -85,13 +85,13 @@ public class FouilleDonnee {
 	 * UTIL 
 	 * **************************/
 
-//	private ArrayList<String> convertirArrayListTypes(ArrayList<String> array){
-//
-//		for(int i=0; i<array.size(); i++){
-//			array.set(i,stringTypeLieuCorrespondant(array.get(i)));
-//		}
-//		return array;
-//	}
+	//	private ArrayList<String> convertirArrayListTypes(ArrayList<String> array){
+	//
+	//		for(int i=0; i<array.size(); i++){
+	//			array.set(i,stringTypeLieuCorrespondant(array.get(i)));
+	//		}
+	//		return array;
+	//	}
 	/**
 	 * @param type_francais : par exemple "Université"
 	 * @return  le type correspondant dans l'autre tableau, par exemple : "University"
@@ -109,7 +109,7 @@ public class FouilleDonnee {
 		}
 		return res;
 	}
-	
+
 	private ArrayList<String> FrancaisToApi(ArrayList<String> types) {
 		ArrayList<String> result = new ArrayList<String>();
 		for(String s : types) {
@@ -162,14 +162,14 @@ public class FouilleDonnee {
 	 * */
 	public static HttpRequestFactory createRequestFactory(
 			final HttpTransport transport) {
-				return transport.createRequestFactory(new HttpRequestInitializer() {
-					public void initialize(HttpRequest request) {
-						GoogleHeaders headers = new GoogleHeaders();
-						headers.setApplicationName("EyeWay");
-						request.setHeaders(headers);
-						JsonCParser parser = new JsonCParser(new JacksonFactory());
-				        request.setParser(parser);
-					}
+		return transport.createRequestFactory(new HttpRequestInitializer() {
+			public void initialize(HttpRequest request) {
+				GoogleHeaders headers = new GoogleHeaders();
+				headers.setApplicationName("EyeWay");
+				request.setHeaders(headers);
+				JsonCParser parser = new JsonCParser(new JacksonFactory());
+				request.setParser(parser);
+			}
 		});
 	}
 
@@ -203,24 +203,33 @@ public class FouilleDonnee {
 			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
 			HttpRequest request = httpRequestFactory
 					.buildGetRequest(new GenericUrl(PLACES_SEARCH_URL));
-	
+
 			request.getUrl().put("location", lat + "," + lng);
 			request.getUrl().put("radius", distance); // in meters
-			
+
 			if(types != null)
 				types=FrancaisToApi(types);
-				request.getUrl().put("types", typesFormatUrl(types));
-			
+			request.getUrl().put("types", typesFormatUrl(types));
+
 			completePlaceQuery(request.getUrl());
 
 			ListeLieu list = request.execute().parseAs(ListeLieu.class);
+
+			// Max de 60 resultats
+			while(list.next_page_token!=null || list.next_page_token!=""){
+				Thread.sleep(4000);
+				/*Since the token can be used after a short time it has been  generated*/
+				request.getUrl().put("pagetoken",list.next_page_token);
+				ListeLieu temp = request.execute().parseAs(ListeLieu.class);
+				list.results.addAll(temp.results);
+			}
 			return list;
 
 		} catch (Exception e) {
 			Log.e("Error:", e.getMessage());
 			return null;
 		}
-		
+
 	}
 
 
@@ -236,13 +245,13 @@ public class FouilleDonnee {
 		 * Exemple d'une requete qui marche : les restaurants d'olivet
 		 * https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurant+olivet&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 		 */		
-		
+
 		try {
 
 			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
 			HttpRequest request = httpRequestFactory
 					.buildGetRequest(new GenericUrl(PLACES_TEXT_SEARCH_URL));
-	
+
 			request.getUrl().put("query", query);
 
 			completePlaceQuery(request.getUrl());
@@ -271,23 +280,23 @@ public class FouilleDonnee {
 		 * https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 		 */
 		try {
-			 
-            HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
-            HttpRequest request = httpRequestFactory
-                    .buildGetRequest(new GenericUrl(PLACES_DETAILS_URL));
-            
-            
-            request.getUrl().put("reference", reference);
-            
-            completePlaceQuery(request.getUrl());
- 
-            PlaceDetails place = request.execute().parseAs(PlaceDetails.class);
- 
-            return place;
- 
-        } catch (Exception e) {
-            Log.e("Error in Perform Details", e.getMessage());
-            return null;
-        }
+
+			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
+			HttpRequest request = httpRequestFactory
+					.buildGetRequest(new GenericUrl(PLACES_DETAILS_URL));
+
+
+			request.getUrl().put("reference", reference);
+
+			completePlaceQuery(request.getUrl());
+
+			PlaceDetails place = request.execute().parseAs(PlaceDetails.class);
+
+			return place;
+
+		} catch (Exception e) {
+			Log.e("Error in Perform Details", e.getMessage());
+			return null;
+		}
 	}
 }
