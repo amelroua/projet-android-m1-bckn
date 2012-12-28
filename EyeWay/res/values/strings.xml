@@ -34,6 +34,7 @@
 	<string name="text_distance">Distance en mètre</string>
 	<string name="titre_recherche_motCle">Recherche par mot clé</string>
 	<string name="text_motCle">Ex: restaurant olivet</string>
+	<string name="logoApli">Logo de l\'application</string>
 	<string-array name="array_choix_position">
         <item>Autour de ma position</item>
         <item>Autour d\'une autre position</item>

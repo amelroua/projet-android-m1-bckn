@@ -4,34 +4,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="#FFFFFF"
-    android:orientation="vertical" 
-  >
+    android:orientation="vertical" >
 
-     <LinearLayout
+    <include
+        android:id="@+id/titlebar"
+        layout="@layout/titlebar" />
+
+    <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:layout_marginTop="10dp"
         android:orientation="horizontal" >
-       <ImageView
-                android:id="@+id/image"
-                     android:layout_width="50dp"
-                android:layout_height="50dp"
-               android:layout_marginLeft="5dp"
-               android:background="@drawable/find_area"
-                android:contentDescription="@string/descriptionImagePopPup" />
-    
-    <TextView
-        android:id="@+id/titre_recherche_perimetre"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:layout_marginTop="10dp"
-        android:text="@string/titre_recherche_perimetre"
-        android:textColor="#000000"
-        android:textSize="14dp" />
 
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/find_area"
+            android:contentDescription="@string/descriptionImagePopPup" />
+
+        <TextView
+            android:id="@+id/titre_recherche_perimetre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="10dp"
+            android:text="@string/titre_recherche_perimetre"
+            android:textColor="#000000"
+            android:textSize="14dp" />
     </LinearLayout>
+
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -46,9 +50,8 @@
             android:layout_width="200dip"
             android:layout_height="wrap_content"
             android:hint="@string/text_distance"
-            android:inputType="number"
-            android:nextFocusLeft="@id/editText1"
-            android:nextFocusUp="@id/editText1" >
+            android:inputType="number|phone"
+            >
         </EditText>
     </LinearLayout>
 
@@ -64,8 +67,7 @@
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
             android:layout_weight="1"
-            android:singleLine="false" 
-           	/>
+            android:singleLine="false" />
 
         <Button
             android:id="@+id/bouton_ajout_type"
@@ -85,8 +87,7 @@
         android:dividerHeight="1dip"
         android:drawSelectorOnTop="false"
         android:headerDividersEnabled="true"
-        android:overScrollHeader="#F7F2B2" 
-        >
+        android:overScrollHeader="#F7F2B2" >
     </ListView>
 
     <Button
