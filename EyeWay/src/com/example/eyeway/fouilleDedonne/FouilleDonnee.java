@@ -1,22 +1,6 @@
 package com.example.eyeway.fouilleDedonne;
 
-import java.io.BufferedReader;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.OutputStream;
-import java.io.Reader;
-import java.io.Writer;
-import java.nio.charset.Charset;
 import java.util.ArrayList;
-
-import org.apache.http.HttpEntity;
-import org.apache.http.HttpResponse;
-import org.apache.http.StatusLine;
-import org.apache.http.client.ClientProtocolException;
-import org.apache.http.client.HttpClient;
-import org.apache.http.client.methods.HttpGet;
-import org.apache.http.impl.client.DefaultHttpClient;
 
 import com.google.api.client.googleapis.GoogleHeaders;
 import com.google.api.client.googleapis.json.JsonCParser;
@@ -24,18 +8,9 @@ import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
-import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
-import com.google.api.client.http.json.JsonHttpParser;
-import com.google.api.client.json.JsonFactory;
-import com.google.api.client.json.JsonGenerator;
-import com.google.api.client.json.JsonParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
 
 import android.util.Log;
 
@@ -110,13 +85,13 @@ public class FouilleDonnee {
 	 * UTIL 
 	 * **************************/
 
-	private ArrayList<String> convertirArrayListTypes(ArrayList<String> array){
-
-		for(int i=0; i<array.size(); i++){
-			array.set(i,stringTypeLieuCorrespondant(array.get(i)));
-		}
-		return array;
-	}
+//	private ArrayList<String> convertirArrayListTypes(ArrayList<String> array){
+//
+//		for(int i=0; i<array.size(); i++){
+//			array.set(i,stringTypeLieuCorrespondant(array.get(i)));
+//		}
+//		return array;
+//	}
 	/**
 	 * @param type_francais : par exemple "Université"
 	 * @return  le type correspondant dans l'autre tableau, par exemple : "University"
@@ -133,6 +108,14 @@ public class FouilleDonnee {
 			res=types_place_api[indiceChaine];
 		}
 		return res;
+	}
+	
+	private ArrayList<String> FrancaisToApi(ArrayList<String> types) {
+		ArrayList<String> result = new ArrayList<String>();
+		for(String s : types) {
+			result.add(stringTypeLieuCorrespondant(s));
+		}
+		return result;
 	}
 
 	/**
@@ -225,6 +208,7 @@ public class FouilleDonnee {
 			request.getUrl().put("radius", distance); // in meters
 			
 			if(types != null)
+				types=FrancaisToApi(types);
 				request.getUrl().put("types", typesFormatUrl(types));
 			
 			completePlaceQuery(request.getUrl());
@@ -291,6 +275,8 @@ public class FouilleDonnee {
             HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
             HttpRequest request = httpRequestFactory
                     .buildGetRequest(new GenericUrl(PLACES_DETAILS_URL));
+            
+            
             request.getUrl().put("reference", reference);
             
             completePlaceQuery(request.getUrl());

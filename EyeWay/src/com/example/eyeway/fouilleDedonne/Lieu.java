@@ -25,7 +25,15 @@ public class Lieu {
 
 	@Key
 	public Geometry geometry;
-
+	
+	@Key
+	public List<Photo> photos;
+	
+	@Key
+	public List<String> types;
+	
+	/** DETAILS */
+	
 	@Key
 	public String formatted_address;
 
@@ -33,24 +41,19 @@ public class Lieu {
 	public String formatted_phone_number;
 	
 	@Key
-	public List<Photo> photos;
-	
-	@Key
-	public List<String> types;
-
-	@Override
-	public String toString() {
-		return name + " - " + id + " - " + reference;
-	}
+	public String website;
 
 	public static class Geometry implements Serializable
 	{
+		private static final long serialVersionUID = -1846546423355113268L;
 		@Key
 		public Location location;
 	}
 
 	public static class Location implements Serializable
 	{
+		private static final long serialVersionUID = -745398283024148157L;
+
 		@Key
 		public double lat;
 
@@ -106,6 +109,10 @@ public class Lieu {
 	
 	public double getLongitude() {
 		return geometry.location.lng;
+	}
+	
+	public String getWebsite() {
+		return website;
 	}
 	
 }
