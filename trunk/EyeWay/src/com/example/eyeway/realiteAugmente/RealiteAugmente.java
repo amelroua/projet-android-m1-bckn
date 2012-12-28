@@ -67,13 +67,29 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		methode = b.getString("methode");
 		
 		if(methode.equalsIgnoreCase("proximite")){
-		types = (ArrayList<String>) b.get("types");
-		distance = b.getInt("distance");
+		
+			types = (ArrayList<String>) b.get("types");
+			distance = b.getInt("distance");
 		
 		}else{
-			
-		motCle = b.getString("motCle"); 
+
+			if(methode.equalsIgnoreCase("instantane")){
 				
+				int taille = FouilleDonnee.types_place_fr.length;
+				types = new ArrayList<String>();
+				/*
+				for(int i = 0 ; i < taille; i++ ){
+					
+					types.add(FouilleDonnee.types_place_fr[i]);
+				}
+				*/
+				types.add("Bar");
+				distance = 500 ; // On défini une distance de 500 mètre
+				
+			}else{
+
+				motCle = b.getString("motCle"); 
+			}
 		}
 		
 		FrameLayout l = (FrameLayout) findViewById(R.id.main);
@@ -117,12 +133,12 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		// On update le manager tout les 100 mili secondes
 
 		// Avec le GPS
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER, 1,
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,
 				1, this);
 
 		// Avec le réseau
 		locationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, 1, 1, this);
+				LocationManager.NETWORK_PROVIDER, 1000, 1, this);
 
 		// Si le réseau et le gps ne sont pas allumé
 		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -156,19 +172,26 @@ public class RealiteAugmente extends Activity implements LocationListener,
 	 * Permet d'initialiser notre écran avec les icons
 	 */
 	public void initialisationFenetre() {
-
+		Log.d("ini","fenetre");
 		this.icons = new ArrayList<Icon>();
 		
 		FouilleDonnee fd = new FouilleDonnee();
 		
 		if(methode.equals("proximite")){
-		
+
 			lieux = fd.getLieuProximiteParType(
 				myLocation.getLatitude(), myLocation.getLongitude(),
 				types, distance);
 		}else{
 			
-			lieux = fd.getLieuParRecherche(motCle);
+			if(methode.equalsIgnoreCase("instantane")){
+				lieux = fd.getLieuProximiteParType(myLocation.getLatitude(), myLocation.getLongitude(), types, distance);
+				
+			}else{
+
+				lieux = fd.getLieuParRecherche(motCle);
+
+			}
 		}
 		
 		Lieu l;
@@ -215,7 +238,21 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		icons.add(icon);
 
 	}
-
+	
+	public void reinitialiserFenetre(){
+		FrameLayout layoutMain = (FrameLayout) findViewById(R.id.main);
+		View v = layoutMain.getChildAt(0);
+		
+		int taille = layoutMain.getChildCount();
+		Log.d("tailleLa",taille+"");
+		if(taille > 1){
+			
+		for (int i = 1 ; i < layoutMain.getChildCount() ; i++){
+			Log.d("beug","quand");
+			layoutMain.removeViewAt(i);
+		}
+		}
+	}
 	/**
 	 * Permet d'afficher la boite de dialogue permettant de demander si
 	 * l'utilisateur veut allumer le gps
@@ -521,12 +558,24 @@ public class RealiteAugmente extends Activity implements LocationListener,
 			// Si on a pas encore créé notre fenêtre
 			initialisationFenetre();
 
+		}else{
+			
+			if(methode.equalsIgnoreCase("instantane")){
+				
+				Log.d("Recherche" ,"new POI");
+				reinitialiserFenetre();
+				initialisationFenetre();
+			
+			}else{
+				
+				// Permet de recalculer la distance en ma position et celle
+				// de mes icons
+				recalculerDistance();
+
+			}
 		}
-
-		// Permet de recalculer la distance en ma position et celle
-		// de mes icons
-		recalculerDistance();
-
+		
+		
 	}
 
 	@Override

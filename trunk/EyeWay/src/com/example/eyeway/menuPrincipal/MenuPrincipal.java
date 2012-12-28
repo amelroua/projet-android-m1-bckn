@@ -80,7 +80,9 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 				startActivity(monIntent);
 				break;
 			case 2 : 
-				Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
+				monIntent= new Intent(this,RealiteAugmente.class);
+				monIntent.putExtra("methode","instantane");
+				startActivity(monIntent);
 				break;
 			case 3 : 
 				Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();

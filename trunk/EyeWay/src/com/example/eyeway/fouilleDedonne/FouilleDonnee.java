@@ -92,7 +92,7 @@ public class FouilleDonnee {
 		String res="";
 		int indiceChaine=-1;
 		for(int i=0;i<types_place_fr.length; i++){
-			if(types_place_fr[i].equals(type_francais)){
+			if(types_place_fr[i].equalsIgnoreCase(type_francais)){
 				indiceChaine=i;
 			}
 		}

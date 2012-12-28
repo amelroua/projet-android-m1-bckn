@@ -111,6 +111,7 @@ public class Icon extends LinearLayout {
 			// On choisi l'icon en fonction du type
 			choixIcon(typeTemp);
 			photoDescription = icon;
+			description = typeTemp;
 
 		} else {
 
@@ -274,7 +275,6 @@ public class Icon extends LinearLayout {
 			DetailLieu detail = fd.getDetails(lieu.getReference());
 			this.adresse = detail.toString();
 			this.name = lieu.getNom();
-			this.description = "Pas de description";
 
 		}
 
