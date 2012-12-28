@@ -1,0 +1,10 @@
+Manifest-Version: 1.0
+Archiver-Version: Plexus Archiver
+Created-By: Apache Maven
+Built-By: rmistry
+Build-Jdk: 1.7.0-google-v5
+Implementation-Title: Google APIs Client Library for Java
+Implementation-Version: 1.12.0-beta
+Implementation-Vendor-Id: com.google.api-client
+Implementation-Vendor: Google
+

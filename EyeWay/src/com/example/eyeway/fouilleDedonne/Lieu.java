@@ -1,54 +1,95 @@
 package com.example.eyeway.fouilleDedonne;
 
+import java.io.Serializable;
 import java.util.List;
+
+import com.google.api.client.util.Key;
 
 // PAS ENCORE TEST
 public class Lieu {
-	
-	private double latitude, longitude;
-	private String icone;
-	private String nom;
-	private String reference;
-	private String vicinity;
-	private List<Photo> photos;
-	private List<String> types;
-	
 
-	public Lieu(double lat, double lng, String icon, String id, String name,
-				List<Photo> pho, String ref, List<String> typ, String vic) {
-		
-		latitude=lat;
-		longitude=lng;
-		icone=icon;
-		nom=name;
-		reference=ref;
-		vicinity=vic;
-		photos=pho;
-		types=typ;
+	@Key	
+	public String id;
+
+	@Key
+	public String name;
+
+	@Key
+	public String reference;
+
+	@Key
+	public String icon;
+
+	@Key
+	public String vicinity;
+
+	@Key
+	public Geometry geometry;
+
+	@Key
+	public String formatted_address;
+
+	@Key
+	public String formatted_phone_number;
+	
+	@Key
+	public List<Photo> photos;
+	
+	@Key
+	public List<String> types;
+
+	@Override
+	public String toString() {
+		return name + " - " + id + " - " + reference;
+	}
+
+	public static class Geometry implements Serializable
+	{
+		@Key
+		public Location location;
+	}
+
+	public static class Location implements Serializable
+	{
+		@Key
+		public double lat;
+
+		@Key
+		public double lng;
 	}
 	
-	public double getLatitude() {
-		return latitude;
-	}
-
-	public double getLongitude() {
-		return longitude;
-	}
-
-	public String getIcone() {
-		return icone;
+	
+	
+	public String getId() {
+		return id;
 	}
 
 	public String getNom() {
-		return nom;
+		return name;
 	}
 
 	public String getReference() {
 		return reference;
 	}
 
+	public String getIcon() {
+		return icon;
+	}
+
 	public String getVicinity() {
 		return vicinity;
+	}
+
+	public Geometry getGeometry() {
+		return geometry;
+	}
+	
+	public String getFormatted_address() {
+		return formatted_address;
+	}
+
+	public String getFormatted_phone_number() {
+		return formatted_phone_number;
 	}
 
 	public List<Photo> getPhotos() {
@@ -59,27 +100,12 @@ public class Lieu {
 		return types;
 	}
 	
-	public String toString() {
-		String toString="";
-		toString+="-------------------\n"
-				+"("+latitude+","+longitude+")\n"
-				+"icone : "+icone+")\n"
-				+"nom : "+nom+")\n"
-				+"reference : "+reference+")\n"
-				+"vicinity : "+vicinity+")\n"
-				+"types : ";
-		
-		for(String type : types) {
-			toString+=type+" ";
-		}
-		
-		toString+="\n\n";
-		for(Photo p : photos) {
-			toString+=" h : "+p.getHeight()+" w : "+p.getWidth()+
-					"\nphoto ref : "+p.getPhoto_reference()+"\n\n";
-		}
-
-		return toString;
+	public double getLatitude() {
+		return geometry.location.lat;
+	}
+	
+	public double getLongitude() {
+		return geometry.location.lng;
 	}
 	
 }

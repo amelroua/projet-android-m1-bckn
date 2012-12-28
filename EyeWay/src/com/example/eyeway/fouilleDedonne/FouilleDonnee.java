@@ -4,6 +4,10 @@ import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStream;
 import java.io.InputStreamReader;
+import java.io.OutputStream;
+import java.io.Reader;
+import java.io.Writer;
+import java.nio.charset.Charset;
 import java.util.ArrayList;
 
 import org.apache.http.HttpEntity;
@@ -13,6 +17,22 @@ import org.apache.http.client.ClientProtocolException;
 import org.apache.http.client.HttpClient;
 import org.apache.http.client.methods.HttpGet;
 import org.apache.http.impl.client.DefaultHttpClient;
+
+import com.google.api.client.googleapis.GoogleHeaders;
+import com.google.api.client.googleapis.json.JsonCParser;
+import com.google.api.client.http.GenericUrl;
+import com.google.api.client.http.HttpRequest;
+import com.google.api.client.http.HttpRequestFactory;
+import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponseException;
+import com.google.api.client.http.HttpTransport;
+import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.http.json.JsonHttpParser;
+import com.google.api.client.json.JsonFactory;
+import com.google.api.client.json.JsonGenerator;
+import com.google.api.client.json.JsonParser;
+import com.google.api.client.json.jackson2.JacksonFactory;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -22,9 +42,16 @@ import android.util.Log;
 public class FouilleDonnee {
 	//Attention si ce tableau est modifié, il faut modifier aussi le tableau des string en francais aussi
 	//et garder le meme ordre dans les deux tableaux
-	
+
+	/** Global instance of the HTTP transport. */
+	private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
+
 	private static String PLACE_APIKEY="AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs";
-	
+
+	private static final String PLACES_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/search/json?";
+	private static final String PLACES_TEXT_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/search/json?";
+	private static final String PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?";
+
 	public static String [] types_place_api= {
 		"bank",
 		"bar",
@@ -77,8 +104,8 @@ public class FouilleDonnee {
 		"Magasin",
 		"Université"
 	};
-	
-	
+
+
 	/****************************
 	 * UTIL 
 	 * **************************/
@@ -110,14 +137,15 @@ public class FouilleDonnee {
 
 	/**
 	 * Ajout de la APIKey, du sensor, de la langue. INDISPENSABLE
-	 * @param url non complétée
-	 * @return url complétée
+	 * @param genericUrl non complétée
 	 */
-	private String completePlaceQuery(String url){
-		return url+="&sensor=true&language=fr&key="+PLACE_APIKEY;
+	private void completePlaceQuery(GenericUrl Url){
+		Url.put("sensor", "true");
+		Url.put("key", PLACE_APIKEY);
+		Url.put("language", "fr");	
 	}
-	
-	
+
+
 	/**
 	 * Formatte la liste de type afin de l'utiliser lors de la requête
 	 * @param liste de types
@@ -131,8 +159,8 @@ public class FouilleDonnee {
 		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
 		return queryFormated;
 	}
-	
-	
+
+
 	String chaineFormatUrl(String query){
 		/*
 		 * construire la chaine qui va etre mise dans l'url
@@ -141,28 +169,34 @@ public class FouilleDonnee {
 		 * 
 		 */
 
-//		String queryFormated="";
-//		Scanner s = new Scanner(query).useDelimiter(" ");
-//		//TODO trouver le pattern qui reconnait un espace entre deux mots
-//		while(s.hasNext()){
-//			queryFormated+=s.next()+"+";
-//		}
-//		queryFormated=queryFormated.substring(0, queryFormated.length()-1);
-		
-		// Ou tout simplement 
-		
 		query.replace(' ', '+');
-		
+
 		return query;
 	}
 
-	
+	/**
+	 * Creating http request Factory
+	 * */
+	public static HttpRequestFactory createRequestFactory(
+			final HttpTransport transport) {
+				return transport.createRequestFactory(new HttpRequestInitializer() {
+					public void initialize(HttpRequest request) {
+						GoogleHeaders headers = new GoogleHeaders();
+						headers.setApplicationName("EyeWay");
+						request.setHeaders(headers);
+						JsonCParser parser = new JsonCParser(new JacksonFactory());
+				        request.setParser(parser);
+					}
+		});
+	}
+
+
 	/****************************
 	 * GOOGLE
 	 * **************************/
-	
 
-	
+
+
 	/**
 	 * Nearby Search Requests de type
 	 * 
@@ -175,22 +209,34 @@ public class FouilleDonnee {
 	 * @param distance en metre (parametre facultatif)
 	 * @return une liste de Lieu
 	 */
-	public ArrayList<Lieu> getLieuProximiteParType(double lat,double lng,ArrayList<String> types,int distance) {
+	public ListeLieu getLieuProximiteParType(double lat,double lng,ArrayList<String> types,int distance) {
 		/*
 		 * Exemple d'une requete qui marche : les restaurants près du Courtepaille : lat =47.8686030 lng =1.9124340 
 		 * https://maps.googleapis.com/maps/api/place/search/json?location=47.8686030,1.9124340&radius=100&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 		 * Testé , ok		
 		 */
-		types=convertirArrayListTypes(types);
-		String url = "https://maps.googleapis.com/maps/api/place/search/json?location="+lat+","+lng+"&radius="+distance;
-		String types_format_url="";
-		if(types.size()!=0){
-			types_format_url="&types="+typesFormatUrl(types);
-			url+=types_format_url;
+		try {
+
+			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
+			HttpRequest request = httpRequestFactory
+					.buildGetRequest(new GenericUrl(PLACES_SEARCH_URL));
+	
+			request.getUrl().put("location", lat + "," + lng);
+			request.getUrl().put("radius", distance); // in meters
+			
+			if(types != null)
+				request.getUrl().put("types", typesFormatUrl(types));
+			
+			completePlaceQuery(request.getUrl());
+
+			ListeLieu list = request.execute().parseAs(ListeLieu.class);
+			return list;
+
+		} catch (Exception e) {
+			Log.e("Error:", e.getMessage());
+			return null;
 		}
-		url=completePlaceQuery(url);
-		String reponse = executeQuery(url);
-		return JsonToLieu(reponse);
+		
 	}
 
 
@@ -201,17 +247,29 @@ public class FouilleDonnee {
 	 * @param query : les mots clés (parametre requis)
 	 * @return une liste de Lieu 
 	 */
-	public ArrayList<Lieu> getLieuParRecherche(String query) { 
+	public ListeLieu getLieuParRecherche(String query) { 
 		/*
 		 * Exemple d'une requete qui marche : les restaurants d'olivet
 		 * https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurant+olivet&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 		 */		
-		String queryFormated=chaineFormatUrl(query);
-		String url = "https://maps.googleapis.com/maps/api/place/textsearch/json?query="+queryFormated;
-		url=completePlaceQuery(url);
-		String reponse = executeQuery(url);
-		Log.d("Reponse", reponse);
-		return JsonToLieu(reponse);
+		
+		try {
+
+			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
+			HttpRequest request = httpRequestFactory
+					.buildGetRequest(new GenericUrl(PLACES_TEXT_SEARCH_URL));
+	
+			request.getUrl().put("query", query);
+
+			completePlaceQuery(request.getUrl());
+
+			ListeLieu list = request.execute().parseAs(ListeLieu.class);
+			return list;
+
+		} catch (Exception e) {
+			Log.e("Error:", e.getMessage());
+			return null;
+		}
 	}
 
 
@@ -219,195 +277,32 @@ public class FouilleDonnee {
 	 * Demande les details du lieu
 	 * @param reference : l'identifiant unique du lieu
 	 */
-	
-	public DetailLieu getDetails(String reference) {
+
+	public PlaceDetails getDetails(String reference) {
 		/* il nous faut une classe qui contienne les champs de l'adresse tels que numero de rue, nom de la rue...
-		*
+		 *
 		 * J'ai hésité a utiliser reverse geocoding pour faire ceci mais il ne faut pas : reverse geocoding fais une approximation a partir des coordonnées et renvoie plusieurs résultats
 		 * alors que place/details travail sur la référence (qui est unique) et ne retourne qu'un resultat
 		 *
 		 * Exemple de requete qui marche : 
 		 * https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
 		 */
-		String url = "https://maps.googleapis.com/maps/api/place/details/json?reference="+reference;
-		url=completePlaceQuery(url);
-		String reponse = executeQuery(url);
-		DetailLieu d=parseDetailResult(reponse);
-		return d;
-	}
-	
-	/**
-	 * Parse un Json en une liste de lieu
-	 * @param jsonString
-	 * @return liste de Lieu
-	 */
-	private ArrayList<Lieu> JsonToLieu(String jsonString) {
-		ArrayList<Lieu> lesLieux=new ArrayList<Lieu>();
 		try {
-			JSONObject jObject = new JSONObject(jsonString);
-			JSONArray results = jObject.getJSONArray("results"); 
-			JSONObject result, location, laPhoto;
-			JSONArray jPhotos,jTypes;
-
-			double lat,lng;
-			String icon="";
-			String id="";
-			String name="";
-			String reference="";
-			String vicinity="";
-			
-			Log.d("taille",""+	 results.length());
-
-			for(int i=0;i<results.length();i++) {
-
-				//Un résultat
-				result=results.getJSONObject(i);
-
-				//Position GPS
-				location=result.getJSONObject("geometry").getJSONObject("location");
-
-				lat=location.getDouble("lat");
-				lng=location.getDouble("lng");
-
-				//L'icone
-				if(result.has("icon")){
-					icon=result.getString("icon");
-				}
-				//ID
-				if(result.has("id")){
-					id=result.getString("id");
-				}
-				//Le nom
-				if(result.has("name")){
-					name=result.getString("name");
-				}
-				//reference
-				if(result.has("reference")){
-					reference=result.getString("reference");
-				}
-				//vicinity
-				if(result.has("vicinity")){
-					vicinity=result.getString("vicinity");
-				}
-				//Les photos
-				ArrayList <Photo> photos=new ArrayList<Photo>();
-				if(result.has("photos")){
-					jPhotos = result.getJSONArray("photos");
-					for(int p=0;p<jPhotos.length();p++) {
-						laPhoto=jPhotos.getJSONObject(p);
-						String photo_reference;
-						int height,width;
-						height=laPhoto.getInt("height");
-						width=laPhoto.getInt("width");
-						photo_reference=laPhoto.getString("photo_reference");
-
-						photos.add(new Photo(photo_reference, height, width));
-					}
-				}
-				//les types
-				ArrayList <String> types = new ArrayList<String>();
-				if(result.has("types")){
-					jTypes = result.getJSONArray("types");
-					for(int t=0;t<jTypes.length();t++) {
-						types.add(jTypes.getString(t));
-					}
-				}
-				lesLieux.add(new Lieu(lat, lng, icon, id, name, photos, reference, types, vicinity));
-			}		
-		} catch (JSONException e) {
-			Log.d("Il y a une erreur",e.toString());
-			e.printStackTrace();
-		} 
-
-
-		return lesLieux;
-	}
-	/**
-	 * Parse un Json en un LieuDetaille
-	 * @param jsonString
-	 * @return LieuDetaille
-	 */
-	private DetailLieu parseDetailResult(String jsonString) {
-		//Testée avec succès avec cette requete : https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
-		Log.i("testFouille","debut de parseDetail");
-		try {
-			JSONObject jObject = new JSONObject(jsonString);
-			JSONObject result = jObject.getJSONObject("result"); //cette instruction bug , pkoi ?
-			Log.i("testFouille","apres recup result");
-			JSONArray address_components = result.getJSONArray("address_components"); 
-			String street_number=""; //707
-			String route=""; //Avenue de Verdun
-			String locality=""; //Olivet
-			String administrative_area_level_2=""; //Loiret
-			String administrative_area_level_1=""; //Centre
-			String country=""; //FR
-			String postal_code=""; //45160
-			String phone_number="";
-			//Pour chaque entrée dans le tableau :
-			for(int i=0;i<address_components.length();i++) {
-				//Java est capricieux et ne veux pas retourner vrai avec une comparaison de string == , obliger de faire .equals
-				JSONObject un_composant=address_components.getJSONObject(i);
-				JSONArray types = un_composant.getJSONArray("types");
-				String type=types.getString(0);
-				if(type.equals(new String("street_number"))){
-					street_number=address_components.getJSONObject(i).getString("long_name");
-				}else if(type.equals(new String("route"))){
-					route=address_components.getJSONObject(i).getString("long_name");
-				}else if(type.equals(new String("locality"))){
-					locality=address_components.getJSONObject(i).getString("long_name");
-				}else if(type.equals(new String("administrative_area_level_2"))){
-					administrative_area_level_2=address_components.getJSONObject(i).getString("long_name");
-				}else if(type.equals(new String("administrative_area_level_1"))){
-					administrative_area_level_1=address_components.getJSONObject(i).getString("long_name");
-				}
-				else if(type.equals(new String("country"))){
-					country=address_components.getJSONObject(i).getString("long_name");
-				}else if(type.equals(new String("postal_code"))){
-					postal_code=address_components.getJSONObject(i).getString("long_name");
-				}else if(type.equals(new String("phone_number"))){
-					phone_number=address_components.getJSONObject(i).getString("long_name");
-				}
-			}
-			return new DetailLieu(street_number, route,  locality,  administrative_area_level_2,  administrative_area_level_1, country,  postal_code,  phone_number);
-
-		} catch (JSONException e) {
-			Log.i("testFouille", "Exeception recuperee "+e.getMessage()+" , cause : "+e.getCause());
-			e.printStackTrace();
-		}
-		return null;
-	}
-
-	/**
-	 * Faire la requete sur google maps api
-	 * @param url
-	 * @return json résultat
-	 */
-	public String executeQuery(String url) {
-		StringBuilder builder = new StringBuilder();
-		HttpClient client = new DefaultHttpClient();
-		HttpGet httpGet = new HttpGet(url);
-		try {
-			HttpResponse response = client.execute(httpGet);
-			StatusLine statusLine = response.getStatusLine();
-			int statusCode = statusLine.getStatusCode();
-			//200 pour dire que la requette s'est bien déroulée
-			if (statusCode == 200) {
-				HttpEntity entity = response.getEntity();
-				InputStream content = entity.getContent();
-				BufferedReader reader = new BufferedReader(
-						new InputStreamReader(content));
-				String line;
-				while ((line = reader.readLine()) != null) {
-					builder.append(line);
-				}
-			} else {
-				Log.i(this.toString(), "Erreur de chargement");
-			}
-		} catch (ClientProtocolException e) {
-			e.printStackTrace();
-		} catch (IOException e) {
-			e.printStackTrace();
-		}
-		return builder.toString();
+			 
+            HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
+            HttpRequest request = httpRequestFactory
+                    .buildGetRequest(new GenericUrl(PLACES_DETAILS_URL));
+            request.getUrl().put("reference", reference);
+            
+            completePlaceQuery(request.getUrl());
+ 
+            PlaceDetails place = request.execute().parseAs(PlaceDetails.class);
+ 
+            return place;
+ 
+        } catch (Exception e) {
+            Log.e("Error in Perform Details", e.getMessage());
+            return null;
+        }
 	}
 }

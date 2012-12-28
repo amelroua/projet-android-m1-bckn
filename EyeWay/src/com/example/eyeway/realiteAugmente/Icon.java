@@ -20,6 +20,7 @@ import com.example.eyeway.Map.Map;
 import com.example.eyeway.fouilleDedonne.DetailLieu;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
 import com.example.eyeway.fouilleDedonne.Lieu;
+import com.example.eyeway.fouilleDedonne.PlaceDetails;
 import com.google.android.maps.GeoPoint;
 
 public class Icon extends LinearLayout {
@@ -272,7 +273,7 @@ public class Icon extends LinearLayout {
 
 		if(lieu != null && adresse.equals("")){
 			FouilleDonnee fd = new FouilleDonnee();
-			DetailLieu detail = fd.getDetails(lieu.getReference());
+			PlaceDetails detail = fd.getDetails(lieu.getReference());
 			this.adresse = detail.toString();
 			this.name = lieu.getNom();
 
