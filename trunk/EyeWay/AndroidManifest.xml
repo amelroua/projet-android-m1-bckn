@@ -63,6 +63,11 @@
             android:label="@string/title_activity_recherche_perimetre" >
            
         </activity>
+           <activity
+            android:name=".menuPrincipal.RechercheMotCle"
+            android:label="@string/title_activity_recherche_par_mot_cle" >
+           
+        </activity>
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" >
