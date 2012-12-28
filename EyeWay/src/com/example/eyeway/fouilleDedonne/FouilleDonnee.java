@@ -207,9 +207,10 @@ public class FouilleDonnee {
 			request.getUrl().put("location", lat + "," + lng);
 			request.getUrl().put("radius", distance); // in meters
 
-			if(types != null)
+			if(types != null) {
 				types=FrancaisToApi(types);
-			request.getUrl().put("types", typesFormatUrl(types));
+				request.getUrl().put("types", typesFormatUrl(types));
+			}
 
 			completePlaceQuery(request.getUrl());
 
