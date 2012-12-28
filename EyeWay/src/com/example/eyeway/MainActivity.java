@@ -52,7 +52,7 @@ public class MainActivity extends Activity implements OnClickListener{
 			 startActivity(monIntent);
 		}
 		if(v.getId()==fouille.getId()){
-			Intent monIntent = new Intent(this,FouilleDonnee.class);
+			Intent monIntent = new Intent(this,FouilleTest.class);
 			startActivity(monIntent);  
 			
 		}
