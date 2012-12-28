@@ -27,21 +27,22 @@ public class Lieu {
 	public Geometry geometry;
 	
 	@Key
-	public List<Photo> photos;
-	
-	@Key
-	public List<String> types;
+	public String formatted_address;
+
 	
 	/** DETAILS */
 	
-	@Key
-	public String formatted_address;
 
 	@Key
 	public String formatted_phone_number;
 	
 	@Key
 	public String website;
+	
+	@Override
+	public String toString() {
+		return id+" "+name+" "+icon;
+	}
 
 	public static class Geometry implements Serializable
 	{
@@ -96,11 +97,11 @@ public class Lieu {
 	}
 
 	public List<Photo> getPhotos() {
-		return photos;
+		return null;
 	}
 
 	public List<String> getTypes() {
-		return types;
+		return null;
 	}
 	
 	public double getLatitude() {

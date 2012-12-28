@@ -1,17 +1,18 @@
 package com.example.eyeway.fouilleDedonne;
 
+import java.io.IOException;
 import java.util.ArrayList;
 
 import com.google.api.client.googleapis.GoogleHeaders;
-import com.google.api.client.googleapis.json.JsonCParser;
 import com.google.api.client.http.GenericUrl;
 import com.google.api.client.http.HttpRequest;
 import com.google.api.client.http.HttpRequestFactory;
 import com.google.api.client.http.HttpRequestInitializer;
+import com.google.api.client.http.HttpResponseException;
 import com.google.api.client.http.HttpTransport;
 import com.google.api.client.http.javanet.NetHttpTransport;
+import com.google.api.client.json.JsonObjectParser;
 import com.google.api.client.json.jackson2.JacksonFactory;
-
 import android.util.Log;
 
 public class FouilleDonnee {
@@ -24,7 +25,7 @@ public class FouilleDonnee {
 	private static String PLACE_APIKEY="AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs";
 
 	private static final String PLACES_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/search/json?";
-	private static final String PLACES_TEXT_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/search/json?";
+	private static final String PLACES_TEXT_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
 	private static final String PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?";
 
 	public static String [] types_place_api= {
@@ -124,8 +125,8 @@ public class FouilleDonnee {
 	 */
 	private void completePlaceQuery(GenericUrl Url){
 		Url.put("sensor", "true");
-		Url.put("key", PLACE_APIKEY);
 		Url.put("language", "fr");	
+		Url.put("key", PLACE_APIKEY);
 	}
 
 
@@ -151,28 +152,28 @@ public class FouilleDonnee {
 		 * et dans l'url on doit mettre restaurant+olivet
 		 * 
 		 */
-
-		query.replace(' ', '+');
-
-		return query;
+		return query.replace(' ', '+');
 	}
 
 	/**
 	 * Creating http request Factory
 	 * */
 	public static HttpRequestFactory createRequestFactory(
-			final HttpTransport transport) {
+			HttpTransport transport) {
 		return transport.createRequestFactory(new HttpRequestInitializer() {
-			public void initialize(HttpRequest request) {
-				GoogleHeaders headers = new GoogleHeaders();
-				headers.setApplicationName("EyeWay");
-				request.setHeaders(headers);
-				JsonCParser parser = new JsonCParser(new JacksonFactory());
-				request.setParser(parser);
-			}
+					public void initialize(HttpRequest request) {
+						GoogleHeaders headers = new GoogleHeaders();
+						headers.setApplicationName("EyeWay");
+						headers.put("Content-Type", "application/json");
+						request.setHeaders(headers);
+	
+						
+						JsonObjectParser parser = new JsonObjectParser(new JacksonFactory());
+			            request.setParser(parser);
+
+					}
 		});
 	}
-
 
 	/****************************
 	 * GOOGLE
@@ -203,6 +204,7 @@ public class FouilleDonnee {
 			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
 			HttpRequest request = httpRequestFactory
 					.buildGetRequest(new GenericUrl(PLACES_SEARCH_URL));
+
 
 			request.getUrl().put("location", lat + "," + lng);
 			request.getUrl().put("radius", distance); // in meters
@@ -253,17 +255,24 @@ public class FouilleDonnee {
 			HttpRequest request = httpRequestFactory
 					.buildGetRequest(new GenericUrl(PLACES_TEXT_SEARCH_URL));
 
+			query=chaineFormatUrl(query);
+			
 			request.getUrl().put("query", query);
 
 			completePlaceQuery(request.getUrl());
-
+			
+			
+				
 			ListeLieu list = request.execute().parseAs(ListeLieu.class);
+
 			return list;
 
-		} catch (Exception e) {
-			Log.e("Error:", e.getMessage());
-			return null;
-		}
+		} catch (HttpResponseException e) {
+            Log.e("Error:", e.getMessage());
+        } catch (IOException e) {
+			e.printStackTrace();
+		} 
+		return null;
 	}
 
 
