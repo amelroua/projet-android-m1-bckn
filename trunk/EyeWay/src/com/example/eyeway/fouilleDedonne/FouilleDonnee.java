@@ -209,20 +209,18 @@ public class FouilleDonnee {
 			request.getUrl().put("location", lat + "," + lng);
 			request.getUrl().put("radius", distance); // in meters
 
-//			if(types != null) {
-//				types=FrancaisToApi(types);
-//				request.getUrl().put("types", typesFormatUrl(types));
-//			}
+			if(types != null && types.size()>0) {
+				types=FrancaisToApi(types);
+				request.getUrl().put("types", typesFormatUrl(types));
+			}
 
 			completePlaceQuery(request.getUrl());
-			
-			Log.e("URL",request.getUrl().toString());
 
 			ListeLieu list = request.execute().parseAs(ListeLieu.class);
 
 			// Max de 60 resultats
-			while(list.next_page_token!=null || list.next_page_token!=""){
-				Thread.sleep(4000);
+			while(list.next_page_token!=null && list.next_page_token!=""){
+				Thread.sleep(100);
 				/*Since the token can be used after a short time it has been  generated*/
 				request.getUrl().put("pagetoken",list.next_page_token);
 				ListeLieu temp = request.execute().parseAs(ListeLieu.class);
@@ -230,11 +228,14 @@ public class FouilleDonnee {
 			}
 			return list;
 
-		} catch (Exception e) {
-			Log.e("Error:", e.getMessage());
-			return null;
-		}
-
+		} catch (HttpResponseException e) {
+            Log.e("Error:", e.getMessage());
+        } catch (IOException e) {
+			e.printStackTrace();
+		} catch (InterruptedException e) {
+			e.printStackTrace();
+        } 
+		return null;
 	}
 
 
