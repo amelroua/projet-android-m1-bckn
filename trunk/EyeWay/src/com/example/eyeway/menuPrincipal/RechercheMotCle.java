@@ -115,7 +115,7 @@ public class RechercheMotCle extends Activity implements OnClickListener
 				} else {
 					intent = new Intent(getApplicationContext(),
 							RealiteAugmente.class);
-					intent.putExtra("methode", "motCle");
+					intent.putExtra("methode", "recherche");
 					intent.putExtra("motCle", edit_text_mot_cle.getText().toString());
 				}
 				startActivity(intent);

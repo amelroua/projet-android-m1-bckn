@@ -22,7 +22,7 @@ public class FouilleDonnee {
 	/** Global instance of the HTTP transport. */
 	private static final HttpTransport HTTP_TRANSPORT = new NetHttpTransport();
 
-	private static String PLACE_APIKEY="AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs";
+	private static String PLACE_APIKEY="AIzaSyBYJJwhn35dASdge0yWHYe6ASolYW5xM_4";
 
 	private static final String PLACES_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/search/json?";
 	private static final String PLACES_TEXT_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
@@ -213,9 +213,9 @@ public class FouilleDonnee {
 				types=FrancaisToApi(types);
 				request.getUrl().put("types", typesFormatUrl(types));
 			}
-
+		
 			completePlaceQuery(request.getUrl());
-
+			Log.d("url",request.getUrl().toString());
 			ListeLieu list = request.execute().parseAs(ListeLieu.class);
 
 			// Max de 60 resultats
