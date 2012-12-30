@@ -2,6 +2,7 @@ package com.example.eyeway.realiteAugmente;
 
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.HashMap;
 
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -17,6 +18,7 @@ import android.location.Geocoder;
 import android.location.Location;
 import android.location.LocationListener;
 import android.location.LocationManager;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -26,19 +28,23 @@ import android.view.View;
 import android.view.View.OnLongClickListener;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.Toast;
 import android.widget.FrameLayout.LayoutParams;
 import android.widget.ImageView;
 import android.widget.TextView;
 
+import com.example.eyeway.FouilleTest;
 import com.example.eyeway.R;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
 import com.example.eyeway.fouilleDedonne.Lieu;
 import com.example.eyeway.fouilleDedonne.ListeLieu;
+import com.example.eyeway.fouilleDedonne.PlaceDetails;
 import com.google.android.maps.GeoPoint;
 
 public class RealiteAugmente extends Activity implements LocationListener,
-		OnLongClickListener {
+OnLongClickListener {
 
 	private SensorManager sensorMngr;
 	private SensorEventListener sensorLstr;
@@ -53,10 +59,15 @@ public class RealiteAugmente extends Activity implements LocationListener,
 	private int distance ;
 	ImageView im;
 	ListeLieu lieux; 
+	PlaceDetails details;
+
+
+	public String KEY_REFERENCE = "reference"; // id of the place
+	public String KEY_NAME = "name"; // name of the place
 	ArrayList<String> types ;
 	private String methode ;
 	private String motCle ;
-	
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 
@@ -66,39 +77,39 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		setContentView(R.layout.activity_realite_augmente);
 		Bundle b = getIntent().getExtras();
 		methode = b.getString("methode");
-		
+
 		if(methode.equalsIgnoreCase("proximite")){
-		
+
 			types = (ArrayList<String>) b.get("types");
 			distance = b.getInt("distance");
-		
+
 		}else{
 
 			if(methode.equalsIgnoreCase("instantane")){
-				
+
 				int taille = FouilleDonnee.types_place_fr.length;
 				types = new ArrayList<String>();
 				/*
 				for(int i = 0 ; i < taille; i++ ){
-					
+
 					types.add(FouilleDonnee.types_place_fr[i]);
 				}
-				*/
+				 */
 				types.add("Bar");
 				distance = 500 ; // On défini une distance de 500 mètre
-				
+
 			}else{
 
 				motCle = b.getString("motCle"); 
 			}
 		}
-		
+
 		FrameLayout l = (FrameLayout) findViewById(R.id.main);
 
 		// On rend notre écran cliquable avec taphold
 		l.setOnLongClickListener(this);
-		
-		
+
+
 		// On initialise nos écouteurs
 		initialisationEcouteursGPS();
 		initialisionEcouteurAccelerometre();
@@ -144,7 +155,7 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		// Si le réseau et le gps ne sont pas allumé
 		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
 				& !locationManager
-						.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
+				.isProviderEnabled(LocationManager.NETWORK_PROVIDER)) {
 
 			boiteDedialog();
 
@@ -175,50 +186,16 @@ public class RealiteAugmente extends Activity implements LocationListener,
 	public void initialisationFenetre() {
 		Log.d("ini","fenetre");
 		this.icons = new ArrayList<Icon>();
-		
-		FouilleDonnee fd = new FouilleDonnee();
-		
-		if(methode.equals("proximite")){
 
-			lieux = fd.getLieuProximiteParType(
-				myLocation.getLatitude(), myLocation.getLongitude(),
-				types, distance);
-		}else{
-			
-			if(methode.equalsIgnoreCase("instantane")){
-				lieux = fd.getLieuProximiteParType(myLocation.getLatitude(), myLocation.getLongitude(), types, distance);
-				
-			}else{
 
-				lieux = fd.getLieuParRecherche(motCle);
-
-			}
-		}
-		
-		Lieu l;
-		Icon ic;
+		new RequeteRecherche().execute(methode);
 
 		// On récupère le context
-				ctx = this;
-				
-		if(lieux.results.size() == 0){
-			
-			Toast.makeText(ctx, "Aucun résultat pour votre recherche", Toast.LENGTH_SHORT).show();
-		}
-		
+		ctx = this;
 
-		// Pour tous les lieux
-		for (int i = 0; i < lieux.results.size(); i++) {
 
-			
-			// On récupère le lieu
-			l = lieux.results.get(i);
-			
-			// On créer un nouvel icon
-			ic = newIcons(l);
 
-			ajoutIcon(ic);
-		}
+
 
 		// On récupère la ta taille de l'écran
 		mScreenWidth = getScreenWidth();
@@ -239,19 +216,19 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		icons.add(icon);
 
 	}
-	
+
 	public void reinitialiserFenetre(){
 		FrameLayout layoutMain = (FrameLayout) findViewById(R.id.main);
 		View v = layoutMain.getChildAt(0);
-		
+
 		int taille = layoutMain.getChildCount();
 		Log.d("tailleLa",taille+"");
 		if(taille > 1){
-			
-		for (int i = 1 ; i < layoutMain.getChildCount() ; i++){
-			Log.d("beug","quand");
-			layoutMain.removeViewAt(i);
-		}
+
+			for (int i = 1 ; i < layoutMain.getChildCount() ; i++){
+				Log.d("beug","quand");
+				layoutMain.removeViewAt(i);
+			}
 		}
 	}
 	/**
@@ -285,7 +262,7 @@ public class RealiteAugmente extends Activity implements LocationListener,
 				startActivityForResult(
 						new Intent(
 								android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS),
-						0);
+								0);
 
 			}
 		});
@@ -340,6 +317,9 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		sensorMngr.registerListener(sensorLstr,
 				sensorMngr.getDefaultSensor(Sensor.TYPE_ORIENTATION),
 				SensorManager.SENSOR_DELAY_UI);
+		
+		initialisationEcouteursGPS();
+
 	}
 
 	@Override
@@ -351,6 +331,10 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		sensorMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		sensorMngr.unregisterListener(sensorLstr,
 				sensorMngr.getDefaultSensor(Sensor.TYPE_ORIENTATION));
+		
+		locationManager.removeUpdates(this);
+	
+	
 	}
 
 	@Override
@@ -560,23 +544,23 @@ public class RealiteAugmente extends Activity implements LocationListener,
 			initialisationFenetre();
 
 		}else{
-			
+
 			if(methode.equalsIgnoreCase("instantane")){
-				
+
 				Log.d("Recherche" ,"new POI");
 				reinitialiserFenetre();
 				initialisationFenetre();
-			
+
 			}else{
-				
+
 				// Permet de recalculer la distance en ma position et celle
 				// de mes icons
 				recalculerDistance();
 
 			}
 		}
-		
-		
+
+
 	}
 
 	@Override
@@ -656,24 +640,24 @@ public class RealiteAugmente extends Activity implements LocationListener,
 
 		adb.setPositiveButton("Enregister",
 				new DialogInterface.OnClickListener() {
-					public void onClick(DialogInterface dialog, int which) {
+			public void onClick(DialogInterface dialog, int which) {
 
-						TextView nom = (TextView) alertDialogView
-								.findViewById(R.id.titre);
-						TextView description = (TextView) alertDialogView
-								.findViewById(R.id.description);
-						
-						EditText edit = (EditText) alertDialogView
-								.findViewById(R.id.modifAdresse);
-						
-						Icon i = new Icon(ctx, im, nom.getText().toString(),
-								description.getText().toString(),"nouveau",edit.getText().toString(), myLocation
-										.getLatitude(), myLocation
-										.getLongitude(), myLocation);
-						ajoutIcon(i);
+				TextView nom = (TextView) alertDialogView
+						.findViewById(R.id.titre);
+				TextView description = (TextView) alertDialogView
+						.findViewById(R.id.description);
 
-					}
-				});
+				EditText edit = (EditText) alertDialogView
+						.findViewById(R.id.modifAdresse);
+
+				Icon i = new Icon(ctx, im, nom.getText().toString(),
+						description.getText().toString(),"nouveau",edit.getText().toString(), myLocation
+						.getLatitude(), myLocation
+						.getLongitude(), myLocation);
+				ajoutIcon(i);
+
+			}
+		});
 
 		// On crée un bouton "Annuler" à notre AlertDialog et on lui affecte un
 		// évènement
@@ -763,4 +747,65 @@ public class RealiteAugmente extends Activity implements LocationListener,
 		return false;
 	}
 
+	class RequeteRecherche extends AsyncTask<String, String, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+			FouilleDonnee fd=new FouilleDonnee();
+			Log.d("Je le fais ","Requete");
+			if(params[0].equals("proximite") || params[0].equals("instantane")){
+				lieux = fd.getLieuProximiteParType(myLocation.getLatitude(), myLocation.getLongitude(),
+						types, distance);
+				Log.d("Types ",types.get(0));
+				Log.d("Distance",distance +"");
+			}
+			else if (params[0].equals("recherche"))
+				lieux = fd.getLieuParRecherche(motCle);
+
+			return null;
+		}
+
+		protected void onPostExecute(String file_url) {
+			runOnUiThread(new Runnable() {
+				public void run() {
+					Log.d("etape","1");
+					String status = "";
+					if(lieux != null)
+						status=lieux.status;
+						Log.d("status",lieux.status);
+					if(status.equals("OK")){
+						Log.d("etape","2");
+						// Successfully got places details
+						if (lieux != null && lieux.results != null) {
+							Log.d("etape","3");
+
+							if(lieux.results.size() == 0){
+
+								Toast.makeText(ctx, "Aucun résultat pour votre recherche", Toast.LENGTH_SHORT).show();
+
+							}else{
+								Toast.makeText(ctx, "je suis la", Toast.LENGTH_SHORT).show();
+
+								Icon ic; 
+								// loop through each place
+								for (Lieu p : lieux.results) {
+
+									// On créer un nouvel icon
+									ic = newIcons(p);
+									ajoutIcon(ic);
+
+								}
+							}
+						}else{
+							Log.d("etape","4");
+						}
+
+
+					}
+				}
+
+			});    
+		}
+	}
 }
+

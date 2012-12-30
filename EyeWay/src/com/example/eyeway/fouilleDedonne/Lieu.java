@@ -39,6 +39,9 @@ public class Lieu {
 	@Key
 	public String website;
 	
+	@Key
+	public List<String> types ;
+	
 	@Override
 	public String toString() {
 		return id+" "+name+" "+icon;
@@ -101,7 +104,7 @@ public class Lieu {
 	}
 
 	public List<String> getTypes() {
-		return null;
+		return this.types;
 	}
 	
 	public double getLatitude() {
