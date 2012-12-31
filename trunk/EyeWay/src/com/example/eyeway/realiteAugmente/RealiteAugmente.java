@@ -773,16 +773,13 @@ OnLongClickListener {
 		protected void onPostExecute(String file_url) {
 			runOnUiThread(new Runnable() {
 				public void run() {
-					Log.d("etape","1");
 					String status = "";
 					if(lieux != null)
 						status=lieux.status;
 						Log.d("status",lieux.status);
 					if(status.equals("OK")){
-						Log.d("etape","2");
 						// Successfully got places details
 						if (lieux != null && lieux.results != null) {
-							Log.d("etape","3");
 
 							if(lieux.results.size() == 0){
 
@@ -802,7 +799,8 @@ OnLongClickListener {
 								}
 							}
 						}else{
-							Log.d("etape","4");
+							Toast.makeText(ctx, "Aucun résultat pour votre recherche", Toast.LENGTH_SHORT).show();
+
 						}
 
 

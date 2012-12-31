@@ -218,22 +218,24 @@ public class FouilleDonnee {
 			Log.d("url",request.getUrl().toString());
 			ListeLieu list = request.execute().parseAs(ListeLieu.class);
 
+			/*
 			// Max de 60 resultats
 			while(list.next_page_token!=null && list.next_page_token!=""){
 				Thread.sleep(100);
-				/*Since the token can be used after a short time it has been  generated*/
+				/*Since the token can be used after a short time it has been  generated
 				request.getUrl().put("pagetoken",list.next_page_token);
 				ListeLieu temp = request.execute().parseAs(ListeLieu.class);
 				list.results.addAll(temp.results);
 			}
+		*/
 			return list;
 
 		} catch (HttpResponseException e) {
             Log.e("Error:", e.getMessage());
         } catch (IOException e) {
 			e.printStackTrace();
-		} catch (InterruptedException e) {
-			e.printStackTrace();
+		//} catch (InterruptedException e) {
+			//e.printStackTrace();
         } 
 		return null;
 	}
@@ -302,9 +304,10 @@ public class FouilleDonnee {
 			request.getUrl().put("reference", reference);
 
 			completePlaceQuery(request.getUrl());
-
+			
+			Log.d("URL details",request.getUrl().toString());
 			PlaceDetails place = request.execute().parseAs(PlaceDetails.class);
-
+			
 			return place;
 
 		} catch (Exception e) {

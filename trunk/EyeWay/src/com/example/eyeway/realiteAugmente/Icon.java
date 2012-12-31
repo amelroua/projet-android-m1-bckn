@@ -30,7 +30,7 @@ import com.example.eyeway.fouilleDedonne.PlaceDetails;
 import com.google.android.maps.GeoPoint;
 
 public class Icon extends LinearLayout {
-	
+
 	public String KEY_REFERENCE = "reference"; // id of the place
 	public String KEY_NAME = "name"; // name of the place
 	private TextView label;
@@ -45,7 +45,7 @@ public class Icon extends LinearLayout {
 	private PlaceDetails details;
 	private String webSite ;
 	private String phone ; 
-	
+
 	public Icon(Context context, Activity a) {
 		super(context);
 	}
@@ -289,12 +289,11 @@ public class Icon extends LinearLayout {
 			// Faire la tâche asynchrone ;) 
 			// Donne les détails complet d'un lieu ;)
 			new RequeteDetail().execute("details");
-			
+
 			this.adresse = lieu.getFormatted_address();
 			this.name = lieu.getNom();
-			this.webSite = details.result.website;
-			this.phone = details.result.formatted_phone_number;
-		}
+			
+				}
 
 		TextView text = (TextView) alertDialogView.findViewById(R.id.titre);
 		text.setText(name);
@@ -311,10 +310,10 @@ public class Icon extends LinearLayout {
 
 		text = (TextView) alertDialogView.findViewById(R.id.webSite);
 		text.setText(this.webSite);
-		
+
 		text = (TextView) alertDialogView.findViewById(R.id.phone);
 		text.setText(this.phone);
-	
+
 		adb.setPositiveButton("Itinéraire",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -343,12 +342,22 @@ public class Icon extends LinearLayout {
 		protected String doInBackground(String... params) {
 			FouilleDonnee fd=new FouilleDonnee();
 
-			if(params[0].equals("details"))
-				details=fd.getDetails(lieu.getReference());
+			if(params[0].equals("details")){
 
+				Log.d("details",lieu.getReference());
+				details=fd.getDetails(lieu.getReference());
+				Log.d("Null ?", (details == null) +"");
+				if(details != null){
+					
+					Log.d("web", ""+details.result.getWebsite());
+					webSite = details.result.getWebsite();
+					phone = details.result.getFormatted_phone_number();
+				}
+			}
 
 			return null;
 		}
+		
 	}
 
 	// ------------- GETTERS AND SETTERS --------------------
