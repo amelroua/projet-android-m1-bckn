@@ -35,6 +35,8 @@
 	<string name="titre_recherche_motCle">Recherche par mot clé</string>
 	<string name="text_motCle">Ex: restaurant olivet</string>
 	<string name="logoApli">Logo de l\'application</string>
+	<string name="phone" >Numéro de téléphone</string>
+	<string name="webSite">Site Web</string>
 	<string-array name="array_choix_position">
         <item>Autour de ma position</item>
         <item>Autour d\'une autre position</item>

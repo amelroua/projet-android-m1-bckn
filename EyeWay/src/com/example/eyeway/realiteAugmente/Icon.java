@@ -1,5 +1,6 @@
 package com.example.eyeway.realiteAugmente;
 
+import java.util.HashMap;
 import java.util.StringTokenizer;
 
 import android.app.Activity;
@@ -8,13 +9,18 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.location.Location;
+import android.os.AsyncTask;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.SimpleAdapter;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.eyeway.FouilleTest;
 import com.example.eyeway.R;
 import com.example.eyeway.Map.Map;
 import com.example.eyeway.fouilleDedonne.DetailLieu;
@@ -24,7 +30,9 @@ import com.example.eyeway.fouilleDedonne.PlaceDetails;
 import com.google.android.maps.GeoPoint;
 
 public class Icon extends LinearLayout {
-
+	
+	public String KEY_REFERENCE = "reference"; // id of the place
+	public String KEY_NAME = "name"; // name of the place
 	private TextView label;
 	private ImageView icon;
 	private ImageView photoDescription;
@@ -34,7 +42,10 @@ public class Icon extends LinearLayout {
 	private String description;
 	private String adresse ;
 	private Lieu lieu ;
-
+	private PlaceDetails details;
+	private String webSite ;
+	private String phone ; 
+	
 	public Icon(Context context, Activity a) {
 		super(context);
 	}
@@ -54,13 +65,15 @@ public class Icon extends LinearLayout {
 	 */
 	public Icon(Context context, ImageView Imview, String name,
 			String description,String type,String adresse, double latitude, double longitude,
-			Location myLocation) {
+			Location myLocation, String phoneNumer , String siteWeb) {
 
 		super(context);
 		this.adresse = adresse;
 		this.description = description;
 		this.name = name;
 		this.lieu = null ;
+		this.phone = phoneNumer;
+		this.webSite = siteWeb;
 		creerIcon(context, Imview, latitude, longitude, myLocation, type);
 	}
 
@@ -272,11 +285,15 @@ public class Icon extends LinearLayout {
 
 
 		if(lieu != null && adresse.equals("")){
-			FouilleDonnee fd = new FouilleDonnee();
-			PlaceDetails detail = fd.getDetails(lieu.getReference());
-			this.adresse = detail.toString();
-			this.name = lieu.getNom();
 
+			// Faire la tâche asynchrone ;) 
+			// Donne les détails complet d'un lieu ;)
+			new RequeteDetail().execute("details");
+			
+			this.adresse = lieu.getFormatted_address();
+			this.name = lieu.getNom();
+			this.webSite = details.result.website;
+			this.phone = details.result.formatted_phone_number;
 		}
 
 		TextView text = (TextView) alertDialogView.findViewById(R.id.titre);
@@ -285,15 +302,19 @@ public class Icon extends LinearLayout {
 		text = (TextView) alertDialogView.findViewById(R.id.description);
 		text.setText(description);
 
-	
+
 		text = (TextView) alertDialogView.findViewById(R.id.distance);
 		text.setText(this.label.getText());
+
 		text = (TextView) alertDialogView.findViewById(R.id.adresse);
-
-
-
 		text.setText(this.adresse);
 
+		text = (TextView) alertDialogView.findViewById(R.id.webSite);
+		text.setText(this.webSite);
+		
+		text = (TextView) alertDialogView.findViewById(R.id.phone);
+		text.setText(this.phone);
+	
 		adb.setPositiveButton("Itinéraire",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
@@ -312,6 +333,22 @@ public class Icon extends LinearLayout {
 
 		adb.show();
 
+	}
+
+
+
+	class RequeteDetail extends AsyncTask<String, String, String> {
+
+		@Override
+		protected String doInBackground(String... params) {
+			FouilleDonnee fd=new FouilleDonnee();
+
+			if(params[0].equals("details"))
+				details=fd.getDetails(lieu.getReference());
+
+
+			return null;
+		}
 	}
 
 	// ------------- GETTERS AND SETTERS --------------------

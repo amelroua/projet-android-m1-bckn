@@ -318,8 +318,7 @@ OnLongClickListener {
 				sensorMngr.getDefaultSensor(Sensor.TYPE_ORIENTATION),
 				SensorManager.SENSOR_DELAY_UI);
 		
-		initialisationEcouteursGPS();
-
+		
 	}
 
 	@Override
@@ -647,13 +646,19 @@ OnLongClickListener {
 				TextView description = (TextView) alertDialogView
 						.findViewById(R.id.description);
 
-				EditText edit = (EditText) alertDialogView
+				EditText adresse = (EditText) alertDialogView
 						.findViewById(R.id.modifAdresse);
 
+				EditText phone = (EditText) alertDialogView
+						.findViewById(R.id.phone);
+				
+				EditText webSite = (EditText) alertDialogView
+						.findViewById(R.id.webSite);
+			
 				Icon i = new Icon(ctx, im, nom.getText().toString(),
-						description.getText().toString(),"nouveau",edit.getText().toString(), myLocation
+						description.getText().toString(),"nouveau",adresse.getText().toString(), myLocation
 						.getLatitude(), myLocation
-						.getLongitude(), myLocation);
+						.getLongitude(), myLocation,phone.getText().toString(),webSite.getText().toString());
 				ajoutIcon(i);
 
 			}
