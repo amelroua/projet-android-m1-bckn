@@ -73,6 +73,10 @@ OnLongClickListener {
 
 		super.onCreate(savedInstanceState);
 
+		// On initialise nos écouteurs
+				initialisationEcouteursGPS();
+				initialisionEcouteurAccelerometre();
+				
 		// On lie notre classe au layout
 		setContentView(R.layout.activity_realite_augmente);
 		Bundle b = getIntent().getExtras();
@@ -89,13 +93,14 @@ OnLongClickListener {
 
 				int taille = FouilleDonnee.types_place_fr.length;
 				types = new ArrayList<String>();
-				/*
+				
+				// Pour tous les types
 				for(int i = 0 ; i < taille; i++ ){
 
 					types.add(FouilleDonnee.types_place_fr[i]);
 				}
-				 */
-				types.add("Bar");
+				 
+				
 				distance = 500 ; // On défini une distance de 500 mètre
 
 			}else{
@@ -110,9 +115,7 @@ OnLongClickListener {
 		l.setOnLongClickListener(this);
 
 
-		// On initialise nos écouteurs
-		initialisationEcouteursGPS();
-		initialisionEcouteurAccelerometre();
+		
 
 	}
 
@@ -145,12 +148,12 @@ OnLongClickListener {
 		// On update le manager tout les 100 mili secondes
 
 		// Avec le GPS
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,1000,
-				1, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10000,
+				10, this);
 
 		// Avec le réseau
 		locationManager.requestLocationUpdates(
-				LocationManager.NETWORK_PROVIDER, 1000, 1, this);
+				LocationManager.NETWORK_PROVIDER, 10000, 10, this);
 
 		// Si le réseau et le gps ne sont pas allumé
 		if (!locationManager.isProviderEnabled(LocationManager.GPS_PROVIDER)
@@ -187,16 +190,12 @@ OnLongClickListener {
 		Log.d("ini","fenetre");
 		this.icons = new ArrayList<Icon>();
 
-
+	
 		new RequeteRecherche().execute(methode);
 
 		// On récupère le context
 		ctx = this;
-
-
-
-
-
+		
 		// On récupère la ta taille de l'écran
 		mScreenWidth = getScreenWidth();
 		mScreenHeight = getScreenHeight();
@@ -219,10 +218,9 @@ OnLongClickListener {
 
 	public void reinitialiserFenetre(){
 		FrameLayout layoutMain = (FrameLayout) findViewById(R.id.main);
-		View v = layoutMain.getChildAt(0);
 
 		int taille = layoutMain.getChildCount();
-		Log.d("tailleLa",taille+"");
+
 		if(taille > 1){
 
 			for (int i = 1 ; i < layoutMain.getChildCount() ; i++){
@@ -311,6 +309,9 @@ OnLongClickListener {
 	 */
 	protected void onResume() {
 		super.onResume();
+		
+		initialisationEcouteursGPS();
+
 		// On enregistre nos écouteurs
 		sensorMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 
@@ -344,6 +345,9 @@ OnLongClickListener {
 		sensorMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		sensorMngr.unregisterListener(sensorLstr,
 				sensorMngr.getDefaultSensor(Sensor.TYPE_ORIENTATION));
+		
+		locationManager.removeUpdates(this);
+
 	}
 
 	/**
