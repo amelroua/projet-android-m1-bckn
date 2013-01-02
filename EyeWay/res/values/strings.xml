@@ -25,7 +25,10 @@
     <string name="title_activity_fouille_test">FouilleTest</string>
     <string name="titre_recherche_perimetre">Recherche dans une zone</string>
     <string name="title_activity_recherche_par_mot_cle"> Recherche par mot clé</string>
-    <string name="title_activity_recherche_perimetre">RecherchePerimetre</string>
+    <string name="title_activity_recherche_perimetre">Recherche dans une zone</string>
+   	<string name="title_activity_recherche_par_adresse">Recherche par adresse</string>
+   	<string name="title_activity_navigation_instantane">Navigation instantannée</string>
+   	<string name="title_activity_gerer_poi">Gérer les points d\'intérêt</string>
     <string name="titre_choix_position">Centre du perimetre</string>
 	<string name="titre_distance">Distance de recherche</string>
 	<string name="titre_ajout_type">Types de lieu</string>

@@ -12,17 +12,14 @@
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
         android:layout_below="@id/titlebar"
-            android:background="#FFFFFF"
-            android:gravity="center_vertical"
-         >
+        android:background="#FFFFFF"
+        android:gravity="center_vertical" >
 
-        
-        
         <ListView
             android:id="@+id/liste_fonctions"
-            android:layout_below="@id/titlebar"
             android:layout_width="fill_parent"
             android:layout_height="wrap_content"
+            android:layout_below="@id/titlebar"
             android:layout_marginBottom="10dip"
             android:layout_marginLeft="8dip"
             android:layout_marginRight="8dip"
@@ -32,10 +29,8 @@
             android:dividerHeight="1dip"
             android:drawSelectorOnTop="false"
             android:headerDividersEnabled="true"
-            android:overScrollHeader="#F7F2B2" 
-            >
+            android:overScrollHeader="#F7F2B2" >
         </ListView>
-
-        
     </RelativeLayout>
+
 </RelativeLayout>

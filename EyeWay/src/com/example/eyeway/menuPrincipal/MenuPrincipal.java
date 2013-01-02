@@ -41,10 +41,11 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 		//setTheme(R.style.Theme_perso);
 		setContentView(R.layout.activity_menu_principal);
 		ArrayList<Fonctionnalite> tab_fonctionnalite =new ArrayList<Fonctionnalite>();
-		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.text_field,"Recherche par mot clé"));
-		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.find_area,"Recherche dans une zone"));
-		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.eye,"Navigation instantannée"));
-		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.star,"Gérer les points d'intérêt"));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.text_field,getString(R.string.title_activity_recherche_par_mot_cle)));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.find_area,getString(R.string.title_activity_recherche_perimetre)));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.ajouterpop,getString(R.string.title_activity_recherche_par_adresse)));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.eye,getString(R.string.title_activity_navigation_instantane)));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.star,getString(R.string.title_activity_gerer_poi)));
 		ListAdapter adapter=new ListAdapter(this,R.layout.ligne_menu,tab_fonctionnalite);
 		list_menu = (ListView)findViewById(R.id.liste_fonctions);
 		//View header = (View)getLayoutInflater().inflate(R.layout.ligne_menu, null);
@@ -80,11 +81,15 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 				startActivity(monIntent);
 				break;
 			case 2 : 
+				Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
+				break;
+		
+			case 3 : 
 				monIntent= new Intent(this,RealiteAugmente.class);
 				monIntent.putExtra("methode","instantane");
 				startActivity(monIntent);
 				break;
-			case 3 : 
+			case 4 : 
 				Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
 				break;
 			}

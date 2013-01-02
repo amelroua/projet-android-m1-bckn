@@ -72,8 +72,8 @@ public class Icon extends LinearLayout {
 		this.description = description;
 		this.name = name;
 		this.lieu = null ;
-		this.phone = phoneNumer;
-		this.webSite = siteWeb;
+		this.phone = null;
+		this.webSite = null;
 		creerIcon(context, Imview, latitude, longitude, myLocation, type);
 	}
 
@@ -83,6 +83,8 @@ public class Icon extends LinearLayout {
 		lieu = l ;
 		this.adresse = "";
 		this.name="";
+		this.webSite="";
+		this.phone="";
 		StringBuffer type = new StringBuffer("");
 		// On récupère son type
 		for (int j = 0; j < l.getTypes().size(); j++) {
@@ -139,7 +141,14 @@ public class Icon extends LinearLayout {
 		icon.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
-				showBoiteInformation();
+				
+				if(lieu != null && (webSite != null || phone != null)){
+				
+					new RequeteDetail().execute("details");
+					
+				}
+					showBoiteInformation();
+				
 			}
 		});
 
@@ -260,6 +269,12 @@ public class Icon extends LinearLayout {
 	 */
 	void showBoiteInformation() {
 
+		if(lieu != null){
+			
+			while(details == null){
+			//attend
+			}
+		}
 		// On instancie notre layout en tant que View
 		LayoutInflater factory = LayoutInflater.from(ctx);
 		final View alertDialogView = factory.inflate(R.layout.popup_layout,
@@ -287,8 +302,7 @@ public class Icon extends LinearLayout {
 		if(lieu != null && adresse.equals("")){
 
 			// Faire la tâche asynchrone ;) 
-			// Donne les détails complet d'un lieu ;)
-			new RequeteDetail().execute("details");
+			// Donne les détails complet d'un lieu ;
 
 			this.adresse = lieu.getFormatted_address();
 			this.name = lieu.getNom();
@@ -317,7 +331,7 @@ public class Icon extends LinearLayout {
 		adb.setPositiveButton("Itinéraire",
 				new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
-
+				
 				showBoiteChoix();
 
 			}
@@ -352,7 +366,9 @@ public class Icon extends LinearLayout {
 					Log.d("web", ""+details.result.getWebsite());
 					webSite = details.result.getWebsite();
 					phone = details.result.getFormatted_phone_number();
+					details.status = "execute";
 				}
+				
 			}
 
 			return null;
