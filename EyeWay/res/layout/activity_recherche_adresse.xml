@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+    
+<LinearLayout 
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:background="#FFFFFF"
+    android:orientation="vertical" >
+
+    
+    <include
+        android:id="@+id/titlebar"
+        layout="@layout/titlebar" />
+
+    
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="horizontal" >
+
+        <ImageView
+            android:id="@+id/image"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginLeft="5dp"
+            android:background="@drawable/ajouterpop"
+            android:contentDescription="@string/descriptionImagePopPup" />
+
+        <TextView
+            android:id="@+id/titre_recherche_perimetre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginLeft="10dp"
+            android:layout_marginTop="15dp"
+            android:text="@string/title_activity_recherche_par_adresse"
+            android:textColor="#000000"
+            android:textSize="14dp" />
+    </LinearLayout>
+
+   
+        
+      <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:layout_marginTop="10dp"
+        android:orientation="vertical" >
+
+        <EditText
+            android:id="@+id/typeBatiment"
+            android:layout_width="200dip"
+            android:layout_height="wrap_content"
+            android:hint="@string/typesBatiments"
+            android:inputType="textAutoComplete" >
+        </EditText>
+         
+        <EditText
+            android:id="@+id/ville"
+            android:layout_width="200dip"
+            android:layout_height="wrap_content"
+            android:hint="@string/ville"
+            android:inputType="textAutoComplete" >
+        </EditText>
+
+         <EditText
+            android:id="@+id/nomRue"
+            android:layout_width="200dip"
+            android:layout_height="wrap_content"
+            android:hint="@string/nomRue"
+            android:inputType="textAutoComplete" >
+        </EditText>
+        
+        <EditText
+            android:id="@+id/codePostale"
+            android:layout_width="200dip"
+            android:layout_height="wrap_content"
+            android:hint="@string/codePostal"
+            android:inputType="number" >
+        </EditText>
+        
+        <EditText
+            android:id="@+id/pays"
+            android:layout_width="200dip"
+            android:layout_height="wrap_content"
+            android:hint="@string/pays"
+            android:inputType="textAutoComplete" >
+        </EditText>
+
+
+
+     
+    </LinearLayout>
+    
+       
+    <ImageView
+        android:id="@+id/bouton_validation_formulaire"
+        android:layout_width="40dp"
+        android:layout_height="40dp"
+        android:layout_marginLeft="5dp"
+        android:background="@drawable/search"
+        android:contentDescription="@string/descriptionImagePopPup" />
+
+</LinearLayout>
+</ScrollView>

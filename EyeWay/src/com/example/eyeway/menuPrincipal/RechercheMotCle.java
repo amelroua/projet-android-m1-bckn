@@ -1,23 +1,13 @@
 package com.example.eyeway.menuPrincipal;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.Set;
+
 
 import com.example.eyeway.R;
 import com.example.eyeway.Map.Map;
-import com.example.eyeway.R.layout;
-import com.example.eyeway.R.menu;
-import com.example.eyeway.fouilleDedonne.FouilleDonnee;
-import com.example.eyeway.fouilleDedonne.Lieu;
 import com.example.eyeway.realiteAugmente.RealiteAugmente;
-
-import android.location.GpsStatus;
-import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
 import android.app.AlertDialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.InputFilter;
@@ -26,16 +16,9 @@ import android.view.Menu;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
-import android.widget.AdapterView;
-import android.widget.AdapterView.OnItemSelectedListener;
-import android.widget.ArrayAdapter;
-import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
-import android.widget.ListView;
-import android.widget.Spinner;
-import android.widget.Toast;
-import android.widget.AdapterView.OnItemClickListener;
+
 
 public class RechercheMotCle extends Activity implements OnClickListener
 		 {
