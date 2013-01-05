@@ -40,6 +40,11 @@
 	<string name="logoApli">Logo de l\'application</string>
 	<string name="phone" >Numéro de téléphone</string>
 	<string name="webSite">Site Web</string>
+	<string name="typesBatiments">Types de batîments</string>
+	<string name="ville" >Ville</string>
+	<string name="pays">Pays</string>
+	<string name="nomRue">Nom de la rue</string>
+	<string name="codePostal">Code postal</string>
 	<string-array name="array_choix_position">
         <item>Autour de ma position</item>
         <item>Autour d\'une autre position</item>

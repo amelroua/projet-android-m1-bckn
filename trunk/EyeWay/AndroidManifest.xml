@@ -60,14 +60,24 @@
         </activity>
         <activity
             android:name=".menuPrincipal.RecherchePerimetre"
-            android:label="@string/title_activity_recherche_perimetre" >
+            android:label="@string/title_activity_recherche_perimetre" 
+            android:windowSoftInputMode="stateHidden">
            
         </activity>
            <activity
             android:name=".menuPrincipal.RechercheMotCle"
-            android:label="@string/title_activity_recherche_par_mot_cle" >
+            android:label="@string/title_activity_recherche_par_mot_cle"
+            android:windowSoftInputMode="stateHidden" >
            
         </activity>
+        
+            <activity
+            android:name=".menuPrincipal.RechercheAdresse"
+            android:label="@string/title_activity_recherche_par_adresse" 
+            android:windowSoftInputMode="stateHidden">
+           
+        </activity>
+           
     </application>
 
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" >
