@@ -1,20 +1,33 @@
 <?xml version="1.0" encoding="utf-8"?>
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:id="@+id/main"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
-    android:orientation="vertical" 
-    android:id="@+id/main">
+    android:orientation="vertical" >
 
     <com.example.eyeway.realiteAugmente.CustomCameraView
         android:id="@+id/camera"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content" />
-	
-    <ImageView
-        	
-                android:id="@+id/fleche"
-            
-                android:layout_width="300dp"
-                android:layout_height="200dp"
-                android:contentDescription="@string/descriptionImagePopPup" />
+
+    <LinearLayout
+        android:id="@+id/linearProgress"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:orientation="vertical"
+        android:gravity="center"
+        >
+
+        <ProgressBar
+            android:id="@android:id/progress"
+            style="?android:attr/progressBarStyleLarge"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/loading" />
+    </LinearLayout>
+
 </FrameLayout>

@@ -26,8 +26,10 @@ import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.View.OnLongClickListener;
+import android.view.Window;
 import android.widget.EditText;
 import android.widget.FrameLayout;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.SimpleAdapter;
 import android.widget.Toast;
@@ -72,6 +74,7 @@ OnLongClickListener {
 	public void onCreate(Bundle savedInstanceState) {
 
 		super.onCreate(savedInstanceState);
+		requestWindowFeature(Window.FEATURE_PROGRESS);
 
 		// On initialise nos écouteurs
 				initialisationEcouteursGPS();
@@ -114,7 +117,9 @@ OnLongClickListener {
 		// On rend notre écran cliquable avec taphold
 		l.setOnLongClickListener(this);
 
-
+		//calling setContentView() after requesting
+		
+		setProgressBarVisibility(true);
 		
 
 	}
@@ -790,7 +795,6 @@ OnLongClickListener {
 								Toast.makeText(ctx, "Aucun résultat pour votre recherche", Toast.LENGTH_SHORT).show();
 
 							}else{
-								Toast.makeText(ctx, "je suis la", Toast.LENGTH_SHORT).show();
 
 								Icon ic; 
 								// loop through each place
@@ -801,6 +805,9 @@ OnLongClickListener {
 									ajoutIcon(ic);
 
 								}
+								
+							LinearLayout l = (LinearLayout) findViewById(R.id.linearProgress);
+							l.setVisibility(View.INVISIBLE);
 							}
 						}else{
 							Toast.makeText(ctx, "Aucun résultat pour votre recherche", Toast.LENGTH_SHORT).show();

@@ -45,6 +45,7 @@
 	<string name="pays">Pays</string>
 	<string name="nomRue">Nom de la rue</string>
 	<string name="codePostal">Code postal</string>
+	<string name="loading">Recherche POI</string>
 	<string-array name="array_choix_position">
         <item>Autour de ma position</item>
         <item>Autour d\'une autre position</item>
