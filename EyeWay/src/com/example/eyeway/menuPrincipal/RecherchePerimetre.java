@@ -257,7 +257,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 	@Override
 	public void onItemSelected(AdapterView<?> arg0, View arg1, int arg2,
 			long arg3) {
-		if (arg0.getId() == R.id.spinner_choix_position) {
+		if (arg0.getId() == 9999) {
 			if (arg2 == 0) {
 				// Recherche a partir de ma position
 
