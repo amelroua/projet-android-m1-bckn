@@ -62,7 +62,7 @@ OnLongClickListener {
 	ImageView im;
 	ListeLieu lieux; 
 	PlaceDetails details;
-
+	private boolean invisible = true ;
 
 	public String KEY_REFERENCE = "reference"; // id of the place
 	public String KEY_NAME = "name"; // name of the place
@@ -806,9 +806,12 @@ OnLongClickListener {
 
 								}
 								
-							LinearLayout l = (LinearLayout) findViewById(R.id.linearProgress);
-							l.setVisibility(View.INVISIBLE);
-							}
+								if(invisible){
+								findViewById(R.id.linearProgress).setVisibility(View.INVISIBLE);
+								setProgressBarVisibility(false);
+								invisible = false ;
+								}
+								}
 						}else{
 							Toast.makeText(ctx, "Aucun résultat pour votre recherche", Toast.LENGTH_SHORT).show();
 

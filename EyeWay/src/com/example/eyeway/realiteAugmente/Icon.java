@@ -1,5 +1,7 @@
 package com.example.eyeway.realiteAugmente;
 
+import java.io.InputStream;
+import java.net.URL;
 import java.util.HashMap;
 import java.util.StringTokenizer;
 
@@ -8,6 +10,7 @@ import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
@@ -168,20 +171,179 @@ public class Icon extends LinearLayout {
 	 */
 	private void choixIcon(String type) {
 
-		if (type.equalsIgnoreCase("restaurant")) {
+		if (type.equalsIgnoreCase("bank")){
+			
+			icon.setBackgroundResource(R.drawable.bank);
 
-			icon.setBackgroundResource(R.drawable.restaurant);
+		}else{
+			
+			if (type.equalsIgnoreCase("bicycle_store")){
 
-		} else {
+				icon.setBackgroundResource(R.drawable.bicycle);
 
-			if (type.equalsIgnoreCase("Bar")) {
+			}else{
+				
+				if(type.equalsIgnoreCase("book_store")){
 
-				icon.setBackgroundResource(R.drawable.cocktail);
+					icon.setBackgroundResource(R.drawable.book);
 
-			} else {
-				icon.setBackgroundResource(R.drawable.img_epingle);
+				}else{
+					
+					if(type.equalsIgnoreCase("bowling_alley")){
+
+						icon.setBackgroundResource(R.drawable.bowling);
+
+					}else{
+						
+						if(type.equalsIgnoreCase("bus_station")){
+
+							icon.setBackgroundResource(R.drawable.bus);
+
+						}else{
+							
+							if(type.equalsIgnoreCase("cafe")){
+
+								icon.setBackgroundResource(R.drawable.coffee);
+
+							}else{
+								
+								if(type.equalsIgnoreCase("car_repair")){
+
+									icon.setBackgroundResource(R.drawable.car);
+
+								}else{
+									
+									if(type.equalsIgnoreCase("car_wash")){
+
+										icon.setBackgroundResource(R.drawable.car);
+
+									}else{
+										
+										if(type.equalsIgnoreCase("clothing_store")){
+
+											icon.setBackgroundResource(R.drawable.clothing);
+
+										}else{
+											
+											if(type.equalsIgnoreCase("food")){
+
+												icon.setBackgroundResource(R.drawable.food);
+
+											}else{
+												
+												if(type.equalsIgnoreCase("grocery_or_supermarket")){
+
+													icon.setBackgroundResource(R.drawable.supermaket);
+
+												}else{
+													
+													if(type.equalsIgnoreCase("gym")){
+
+														icon.setBackgroundResource(R.drawable.sport);
+
+													}else{
+														
+														if(type.equalsIgnoreCase("hair_care")){
+
+															icon.setBackgroundResource(R.drawable.img_epingle);
+
+														}else{
+															
+															if(type.equalsIgnoreCase("hardware_store")){
+
+																icon.setBackgroundResource(R.drawable.sytemestore);
+
+																
+															}else{
+																
+																if(type.equalsIgnoreCase("hospital")){
+
+																	icon.setBackgroundResource(R.drawable.hospital);
+
+																}else{
+																	
+																	if(type.equalsIgnoreCase("insurance_agency")){
+
+																		icon.setBackgroundResource(R.drawable.insurance);
+
+																	}else{
+																		
+																		if(type.equalsIgnoreCase("library")){
+																			
+																			icon.setBackgroundResource(R.drawable.library);
+
+																		}else{
+																			
+																			if(type.equalsIgnoreCase("police")){
+
+																				icon.setBackgroundResource(R.drawable.police);
+
+																			}else{
+																				
+																				if(type.equalsIgnoreCase("post_office")){
+
+																					icon.setBackgroundResource(R.drawable.poste);
+
+																				}else{
+																					
+																					if(type.equalsIgnoreCase("restaurant")){
+																						
+																						icon.setBackgroundResource(R.drawable.restaurant);
+
+																					}else{
+																						
+																						if(type.equalsIgnoreCase("stadium")){
+																							
+																							icon.setBackgroundResource(R.drawable.stadium);
+
+																						}else{
+																							
+																							if(type.equalsIgnoreCase("store")){
+
+																								icon.setBackgroundResource(R.drawable.restaurant);
+
+																							}else{
+																								
+																								if(type.equalsIgnoreCase("university")){
+
+																									icon.setBackgroundResource(R.drawable.university);
+
+																								}else{
+																								
+																									if(type.equalsIgnoreCase("bar")){
+
+																										
+																										icon.setBackgroundResource(R.drawable.cocktail);
+
+																									}else{
+																									
+																										icon.setBackgroundResource(R.drawable.img_epingle);
+																									}
+																								}
+																							}
+																						}
+																					}
+																				}
+																			}
+																		}
+																	}
+																}
+															}
+														}
+													}
+												}
+											}
+										}
+									}
+								}
+							}
+						}
+					}
+				}
 			}
 		}
+		
+
 	}
 
 	/**
@@ -295,18 +457,27 @@ public class Icon extends LinearLayout {
 		ImageView image = (ImageView) alertDialogView.findViewById(R.id.image);
 
 
-		image.setImageDrawable(photoDescription.getBackground());
 
 
 
-		if(lieu != null && adresse.equals("")){
+		if(lieu != null){
 
 			// Faire la tâche asynchrone ;) 
 			// Donne les détails complet d'un lieu ;
-
-			this.adresse = lieu.getFormatted_address();
-			this.name = lieu.getNom();
 			
+				
+					image.setBackgroundDrawable(LoadImageFromWebOperations(lieu.getIcon()));
+					this.adresse = lieu.getFormatted_address();
+					this.name = lieu.getNom();
+			
+					
+					Toast.makeText(this.ctx, adresse, Toast.LENGTH_SHORT);
+				
+			
+				}else{
+					
+					image.setImageDrawable(photoDescription.getBackground());
+
 				}
 
 		TextView text = (TextView) alertDialogView.findViewById(R.id.titre);
@@ -348,7 +519,19 @@ public class Icon extends LinearLayout {
 
 	}
 
-
+	
+	 private Drawable LoadImageFromWebOperations(String url)
+	    {
+	         try
+	         {
+	             InputStream is = (InputStream) new URL(url).getContent();
+	             Drawable d = Drawable.createFromStream(is, "src name");
+	             return d;
+	         }catch (Exception e) {
+	             System.out.println("Exc="+e);
+	             return null;
+	         }
+	     }
 
 	class RequeteDetail extends AsyncTask<String, String, String> {
 
