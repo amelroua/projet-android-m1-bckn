@@ -11,8 +11,11 @@ import android.location.GpsStatus;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.app.Activity;
+import android.app.AlertDialog;
+import android.content.Context;
 import android.content.Intent;
 import android.graphics.Color;
+import android.util.Log;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -34,10 +37,18 @@ import android.widget.AdapterView.OnItemClickListener;
 public class MenuPrincipal extends Activity implements OnClickListener,OnItemClickListener {
 	private Button gps_status;
 	private ListView list_menu;
+	// GPS Location
+	GPSTracker gps; 
+	
+	ConnectionDetector cd ;
+	AlertDialogManager alert = new AlertDialogManager();
+	Boolean isInternetPresent = false ;
+	
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		
 		//setTheme(R.style.Theme_perso);
 		setContentView(R.layout.activity_menu_principal);
 		ArrayList<Fonctionnalite> tab_fonctionnalite =new ArrayList<Fonctionnalite>();
@@ -52,6 +63,23 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 		//list_menu.addHeaderView(header);
 		list_menu.setAdapter(adapter);
 		list_menu.setOnItemClickListener(this);	
+		
+		cd = new ConnectionDetector(getApplicationContext());
+		
+		isInternetPresent = cd.isConnectionToInternet();
+		
+		if(!isInternetPresent){
+			
+			alert.showAlertDialog(MenuPrincipal.this, "Données Désactivées","Activer l'accés aux données sur le réseau mobile",false);
+		
+		}else{
+	
+			Log.d("GPS","la");
+
+		gps = new GPSTracker(this);
+		
+		}
+		
 	}
 	
 	@Override
