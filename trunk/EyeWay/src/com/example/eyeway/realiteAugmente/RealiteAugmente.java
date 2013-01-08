@@ -62,7 +62,6 @@ OnLongClickListener {
 	ImageView im;
 	ListeLieu lieux; 
 	PlaceDetails details;
-	private boolean invisible = true ;
 
 	public String KEY_REFERENCE = "reference"; // id of the place
 	public String KEY_NAME = "name"; // name of the place
@@ -77,9 +76,9 @@ OnLongClickListener {
 		requestWindowFeature(Window.FEATURE_PROGRESS);
 
 		// On initialise nos écouteurs
-				initialisationEcouteursGPS();
-				initialisionEcouteurAccelerometre();
-				
+		initialisationEcouteursGPS();
+		initialisionEcouteurAccelerometre();
+
 		// On lie notre classe au layout
 		setContentView(R.layout.activity_realite_augmente);
 		Bundle b = getIntent().getExtras();
@@ -96,14 +95,14 @@ OnLongClickListener {
 
 				int taille = FouilleDonnee.types_place_fr.length;
 				types = new ArrayList<String>();
-				
+
 				// Pour tous les types
 				for(int i = 0 ; i < taille; i++ ){
 
 					types.add(FouilleDonnee.types_place_fr[i]);
 				}
-				 
-				
+
+
 				distance = 500 ; // On défini une distance de 500 mètre
 
 			}else{
@@ -120,7 +119,7 @@ OnLongClickListener {
 		//calling setContentView() after requesting
 		
 		setProgressBarVisibility(true);
-		
+
 
 	}
 
@@ -195,12 +194,12 @@ OnLongClickListener {
 		Log.d("ini","fenetre");
 		this.icons = new ArrayList<Icon>();
 
-	
+
 		new RequeteRecherche().execute(methode);
 
 		// On récupère le context
 		ctx = this;
-		
+
 		// On récupère la ta taille de l'écran
 		mScreenWidth = getScreenWidth();
 		mScreenHeight = getScreenHeight();
@@ -314,7 +313,7 @@ OnLongClickListener {
 	 */
 	protected void onResume() {
 		super.onResume();
-		
+
 		initialisationEcouteursGPS();
 
 		// On enregistre nos écouteurs
@@ -323,8 +322,8 @@ OnLongClickListener {
 		sensorMngr.registerListener(sensorLstr,
 				sensorMngr.getDefaultSensor(Sensor.TYPE_ORIENTATION),
 				SensorManager.SENSOR_DELAY_UI);
-		
-		
+
+
 	}
 
 	@Override
@@ -336,10 +335,10 @@ OnLongClickListener {
 		sensorMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		sensorMngr.unregisterListener(sensorLstr,
 				sensorMngr.getDefaultSensor(Sensor.TYPE_ORIENTATION));
-		
+
 		locationManager.removeUpdates(this);
-	
-	
+
+
 	}
 
 	@Override
@@ -350,7 +349,7 @@ OnLongClickListener {
 		sensorMngr = (SensorManager) getSystemService(Context.SENSOR_SERVICE);
 		sensorMngr.unregisterListener(sensorLstr,
 				sensorMngr.getDefaultSensor(Sensor.TYPE_ORIENTATION));
-		
+
 		locationManager.removeUpdates(this);
 
 	}
@@ -438,7 +437,7 @@ OnLongClickListener {
 	 */
 	public final static void moveSpot(Context context, View vue,
 			GeoPoint geoPoint, float azimut, Location myLocation,
-			int screenWidth, float roll, int screenHeight, float pitch) {
+			int screenWidth, float roll, int screenHeight, float pitch , int pos) {
 
 		// Angle entre moi et le point d'intêret
 		int angle = (int) (angleDirection(
@@ -462,7 +461,7 @@ OnLongClickListener {
 			marginTop = -(int) ((roll - 90) / 90 * screenHeight);
 
 		// On change les marges
-		lp.setMargins(angle * screenWidth / 90, marginTop, 0, 0);
+		lp.setMargins(angle * screenWidth / 90 + (pos * 100), marginTop, 0, 0);
 
 		// On change la gravité pour le mettre au centre
 		lp.gravity = Gravity.CENTER;
@@ -512,7 +511,7 @@ OnLongClickListener {
 							// On place l'icon sur l'écran
 							moveSpot(ctx, ic, ic.getGeoPoint(), azimut,
 									myLocation, mScreenWidth, roll,
-									mScreenHeight, pitch);
+									mScreenHeight, pitch,i);
 
 						}
 
@@ -660,10 +659,10 @@ OnLongClickListener {
 
 				EditText phone = (EditText) alertDialogView
 						.findViewById(R.id.phone);
-				
+
 				EditText webSite = (EditText) alertDialogView
 						.findViewById(R.id.webSite);
-			
+
 				Icon i = new Icon(ctx, im, nom.getText().toString(),
 						description.getText().toString(),"nouveau",adresse.getText().toString(), myLocation
 						.getLatitude(), myLocation
@@ -785,7 +784,7 @@ OnLongClickListener {
 					String status = "";
 					if(lieux != null)
 						status=lieux.status;
-						Log.d("status",lieux.status);
+
 					if(status.equals("OK")){
 						// Successfully got places details
 						if (lieux != null && lieux.results != null) {
@@ -805,13 +804,13 @@ OnLongClickListener {
 									ajoutIcon(ic);
 
 								}
-								
-								if(invisible){
-								findViewById(R.id.linearProgress).setVisibility(View.INVISIBLE);
-								setProgressBarVisibility(false);
-								invisible = false ;
+
+								if(findViewById(R.id.linearProgress) != null){
+									
+									findViewById(R.id.linearProgress).setVisibility(View.INVISIBLE);
+									setProgressBarVisibility(false);
 								}
-								}
+							}
 						}else{
 							Toast.makeText(ctx, "Aucun résultat pour votre recherche", Toast.LENGTH_SHORT).show();
 

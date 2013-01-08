@@ -9,8 +9,7 @@
     android:id="@+id/TextView1"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:text="Voulez-vous activer votre GPS ? L'application sera moins précise si vous n'activer pas le gps"
-    android:paddingBottom="10dip" />
+    android:paddingBottom="3dip" />
  
  
 </RelativeLayout>
