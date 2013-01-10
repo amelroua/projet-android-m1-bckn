@@ -12,6 +12,7 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.View;
 import android.view.Window;
@@ -40,29 +41,22 @@ public class RechercheMotCle extends Activity implements OnClickListener
 		
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
-		setContentView(R.layout.activity_recherche_motcle);
+		
+		LayoutInflater factory = LayoutInflater.from(this);
+		final View alertDialogView = factory.inflate(R.layout.boitedialogue,
+				null);
+
+		// Création de l'AlertDialog
+		AlertDialog.Builder adb = new AlertDialog.Builder(this);
 		
 		bouton_validation_formulaire = (ImageView) findViewById(R.id.bouton_validation_formulaire);
 		bouton_validation_formulaire.setOnClickListener(this);
 		
 		edit_text_mot_cle = (EditText) findViewById(R.id.editText1);
 
-		edit_text_mot_cle.setFilters(new InputFilter[] {
-			    new InputFilter() {
-			       
-			    		@Override
-					public CharSequence filter(CharSequence source, int start,
-							int end, Spanned dest, int dstart, int dend) {
-			    			   if(source.equals("")){ // for backspace
-					                return source;
-					            }
-					            if(source.toString().matches("[a-zA-Z ]+")){
-					                return source;
-					            }
-					            return "";
-					}
-			    }
-			});
+	
+		
+		adb.show();
 
 	}
 
