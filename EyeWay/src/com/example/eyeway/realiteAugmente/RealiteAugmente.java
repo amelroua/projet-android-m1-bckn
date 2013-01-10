@@ -41,8 +41,11 @@ import com.example.eyeway.FouilleTest;
 import com.example.eyeway.R;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
 import com.example.eyeway.fouilleDedonne.Lieu;
+import com.example.eyeway.fouilleDedonne.Sauvegarde;
+import com.example.eyeway.fouilleDedonne.Lieu.MyLocation;
 import com.example.eyeway.fouilleDedonne.ListeLieu;
 import com.example.eyeway.fouilleDedonne.PlaceDetails;
+import com.example.eyeway.fouilleDedonne.Lieu.Geometry;
 import com.google.android.maps.GeoPoint;
 
 public class RealiteAugmente extends Activity implements LocationListener,
@@ -668,7 +671,12 @@ OnLongClickListener {
 						.getLatitude(), myLocation
 						.getLongitude(), myLocation,phone.getText().toString(),webSite.getText().toString());
 				
+				Geometry g = new Geometry(new MyLocation(myLocation.getLatitude(),myLocation.getLongitude()));
+				Lieu l = new Lieu(nom.getText().toString(),"","",description.getText().toString(),g,adresse.getText().toString(),
+						phone.getText().toString(),webSite.getText().toString());
 				
+				Sauvegarde sauvegarder = new Sauvegarde(getApplicationContext());
+				sauvegarder.sauvegarderLieu(l);
 				ajoutIcon(i);
 
 			}

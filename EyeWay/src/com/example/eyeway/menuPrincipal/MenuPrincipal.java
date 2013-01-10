@@ -23,7 +23,7 @@ import com.example.eyeway.fouilleDedonne.Sauvegarde;
 import com.example.eyeway.realiteAugmente.RealiteAugmente;
 
 import android.location.GpsStatus;
-import com.example.eyeway.fouilleDedonne.Lieu.Location;
+import com.example.eyeway.fouilleDedonne.Lieu.MyLocation;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -139,7 +139,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 			case 3 : 
 
-				monIntent= new Intent(this,PlacesMapActivity.class);
+				monIntent= new Intent(this,RealiteAugmente.class);
 				monIntent.putExtra("methode","instantane");
 				startActivity(monIntent);
 
@@ -148,9 +148,9 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 				//Toast.makeText(getApplicationContext(),"Sauvegarde", Toast.LENGTH_SHORT).show();
 				for(int i=0; i<10 ; i++){
-					Location l=new Location(1.0,1.0);
+					MyLocation l=new MyLocation(1.0,1.0);
 					Geometry g=new Geometry(l);
-					s.sauvegarderLieu(new Lieu(""+i, "", "", "",g, ""));
+					s.sauvegarderLieu(new Lieu(""+i, "", "", "",g, "","",""));
 				}
 				//Toast.makeText(getApplicationContext(),"Chargement", Toast.LENGTH_SHORT).show();
 				ArrayList<Lieu> lieux=s.getLieuxEnregistres();
