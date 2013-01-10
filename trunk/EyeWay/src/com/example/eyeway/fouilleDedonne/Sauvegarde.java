@@ -41,36 +41,49 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class Sauvegarde {
-
+	
+	ArrayList<String> nomLieuxEnregistres;
+	ArrayList<String> nomPlaceDetailsEnregistres;
+	
 	Context fileContext; //nécessaire pour fileContext.openFileOutput
-	static int idLieu=0;
-	static int idPlaceDetail=0;
+	private static int lastIdLieu=0;
+	private static int lastIdPlaceDetail=0;
 	public Sauvegarde(Context fileContext){
 		this.fileContext = fileContext;
+		nomLieuxEnregistres=new ArrayList<String>();
+		nomPlaceDetailsEnregistres=new ArrayList<String>();
 	}
 
-	/**
-	 * @param lieuAenregistrer
-	 */
-	public void sauvegarder(Object o,String nom){
+	public void sauvegarderLieu(Lieu l){
 		FileOutputStream fos=null;
 		try{
-			fos = fileContext.openFileOutput(nom, Context.MODE_PRIVATE);
+			String nomLieu="lieu"+lastIdLieu;
+			fos = fileContext.openFileOutput(nomLieu, Context.MODE_PRIVATE);
 			byte[] b=null;
-			b=getBytes(o);
+			b=getBytes(l);
 			fos.write(b);
 			fos.close();
 			Toast.makeText(fileContext.getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
+			nomLieuxEnregistres.add(nomLieu);
+			lastIdLieu++;
 		}catch(Exception e){
 			Toast.makeText(fileContext.getApplicationContext(), "Exception save", Toast.LENGTH_SHORT).show();
 		}
 	}
-
-	public void sauvegarderLieu(Lieu l){
-		sauvegarder(l,"lieu"+idLieu); //todo gerer les noms uniques
-	}
 	public void sauvegarderPlaceDetails(PlaceDetails p){
-		sauvegarder(p,"placeDetail"+idPlaceDetail); //todo gerer les noms uniques
+		FileOutputStream fos=null;
+		try{
+			String nomPlaceDetails="placeDetail"+lastIdPlaceDetail;
+			fos = fileContext.openFileOutput(nomPlaceDetails, Context.MODE_PRIVATE);
+			byte[] b=null;
+			b=getBytes(p);
+			fos.write(b);
+			fos.close();
+			Toast.makeText(fileContext.getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
+			nomLieuxEnregistres.add(nomPlaceDetails);
+		}catch(Exception e){
+			Toast.makeText(fileContext.getApplicationContext(), "Exception save", Toast.LENGTH_SHORT).show();
+		}
 	}
 
 	/**
@@ -79,7 +92,7 @@ public class Sauvegarde {
 	 * @param obj l'objet dont on veut la représentation binaire
 	 * @return le tableau de bits représentant l'objet
 	 */
-	public byte[] getBytes(Object obj) {
+	private byte[] getBytes(Object obj) {
 		ByteArrayOutputStream bos=null;
 		ObjectOutputStream oos=null;
 		byte [] data=null;
@@ -97,7 +110,7 @@ public class Sauvegarde {
 		return data;
 	}
 	
-	public Object lire(String nomFichier){
+	private  Object lire(String nomFichier){
 		Object res=null;
 		try {
 			FileInputStream fis=fileContext.openFileInput(nomFichier);
@@ -110,9 +123,31 @@ public class Sauvegarde {
 		}
 		return res;
 	}
-	/*
-	public Lieu lire(){
-		
+	
+	private Lieu lireLieu(String nomLieu){
+			Lieu l=(Lieu)lire(nomLieu);
+			return l;
 	}
-	*/
+	
+	private PlaceDetails lirePlaceDetails(String nomPlaceDetail){
+		PlaceDetails p=(PlaceDetails)lire(nomPlaceDetail);
+		return p;
+	}
+	
+	public ArrayList<Lieu> getLieuxEnregistres(){
+		ArrayList<Lieu> res=new ArrayList<Lieu>();
+		for(int i=0; i<nomLieuxEnregistres.size(); i++){
+			Lieu l = lireLieu(nomLieuxEnregistres.get(i));
+			res.add(l);
+		}
+		return res;
+	}
+	public ArrayList<PlaceDetails> getPlaceDetailsEnregistres(){
+		ArrayList<PlaceDetails> res=new ArrayList<PlaceDetails>();
+		for(int i=0; i<nomPlaceDetailsEnregistres.size(); i++){
+			PlaceDetails p = lirePlaceDetails(nomPlaceDetailsEnregistres.get(i));
+			res.add(p);
+		}
+		return res;
+	}
 }
