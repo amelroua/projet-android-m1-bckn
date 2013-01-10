@@ -4,6 +4,7 @@ import java.util.ArrayList;
 
 import com.example.eyeway.R;
 import com.example.eyeway.Map.Map;
+import com.example.eyeway.Map.PlacesMapActivity;
 
 import java.io.ByteArrayOutputStream;
 import java.io.File;
@@ -121,8 +122,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 			Intent monIntent;
 			switch(arg2){
 			case 0 : 
-				monIntent= new Intent(this,RechercheMotCle.class);
-				startActivity(monIntent);
+				alert.showRecherche(this);
 				break;
 			case 1 : 
 				monIntent= new Intent(this,RecherchePerimetre.class);
@@ -135,7 +135,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 			case 3 : 
 
-				monIntent= new Intent(this,RealiteAugmente.class);
+				monIntent= new Intent(this,PlacesMapActivity.class);
 				monIntent.putExtra("methode","instantane");
 				startActivity(monIntent);
 

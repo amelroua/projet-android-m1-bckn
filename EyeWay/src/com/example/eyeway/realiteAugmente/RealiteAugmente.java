@@ -662,11 +662,13 @@ OnLongClickListener {
 
 				EditText webSite = (EditText) alertDialogView
 						.findViewById(R.id.webSite);
-
+							
 				Icon i = new Icon(ctx, im, nom.getText().toString(),
 						description.getText().toString(),"nouveau",adresse.getText().toString(), myLocation
 						.getLatitude(), myLocation
 						.getLongitude(), myLocation,phone.getText().toString(),webSite.getText().toString());
+				
+				
 				ajoutIcon(i);
 
 			}

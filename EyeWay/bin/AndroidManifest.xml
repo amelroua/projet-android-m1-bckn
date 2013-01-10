@@ -62,7 +62,8 @@
         </activity>
         <activity
             android:name=".menuPrincipal.MenuPrincipal"
-            android:label="@string/title_activity_menu_principal" >
+            android:label="@string/title_activity_menu_principal" 
+            >
         </activity>
         <activity
             android:name=".FouilleTest"
@@ -80,6 +81,12 @@
         </activity>
         <activity
             android:name=".menuPrincipal.RechercheAdresse"
+            android:label="@string/title_activity_recherche_par_adresse"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
+        
+        <activity
+            android:name=".Map.PlacesMapActivity"
             android:label="@string/title_activity_recherche_par_adresse"
             android:windowSoftInputMode="stateHidden" >
         </activity>
