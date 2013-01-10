@@ -85,7 +85,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 		cd = new ConnectionDetector(getApplicationContext());
 
-		isInternetPresent = cd.isConnectionToInternet();
+		isInternetPresent = true ;//cd.isConnectionToInternet();
 
 		if(!isInternetPresent){
 
@@ -97,6 +97,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 			gps = new GPSTracker(this);
 
+		
 		}
 
 	}
@@ -141,9 +142,10 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 				break;
 			case 4 : 
+
 				//ouvrir le layout de gestion des favoris
 				Sauvegarde s=new Sauvegarde(this);
-				s.sauvegarderLieu(new Lieu("00A", "ici"));
+				//s.sauvegarderLieu(new Lieu("00A", "ici"));
 				Toast.makeText(getApplicationContext(),"TODO", Toast.LENGTH_SHORT).show();
 				break;
 			}

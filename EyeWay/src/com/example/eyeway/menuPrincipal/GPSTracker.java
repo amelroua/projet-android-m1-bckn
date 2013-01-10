@@ -2,6 +2,7 @@ package com.example.eyeway.menuPrincipal;
 
 import com.example.eyeway.R;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Service;
 import android.content.Context;
@@ -185,7 +186,9 @@ public class GPSTracker extends Service implements LocationListener{
 							
 							alert.showAlertDialog(mContext,"Status du GPS",
 									"Le GPS ou l'itinérance de donnée doit être activé",false);
-							return ;
+						
+							Activity ac = (Activity) mContext;
+							ac.finish();
 						}
 
 					}
