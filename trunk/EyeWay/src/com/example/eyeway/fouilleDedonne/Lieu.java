@@ -3,10 +3,19 @@ package com.example.eyeway.fouilleDedonne;
 import java.io.Serializable;
 import java.util.List;
 
+import android.content.Context;
+import android.provider.OpenableColumns;
+
 import com.google.api.client.util.Key;
 
 // PAS ENCORE TEST
-public class Lieu {
+//Il faut que cette classe soit serializable pour appliquer le writeObject() dessus
+public class Lieu implements Serializable{
+	
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 
 	@Key	
 	public String id;
@@ -14,6 +23,10 @@ public class Lieu {
 	@Key
 	public String name;
 
+	public Lieu(String id,String name){
+		this.id=id;
+		this.name=name;
+	}
 	@Key
 	public String reference;
 
@@ -99,9 +112,6 @@ public class Lieu {
 		return formatted_phone_number;
 	}
 
-	public List<Photo> getPhotos() {
-		return null;
-	}
 
 	public List<String> getTypes() {
 		return this.types;
