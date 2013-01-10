@@ -18,6 +18,7 @@
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
+            android:layout_margin="1dp"
             android:src="@drawable/menu_recherche_par_mot_clef"
             android:contentDescription="@string/descriptionImagePopPup" />
 
@@ -28,7 +29,7 @@
             android:layout_marginLeft="10dp"
             android:layout_marginTop="15dp"
             android:text="@string/titre_recherche_motCle"
-            android:textColor="#000000"
+            android:textColor="#FFFFFF"
             android:textSize="14dp" />
     </LinearLayout>
 
@@ -50,6 +51,8 @@
             android:layout_height="wrap_content"
             android:hint="@string/text_motCle"
             android:inputType="textAutoComplete" 
+            android:layout_margin="1dp"
+
             android:layout_gravity="center_horizontal"
             >
         </EditText>

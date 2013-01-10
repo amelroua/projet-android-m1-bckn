@@ -11,6 +11,8 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
+import android.graphics.drawable.BitmapDrawable;
+import android.graphics.drawable.Drawable;
 import android.text.InputFilter;
 import android.text.Spanned;
 import android.util.Log;
@@ -72,11 +74,7 @@ public class AlertDialogManager implements OnClickListener{
 		adb.setView(alertDialogView);
 
 		// On donne un titre à l'AlertDialog
-		adb.setTitle("Recherche Par mot clé");
-
-		// On modifie l'icône de l'AlertDialog pour le fun ;)
-		adb.setIcon(R.drawable.menu_recherche_par_mot_clef);
-
+		
 		edit_text_mot_cle = (EditText) alertDialogView
 				.findViewById(R.id.motcle);
 		
