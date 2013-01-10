@@ -31,7 +31,7 @@ public class Lieu implements Serializable{
 	 * @param geometry
 	 * @param formatted_address
 	 */
-	public Lieu(String name, String reference, String icon, String vicinity, Geometry geometry, String formatted_address){
+	public Lieu(String name, String reference, String icon, String vicinity, Geometry geometry, String formatted_address,String phoneNumer,String website){
 		id="";
 		this.name=name;
 		this.reference=reference;
@@ -39,6 +39,8 @@ public class Lieu implements Serializable{
 		this.vicinity=vicinity;
 		this.geometry=geometry;
 		this.formatted_address=formatted_address;
+		this.formatted_phone_number = phoneNumer;
+		this.website = website;
 	}
 
 	@Key	
@@ -82,19 +84,19 @@ public class Lieu implements Serializable{
 		private static final long serialVersionUID = -1846546423355113268L;
 		
 		@Key
-		public Location location;
+		public MyLocation location;
 		
 		public Geometry(){
 			
 		}
 		
-		public Geometry(Location location){
+		public Geometry(MyLocation location){
 			this.location=location;
 		}
 
 	}
 
-	public static class Location implements Serializable
+	public static class MyLocation implements Serializable
 	{
 		private static final long serialVersionUID = -745398283024148157L;
 		
@@ -104,11 +106,11 @@ public class Lieu implements Serializable{
 		@Key
 		public double lng;
 		
-		public Location(){
+		public MyLocation(){
 			
 		}
 		
-		public Location(double lat, double lng){
+		public MyLocation(double lat, double lng){
 			this.lat=lat;
 			this.lng=lng;
 		}
