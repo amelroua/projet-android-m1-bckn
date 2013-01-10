@@ -18,10 +18,12 @@ import java.io.ObjectOutputStream;
 
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
 import com.example.eyeway.fouilleDedonne.Lieu;
+import com.example.eyeway.fouilleDedonne.Lieu.Geometry;
 import com.example.eyeway.fouilleDedonne.Sauvegarde;
 import com.example.eyeway.realiteAugmente.RealiteAugmente;
 
 import android.location.GpsStatus;
+import com.example.eyeway.fouilleDedonne.Lieu.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.provider.Settings;
@@ -57,24 +59,26 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 	private ListView list_menu;
 	// GPS Location
 	GPSTracker gps; 
-
+	ArrayList<Fonctionnalite> tab_fonctionnalite =new ArrayList<Fonctionnalite>();
 	ConnectionDetector cd ;
 	AlertDialogManager alert = new AlertDialogManager();
 	Boolean isInternetPresent = false ;
+	Sauvegarde s=new Sauvegarde(this);
 
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
 		//setTheme(R.style.Theme_perso);
 		setContentView(R.layout.activity_menu_principal);
-		ArrayList<Fonctionnalite> tab_fonctionnalite =new ArrayList<Fonctionnalite>();
-		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.text_field,getString(R.string.title_activity_recherche_par_mot_cle)));
-		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.find_area,getString(R.string.title_activity_recherche_perimetre)));
-		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.ajouterpop,getString(R.string.title_activity_recherche_par_adresse)));
-		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.eye,getString(R.string.title_activity_navigation_instantane)));
-		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.star,getString(R.string.title_activity_gerer_poi)));
+		
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_par_mot_clef,getString(R.string.title_activity_recherche_par_mot_cle)));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_dans_zone,getString(R.string.title_activity_recherche_perimetre)));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_par_adresse,getString(R.string.title_activity_recherche_par_adresse)));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_instantanee,getString(R.string.title_activity_navigation_instantane)));
+		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_favoris,getString(R.string.title_activity_gerer_poi)));
 		ListAdapter adapter=new ListAdapter(this,R.layout.ligne_menu,tab_fonctionnalite);
 		list_menu = (ListView)findViewById(R.id.liste_fonctions);
 		manager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -98,7 +102,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 			gps = new GPSTracker(this);
 
-		
+
 		}
 
 	}
@@ -114,7 +118,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 		// TODO Auto-generated method stub
 
 	}
-
+	
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		if(arg0.getId()==list_menu.getId()){
@@ -139,15 +143,23 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 				monIntent.putExtra("methode","instantane");
 				startActivity(monIntent);
 
-
 				break;
 			case 4 : 
 
-				//ouvrir le layout de gestion des favoris
-				Sauvegarde s=new Sauvegarde(this);
-				//s.sauvegarderLieu(new Lieu("00A", "ici"));
-				Toast.makeText(getApplicationContext(),"TODO", Toast.LENGTH_SHORT).show();
+				//Toast.makeText(getApplicationContext(),"Sauvegarde", Toast.LENGTH_SHORT).show();
+				for(int i=0; i<10 ; i++){
+					Location l=new Location(1.0,1.0);
+					Geometry g=new Geometry(l);
+					s.sauvegarderLieu(new Lieu(""+i, "", "", "",g, ""));
+				}
+				//Toast.makeText(getApplicationContext(),"Chargement", Toast.LENGTH_SHORT).show();
+				ArrayList<Lieu> lieux=s.getLieuxEnregistres();
+
+				for(int i=0; i< lieux.size(); i++){
+					Toast.makeText(getApplicationContext(),"NomLieu recup : "+lieux.get(i).getNom(), Toast.LENGTH_SHORT).show();
+				}
 				break;
+
 			}
 
 		}

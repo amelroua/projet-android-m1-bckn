@@ -75,7 +75,7 @@ public class AlertDialogManager implements OnClickListener{
 		adb.setTitle("Recherche Par mot clé");
 
 		// On modifie l'icône de l'AlertDialog pour le fun ;)
-		adb.setIcon(R.drawable.text_field);
+		adb.setIcon(R.drawable.menu_recherche_par_mot_clef);
 
 		edit_text_mot_cle = (EditText) alertDialogView
 				.findViewById(R.id.motcle);

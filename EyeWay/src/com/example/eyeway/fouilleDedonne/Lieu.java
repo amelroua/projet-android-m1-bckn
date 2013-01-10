@@ -11,11 +11,35 @@ import com.google.api.client.util.Key;
 // PAS ENCORE TEST
 //Il faut que cette classe soit serializable pour appliquer le writeObject() dessus
 public class Lieu implements Serializable{
-	
+
 	/**
 	 * 
 	 */
 	private static final long serialVersionUID = 1L;
+
+
+	public Lieu(){
+
+	}
+	/**
+	 * L utilisateur veut enregistrer sa position actuelle comme favoris
+	 * Il saisis certains champs seulement, et l'id n'est pas connu
+	 * @param name
+	 * @param reference
+	 * @param icon
+	 * @param vicinity
+	 * @param geometry
+	 * @param formatted_address
+	 */
+	public Lieu(String name, String reference, String icon, String vicinity, Geometry geometry, String formatted_address){
+		id="";
+		this.name=name;
+		this.reference=reference;
+		this.icon=icon;
+		this.vicinity=vicinity;
+		this.geometry=geometry;
+		this.formatted_address=formatted_address;
+	}
 
 	@Key	
 	public String id;
@@ -34,23 +58,20 @@ public class Lieu implements Serializable{
 
 	@Key
 	public Geometry geometry;
-	
+
 	@Key
 	public String formatted_address;
 
-	
 	/** DETAILS */
-	
-
 	@Key
 	public String formatted_phone_number;
-	
+
 	@Key
 	public String website;
-	
+
 	@Key
 	public List<String> types ;
-	
+
 	@Override
 	public String toString() {
 		return id+" "+name+" "+icon;
@@ -59,23 +80,44 @@ public class Lieu implements Serializable{
 	public static class Geometry implements Serializable
 	{
 		private static final long serialVersionUID = -1846546423355113268L;
+		
 		@Key
 		public Location location;
+		
+		public Geometry(){
+			
+		}
+		
+		public Geometry(Location location){
+			this.location=location;
+		}
+
 	}
 
 	public static class Location implements Serializable
 	{
 		private static final long serialVersionUID = -745398283024148157L;
-
+		
 		@Key
 		public double lat;
 
 		@Key
 		public double lng;
+		
+		public Location(){
+			
+		}
+		
+		public Location(double lat, double lng){
+			this.lat=lat;
+			this.lng=lng;
+		}
+		
+		
 	}
-	
-	
-	
+
+
+
 	public String getId() {
 		return id;
 	}
@@ -99,7 +141,7 @@ public class Lieu implements Serializable{
 	public Geometry getGeometry() {
 		return geometry;
 	}
-	
+
 	public String getFormatted_address() {
 		return formatted_address;
 	}
@@ -112,17 +154,17 @@ public class Lieu implements Serializable{
 	public List<String> getTypes() {
 		return this.types;
 	}
-	
+
 	public double getLatitude() {
 		return geometry.location.lat;
 	}
-	
+
 	public double getLongitude() {
 		return geometry.location.lng;
 	}
-	
+
 	public String getWebsite() {
 		return website;
 	}
-	
+
 }

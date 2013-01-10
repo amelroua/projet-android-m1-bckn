@@ -3,6 +3,7 @@ package com.example.eyeway.menuPrincipal;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.Set;
+import android.app.Fragment;
 
 import com.example.eyeway.R;
 import com.example.eyeway.Map.Map;
@@ -54,7 +55,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 	private ListView list_types_selectionnes;
 	private Button bouton_ajout_type;
 	private Button bouton_validation_formulaire;
-	private ListAdapter adapter_list_view_types;
+	private ListAdapter adapter_list_view_types=null;
 	// la liste des choix pour le centre du perimetre : Autour de ma position,
 	// Autour d'une position donnée
 	// pour ce spinner, on reagit directement a l'evenement de selection
@@ -77,8 +78,9 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 		 */
 		// ensemble_types=new HashSet<Fonctionnalite>();
 		ensemble_types = new ArrayList<Fonctionnalite>();
-		adapter_list_view_types = new ListAdapter(this,
-				R.layout.ligne_liste_type, ensemble_types);
+		 //final Object data = getLastNonConfigurationInstance();
+		//setRetainInstance (true);
+		adapter_list_view_types = new ListAdapter(this,R.layout.ligne_liste_type, ensemble_types);
 		// A CHANGER
 		list_types_selectionnes = (ListView) findViewById(R.id.liste_types);
 		edit_text_distance = (EditText) findViewById(R.id.editText1);
@@ -105,8 +107,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 		ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(this,
 				android.R.layout.simple_spinner_item,
 				FouilleDonnee.types_place_fr);
-		dataAdapter
-				.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
 		spinner_selection_type.setAdapter(dataAdapter);
 		// adapter_spinner_selection_type = new
 		// ArrayAdapter(this,android.R.layout.simple_spinner_item,
@@ -114,13 +115,37 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 		// spinner_selection_type.setAdapter(adapter);
 		// spinner_choix_position.setOnItemSelectedListener(this);
 	}
-
+	/*
+	@Override
+	onActivityCreated(){
+		
+	}
+	
+	@Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putInt("curChoice", mCurCheckPosition);
+    }
+	@Override
+    public void onActivityCreated(Bundle savedInstanceState) {
+        super.onActivityCreated(savedInstanceState);
+    if (savedInstanceState != null) {
+            // Restore last state for checked position.
+            mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
+        }
+}
+*/
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_menu_principal, menu);
 		return true;
 	}
-
+	@Override
+	public Object onRetainNonConfigurationInstance() {
+	    final ListAdapter sauvegarde;
+	    sauvegarde=adapter_list_view_types;
+	    return sauvegarde;
+	}
 	/**
 	 * Boite de dialogue qui s'ouvre lors du clic sur le calcul d'itinéraire
 	 */

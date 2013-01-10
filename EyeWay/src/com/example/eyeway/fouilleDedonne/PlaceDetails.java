@@ -17,7 +17,10 @@ public class PlaceDetails implements Serializable {
  
     @Key
     public Lieu result;
- 
+    
+    public String getId(){
+    	return result.getId();
+    }
     @Override
     public String toString() {
         if (result!=null) {

@@ -27,10 +27,10 @@
 
         <ImageView
             android:id="@+id/image"
+            android:src="@drawable/menu_recherche_par_adresse"
             android:layout_width="50dp"
             android:layout_height="50dp"
             android:layout_marginLeft="5dp"
-            android:background="@drawable/ajouterpop"
             android:contentDescription="@string/descriptionImagePopPup" />
 
         <TextView
