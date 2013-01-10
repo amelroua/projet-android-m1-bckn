@@ -23,10 +23,6 @@ public class Lieu implements Serializable{
 	@Key
 	public String name;
 
-	public Lieu(String id,String name){
-		this.id=id;
-		this.name=name;
-	}
 	@Key
 	public String reference;
 

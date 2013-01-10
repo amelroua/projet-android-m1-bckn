@@ -267,9 +267,9 @@ public class FouilleDonnee {
 			completePlaceQuery(request.getUrl());
 			
 			
-				
+			Log.d("j'arrive", request.getUrl().toString());
 			ListeLieu list = request.execute().parseAs(ListeLieu.class);
-
+			Log.d("Erreur","la");
 			return list;
 
 		} catch (HttpResponseException e) {

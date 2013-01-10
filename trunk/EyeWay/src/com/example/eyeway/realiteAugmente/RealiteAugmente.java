@@ -461,7 +461,7 @@ OnLongClickListener {
 			marginTop = -(int) ((roll - 90) / 90 * screenHeight);
 
 		// On change les marges
-		lp.setMargins(angle * screenWidth / 90 + (pos * 100), marginTop, 0, 0);
+		lp.setMargins(angle * screenWidth / 90, marginTop, 0, 0);
 
 		// On change la gravité pour le mettre au centre
 		lp.gravity = Gravity.CENTER;
@@ -772,9 +772,12 @@ OnLongClickListener {
 				Log.d("Types ",types.get(0));
 				Log.d("Distance",distance +"");
 			}
-			else if (params[0].equals("recherche"))
+			else if (params[0].equals("recherche")){
+			
+				Log.d("motcle",motCle);
 				lieux = fd.getLieuParRecherche(motCle);
-
+			}
+			
 			return null;
 		}
 
