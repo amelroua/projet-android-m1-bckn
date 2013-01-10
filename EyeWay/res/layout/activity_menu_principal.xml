@@ -31,6 +31,12 @@
             android:headerDividersEnabled="true"
             android:overScrollHeader="#F7F2B2" >
         </ListView>
+        <Button 
+            android:id="@+id/status_gps"
+             android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/liste_fonctions"
+            />
     </RelativeLayout>
 
 </RelativeLayout>

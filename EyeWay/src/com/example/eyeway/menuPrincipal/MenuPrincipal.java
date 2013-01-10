@@ -17,6 +17,7 @@ import java.io.ObjectOutputStream;
 
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
 import com.example.eyeway.fouilleDedonne.Lieu;
+import com.example.eyeway.fouilleDedonne.Sauvegarde;
 import com.example.eyeway.realiteAugmente.RealiteAugmente;
 
 import android.location.GpsStatus;
@@ -132,155 +133,21 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 				break;
 
 			case 3 : 
-				/*
+
 				monIntent= new Intent(this,RealiteAugmente.class);
 				monIntent.putExtra("methode","instantane");
 				startActivity(monIntent);
-				 */
-				Toast.makeText(getApplicationContext(),"clic", Toast.LENGTH_SHORT).show();
-				try {
-					FileInputStream fis=openFileInput("hello_file");
-					ObjectInputStream is = new ObjectInputStream(fis);
-					Lieu object =(Lieu) is.readObject();
-					is.close();
-					Toast.makeText(getApplicationContext(),object.getNom(), Toast.LENGTH_SHORT).show();
-				} catch (Exception e) {
-					Toast.makeText(getApplicationContext(),"exception a la lecture "+e.getMessage(), Toast.LENGTH_SHORT).show();
-					// TODO Auto-generated catch block
-					//e1.printStackTrace();
-				}
+
 
 				break;
 			case 4 : 
-				Toast.makeText(getApplicationContext(), "TODO", Toast.LENGTH_SHORT).show();
-				String FILENAME = "hello_file";
-				Lieu lieuAenregistrer = new Lieu("001", "nom");
-				//FileOutputStream fos=null;
-
-				FileOutputStream fos=null;
-				try {
-					fos = openFileOutput(FILENAME, Context.MODE_PRIVATE);
-				} catch (FileNotFoundException e) {
-					// TODO Auto-generated catch block
-					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-					alertDialog.setTitle("Reset...");
-					alertDialog.setMessage("FILE exception a l ecriture "+e.getCause()+" "+e.getStackTrace());
-
-					//alertDialog.setIcon(R.drawable.icon);
-					alertDialog.show();
-				}	
-
-				byte[] b=null;
-				
-				
-				if(fos==null){
-					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-					alertDialog.setTitle("Reset...");
-					alertDialog.setMessage("fos NULL ");
-
-					//alertDialog.setIcon(R.drawable.icon);
-					alertDialog.show();
-				}
-				if(b==null){
-					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-					alertDialog.setTitle("Reset...");
-					alertDialog.setMessage("b NULL ");
-
-					//alertDialog.setIcon(R.drawable.icon);
-					alertDialog.show();
-				}
-				/*
-				try {
-
-					fos.write(b);
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					//e.printStackTrace();
-					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-					alertDialog.setTitle("Reset...");
-					alertDialog.setMessage("IO exception a l ecriture "+e.getCause()+" "+e.getStackTrace());
-
-					//alertDialog.setIcon(R.drawable.icon);
-					alertDialog.show();
-				}
-				 */
-				try {
-					fos.close();
-				} catch (IOException e) {
-					// TODO Auto-generated catch block
-					//e.printStackTrace();
-					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-					alertDialog.setTitle("Reset...");
-					alertDialog.setMessage("CLOSE exception a l ecriture "+e.getCause()+" "+e.getStackTrace());
-
-					//alertDialog.setIcon(R.drawable.icon);
-					alertDialog.show();
-				}
-				/*
-				catch(Exception e){
-
-
-					AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-					alertDialog.setTitle("Reset...");
-					alertDialog.setMessage("exception a l ecriture "+e.getCause()+" "+e.getStackTrace());
-
-					//alertDialog.setIcon(R.drawable.icon);
-					alertDialog.show();
-				}*/
+				//ouvrir le layout de gestion des favoris
+				Sauvegarde s=new Sauvegarde(this);
+				s.sauvegarderLieu(new Lieu("00A", "ici"));
+				Toast.makeText(getApplicationContext(),"TODO", Toast.LENGTH_SHORT).show();
 				break;
 			}
 
 		}
 	}
-	public byte[] getBytes(Object obj) {
-		ByteArrayOutputStream bos=null;
-		ObjectOutputStream oos=null;
-		byte [] data=null;
-		try{
-			bos = new ByteArrayOutputStream(); 
-			oos = new ObjectOutputStream(bos); 
-			oos.writeObject(obj);
-			oos.flush(); 
-
-			//bos.toByteArra
-			 data =bos.toByteArray();
-			
-		}catch(Exception e){
-			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-			alertDialog.setTitle("Reset...");
-			alertDialog.setMessage("GETBYTES exception a l ecriture "+e.getCause()+" "+e.getStackTrace());
-
-			//alertDialog.setIcon(R.drawable.icon);
-			alertDialog.show();
-		}
-
-		try{
-			oos.close(); 
-			bos.close();
-		}catch(Exception e){
-			AlertDialog alertDialog = new AlertDialog.Builder(this).create();
-			alertDialog.setTitle("Reset...");
-			alertDialog.setMessage("CLOSE exception a l ecriture "+e.getCause()+" "+e.getStackTrace());
-
-			//alertDialog.setIcon(R.drawable.icon);
-			alertDialog.show();
-		}
-		return data;
-
-		/*
-		 * 
-		 * ByteArrayOutputStream bos = new ByteArrayOutputStream();
-ObjectOutput out = null;
-try {
-  out = new ObjectOutputStream(bos);   
-  out.writeObject(yourObject);
-  byte[] yourBytes = bos.toByteArray();
-  ...
-} finally {
-  out.close();
-  bos.close();
-}
-		 */
-	}
-
 }
