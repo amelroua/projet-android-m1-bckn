@@ -66,4 +66,5 @@ public class ListAdapter extends ArrayAdapter<Fonctionnalite> {
         ImageView imgIcon;
         TextView txtTitle;
     }
+    
 }
