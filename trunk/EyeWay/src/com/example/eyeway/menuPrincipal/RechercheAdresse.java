@@ -16,13 +16,18 @@ import android.gesture.GestureOverlayView;
 import android.gesture.GestureOverlayView.OnGestureListener;
 import android.text.InputFilter;
 import android.text.Spanned;
+import android.view.GestureDetector;
+import android.view.GestureDetector.SimpleOnGestureListener;
 import android.view.Menu;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.Window;
 import android.view.View.OnClickListener;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
+import android.widget.ScrollView;
 import android.widget.Toast;
 
 
@@ -40,9 +45,14 @@ public class RechercheAdresse extends Activity implements OnClickListener
 	private EditText editNomRue;
 	private EditText editCodePostal;
 	private EditText editPays;
-	
-	private ImageView bouton_validation_formulaire;
+    private static final int SWIPE_MIN_DISTANCE = 120;
+    private static final int SWIPE_MAX_OFF_PATH = 250;
+    private static final int SWIPE_THRESHOLD_VELOCITY = 200;
+	private Button bouton_validation_formulaire;
 
+
+	  private GestureDetector gestureDetector;
+	    View.OnTouchListener gestureListener;
 
 
 	@Override
@@ -52,7 +62,7 @@ public class RechercheAdresse extends Activity implements OnClickListener
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_recherche_adresse);
 		
-		bouton_validation_formulaire = (ImageView) findViewById(R.id.bouton_validation_formulaire);
+		bouton_validation_formulaire = (Button) findViewById(R.id.bouton_validation_formulaire);
 		bouton_validation_formulaire.setOnClickListener(this);
 		
 		editTypesBatiments = (EditText) findViewById(R.id.typeBatiment);
@@ -112,22 +122,7 @@ public class RechercheAdresse extends Activity implements OnClickListener
 			    }
 			});
 		
-		editCodePostal.setFilters(new InputFilter[] {
-			    new InputFilter() {
-			       
-			    		@Override
-					public CharSequence filter(CharSequence source, int start,
-							int end, Spanned dest, int dstart, int dend) {
-			    			   if(source.equals("")){ // for backspace
-					                return source;
-					            }
-					            if(source.toString().matches("[a-zA-Z ]+")){
-					                return source;
-					            }
-					            return "";
-					}
-			    }
-			});
+		
 		editPays.setFilters(new InputFilter[] {
 			    new InputFilter() {
 			       
@@ -145,8 +140,15 @@ public class RechercheAdresse extends Activity implements OnClickListener
 			    }
 			});
 		
+		ActivitySwipeDetector activitySwipeDetector = new ActivitySwipeDetector(this);
+		ScrollView lowestLayout = (ScrollView)this.findViewById(R.id.linear_adresse);
+		lowestLayout.setOnTouchListener(activitySwipeDetector);
+		
+		
 
 	}
+	
+	
 
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
@@ -228,6 +230,23 @@ public class RechercheAdresse extends Activity implements OnClickListener
 	 }	
 	}
 
-	
 
+	 class MyGestureDetector extends SimpleOnGestureListener {
+	        @Override
+	        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+	            try {
+	                if (Math.abs(e1.getY() - e2.getY()) > SWIPE_MAX_OFF_PATH)
+	                    return false;
+	                // right to left swipe
+	                if(e1.getX() - e2.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+	                    Toast.makeText(RechercheAdresse.this, "Left Swipe", Toast.LENGTH_SHORT).show();
+	                }  else if (e2.getX() - e1.getX() > SWIPE_MIN_DISTANCE && Math.abs(velocityX) > SWIPE_THRESHOLD_VELOCITY) {
+	                    Toast.makeText(RechercheAdresse.this, "Right Swipe", Toast.LENGTH_SHORT).show();
+	                }
+	            } catch (Exception e) {
+	                // nothing
+	            }
+	            return false;
+	        }
+	 }
 }
