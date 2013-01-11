@@ -139,7 +139,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 			case 3 : 
 
-				monIntent= new Intent(this,RealiteAugmente.class);
+				monIntent= new Intent(this,PlacesMapActivity.class);
 				monIntent.putExtra("methode","instantane");
 				startActivity(monIntent);
 
