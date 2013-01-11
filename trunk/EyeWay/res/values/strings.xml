@@ -16,9 +16,9 @@
     <string name="distancePopPup">Distance </string>
     <string name="linterface">Interface</string>
     <string name="adresse">Adresse </string>
-    <string name="creer_poi">Ajouter un Point d\'intérêt</string>
+    <string name="creer_poi">Ajouter un favoris</string>
     <string name="nom">Nom</string>
-    <string name="detail_poi">Détail d\'un Point d\'interêt</string>
+    <string name="detail_poi">Détail d\'un favoris</string>
     <string name="gps_status_offline">Gps inactif</string>
     <string name="gps_status_online">Gps actif</string>
     <string name="titre_menu_principal">Menu principal :</string>
@@ -30,7 +30,7 @@
     <string name="title_activity_recherche_perimetre">Recherche dans une zone</string>
     <string name="title_activity_recherche_par_adresse">Recherche par adresse</string>
     <string name="title_activity_navigation_instantane">Navigation instantannée</string>
-    <string name="title_activity_gerer_poi">Gérer les points d\'intérêt</string>
+    <string name="title_activity_gerer_poi">Gérer les favoris</string>
     <string name="titre_choix_position">Centre du perimetre</string>
     <string name="titre_distance">Distance de recherche</string>
     <string name="titre_ajout_type">Types de lieu</string>
@@ -47,8 +47,8 @@
     <string name="pays">Pays</string>
     <string name="nomRue">Nom de la rue</string>
     <string name="codePostal">Code postal</string>
-    <string name="loading">Recherche POI</string>
-    <string name="nom_liste_poi">Points d\'intérêts enregistrés</string>
+    <string name="loading">Recherche en cours</string>
+    <string name="nom_liste_poi">Points d\'intérêt enregistrés</string>
 
     <string-array name="array_choix_position">
         <item>Autour de ma position</item>

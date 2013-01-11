@@ -7,24 +7,24 @@
     android:background="@drawable/background_item1"
     android:gravity="center_horizontal">
     
-
-	    
-    <ImageView
-        android:id="@+id/eyeWayLogo"
-        android:layout_width="60dip"
-        android:layout_height="60dip"
-        android:padding="3dip"
-        android:src="@drawable/iconresize" 
-        android:contentDescription="@string/logoApli"/>
+    
 
     <TextView
         android:id="@+id/eyeWayTitle"
-        android:textSize="24sp"
+        android:textSize="20sp"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_centerVertical="true"
-        android:layout_toRightOf="@id/eyeWayLogo"
+        android:layout_centerHorizontal="true"
         android:textColor="#FFFFFF"
         android:text="@string/app_name" />
-	
+	<ImageView
+	    
+        android:id="@+id/eyeWayLogo"
+        android:layout_width="55dip"
+        android:layout_height="55dip"
+        android:padding="1dip"
+        android:layout_toLeftOf="@id/eyeWayTitle"
+        android:src="@drawable/iconresize" 
+        android:contentDescription="@string/logoApli"/>
 </RelativeLayout>

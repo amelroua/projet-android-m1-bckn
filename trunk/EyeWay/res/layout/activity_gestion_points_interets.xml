@@ -12,7 +12,7 @@
 
     <RelativeLayout
         android:id="@+id/relative1"
-        
+        android:layout_below="@id/titlebar"
         android:layout_width="fill_parent"
         android:layout_height="wrap_content" >
 
@@ -37,20 +37,11 @@
             android:src="@drawable/menu_favoris" />
     </RelativeLayout>
 
-    <Button
-        android:id="@+id/bouton_ajout_poi"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignParentBottom="true"
-        android:layout_centerHorizontal="true"
-        android:text="@string/creer_poi"
-        android:textSize="20sp" />
 
     <ListView
         android:id="@+id/liste_lieux"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@id/bouton_ajout_poi"
         android:layout_below="@id/relative1"
         android:layout_marginBottom="10dip"
         android:layout_marginLeft="8dip"

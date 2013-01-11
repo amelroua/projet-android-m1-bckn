@@ -50,7 +50,7 @@ OnItemClickListener, OnItemSelectedListener {
 	int distance;
 	String types;
 	//
-	private ArrayList<Fonctionnalite> ensemble_types;// ne pas faire de add sur
+	private ArrayList<Fonctionnalite> ensemble_types=new ArrayList<Fonctionnalite>();// ne pas faire de add sur
 	// ce tableau, mais sur
 	// le listAdapter
 	private EditText edit_text_distance;
@@ -79,10 +79,14 @@ OnItemClickListener, OnItemSelectedListener {
 		 * Pour gérer la list view des types qui ont été selectionnés
 		 */
 		// ensemble_types=new HashSet<Fonctionnalite>();
-		ensemble_types = new ArrayList<Fonctionnalite>();
+		//ensemble_types = 
 		//final Object data = getLastNonConfigurationInstance();
 		//setRetainInstance (true);
-		adapter_list_view_types = new ListAdapter(this,R.layout.ligne_liste_type, ensemble_types);
+		@SuppressWarnings("deprecation")
+		ListAdapter recup=(ListAdapter) getLastNonConfigurationInstance();
+		if(recup==null){
+			adapter_list_view_types = new ListAdapter(this,R.layout.ligne_liste_type, ensemble_types);
+		}else adapter_list_view_types=recup;	
 		// A CHANGER
 		list_types_selectionnes = (ListView) findViewById(R.id.liste_types);
 		edit_text_distance = (EditText) findViewById(R.id.editText1);
@@ -141,16 +145,30 @@ OnItemClickListener, OnItemSelectedListener {
         }
 }
 	 */
+	/*
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_menu_principal, menu);
 		return true;
 	}
 	@Override
+	protected void onSaveInstanceState(Bundle outState) {
+		//outState.putO
+		//>adapter_list_view_types.get
+		super.onSaveInstanceState(outState);
+
+	}
+
+	@Override
+	protected void onRestoreInstanceState(Bundle savedInstanceState) {
+		// TODO Auto-generated method stub
+		super.onRestoreInstanceState(savedInstanceState);
+	}*/
+
+	@Override
 	public Object onRetainNonConfigurationInstance() {
-		final ListAdapter sauvegarde;
-		sauvegarde=adapter_list_view_types;
-		return sauvegarde;
+
+		return adapter_list_view_types;
 	}
 	/**
 	 * Boite de dialogue qui s'ouvre lors du clic sur le calcul d'itinéraire
@@ -205,7 +223,7 @@ OnItemClickListener, OnItemSelectedListener {
 			adapter_list_view_types.add(new Fonctionnalite(R.drawable.delete,type_selectionne));
 			Toast.makeText(getApplicationContext(),"Ajout du type "+type_selectionne,Toast.LENGTH_SHORT).show();
 		} else if (v.getId() == R.id.bouton_validation_formulaire) {
-			
+
 			/**
 			 * Recuperer toutes les valeurs du formulaire et les soumettre a la
 			 * requete :
