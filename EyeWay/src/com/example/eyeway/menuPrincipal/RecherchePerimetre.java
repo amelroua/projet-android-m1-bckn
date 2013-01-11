@@ -30,7 +30,9 @@ import android.widget.AdapterView.OnItemSelectedListener;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.ListView;
+import android.widget.RelativeLayout;
 import android.widget.Spinner;
 import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
@@ -95,6 +97,10 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 		//
 		bouton_validation_formulaire = (Button) findViewById(R.id.bouton_validation_formulaire);
 		bouton_validation_formulaire.setOnClickListener(this);
+		
+		ActivitySwipeDetector activitySwipeDetector = new ActivitySwipeDetector(this);
+		RelativeLayout lowestLayout = (RelativeLayout)this.findViewById(R.id.relative_perimetre);
+		lowestLayout.setOnTouchListener(activitySwipeDetector);
 		//
 
 		// spinner_choix_position = (Spinner)
