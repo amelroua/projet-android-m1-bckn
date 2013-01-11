@@ -16,7 +16,9 @@
     <string name="distancePopPup">Distance </string>
     <string name="linterface">Interface</string>
     <string name="adresse">Adresse </string>
+    <string name="creer_poi">Ajouter un Point d\'intérêt</string>
     <string name="nom">Nom</string>
+    <string name="detail_poi">Détail d\'un Point d\'interêt</string>
     <string name="gps_status_offline">Gps inactif</string>
     <string name="gps_status_online">Gps actif</string>
     <string name="titre_menu_principal">Menu principal :</string>
@@ -26,29 +28,31 @@
     <string name="titre_recherche_perimetre">Recherche dans une zone</string>
     <string name="title_activity_recherche_par_mot_cle"> Recherche par mot clé</string>
     <string name="title_activity_recherche_perimetre">Recherche dans une zone</string>
-   	<string name="title_activity_recherche_par_adresse">Recherche par adresse</string>
-   	<string name="title_activity_navigation_instantane">Navigation instantannée</string>
-   	<string name="title_activity_gerer_poi">Gérer les points d\'intérêt</string>
+    <string name="title_activity_recherche_par_adresse">Recherche par adresse</string>
+    <string name="title_activity_navigation_instantane">Navigation instantannée</string>
+    <string name="title_activity_gerer_poi">Gérer les points d\'intérêt</string>
     <string name="titre_choix_position">Centre du perimetre</string>
-	<string name="titre_distance">Distance de recherche</string>
-	<string name="titre_ajout_type">Types de lieu</string>
-	 <string name="bouton_ajout_type">Ajouter</string>
-	<string name="action_rechercher">Rechercher</string>
-	<string name="text_distance">Distance en mètre</string>
-	<string name="titre_recherche_motCle">Recherche par mot clé</string>
-	<string name="text_motCle">Ex: restaurant olivet</string>
-	<string name="logoApli">Logo de l\'application</string>
-	<string name="phone" >Numéro de téléphone</string>
-	<string name="webSite">Site Web</string>
-	<string name="typesBatiments">Types de batîments</string>
-	<string name="ville" >Ville</string>
-	<string name="pays">Pays</string>
-	<string name="nomRue">Nom de la rue</string>
-	<string name="codePostal">Code postal</string>
-	<string name="loading">Recherche POI</string>
-	<string-array name="array_choix_position">
+    <string name="titre_distance">Distance de recherche</string>
+    <string name="titre_ajout_type">Types de lieu</string>
+    <string name="bouton_ajout_type">Ajouter</string>
+    <string name="action_rechercher">Rechercher</string>
+    <string name="text_distance">Distance en mètre</string>
+    <string name="titre_recherche_motCle">Recherche par mot clé</string>
+    <string name="text_motCle">Ex: restaurant olivet</string>
+    <string name="logoApli">Logo de l\'application</string>
+    <string name="phone">Numéro de téléphone</string>
+    <string name="webSite">Site Web</string>
+    <string name="typesBatiments">Types de batîments</string>
+    <string name="ville">Ville</string>
+    <string name="pays">Pays</string>
+    <string name="nomRue">Nom de la rue</string>
+    <string name="codePostal">Code postal</string>
+    <string name="loading">Recherche POI</string>
+    <string name="nom_liste_poi">Points d\'intérêts enregistrés</string>
+
+    <string-array name="array_choix_position">
         <item>Autour de ma position</item>
         <item>Autour d\'une autre position</item>
     </string-array>
-	 
+
 </resources>

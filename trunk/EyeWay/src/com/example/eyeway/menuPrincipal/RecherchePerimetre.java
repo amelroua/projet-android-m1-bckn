@@ -38,7 +38,7 @@ import android.widget.Toast;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class RecherchePerimetre extends Activity implements OnClickListener,
-		OnItemClickListener, OnItemSelectedListener {
+OnItemClickListener, OnItemSelectedListener {
 	/**
 	 * Les parametres qui vont etre utilisés pour la soumission du formulaire
 	 */
@@ -51,8 +51,8 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 	String types;
 	//
 	private ArrayList<Fonctionnalite> ensemble_types;// ne pas faire de add sur
-														// ce tableau, mais sur
-														// le listAdapter
+	// ce tableau, mais sur
+	// le listAdapter
 	private EditText edit_text_distance;
 	private ListView list_types_selectionnes;
 	private Button bouton_ajout_type;
@@ -80,7 +80,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 		 */
 		// ensemble_types=new HashSet<Fonctionnalite>();
 		ensemble_types = new ArrayList<Fonctionnalite>();
-		 //final Object data = getLastNonConfigurationInstance();
+		//final Object data = getLastNonConfigurationInstance();
 		//setRetainInstance (true);
 		adapter_list_view_types = new ListAdapter(this,R.layout.ligne_liste_type, ensemble_types);
 		// A CHANGER
@@ -97,7 +97,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 		//
 		bouton_validation_formulaire = (Button) findViewById(R.id.bouton_validation_formulaire);
 		bouton_validation_formulaire.setOnClickListener(this);
-		
+
 		ActivitySwipeDetector activitySwipeDetector = new ActivitySwipeDetector(this);
 		RelativeLayout lowestLayout = (RelativeLayout)this.findViewById(R.id.relative_perimetre);
 		lowestLayout.setOnTouchListener(activitySwipeDetector);
@@ -124,9 +124,9 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 	/*
 	@Override
 	onActivityCreated(){
-		
+
 	}
-	
+
 	@Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
@@ -140,7 +140,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
             mCurCheckPosition = savedInstanceState.getInt("curChoice", 0);
         }
 }
-*/
+	 */
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_menu_principal, menu);
@@ -148,9 +148,9 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 	}
 	@Override
 	public Object onRetainNonConfigurationInstance() {
-	    final ListAdapter sauvegarde;
-	    sauvegarde=adapter_list_view_types;
-	    return sauvegarde;
+		final ListAdapter sauvegarde;
+		sauvegarde=adapter_list_view_types;
+		return sauvegarde;
 	}
 	/**
 	 * Boite de dialogue qui s'ouvre lors du clic sur le calcul d'itinéraire
@@ -200,12 +200,12 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 			type_selectionne = spinner_selection_type.getSelectedItem()
 					.toString();
 
-//			Toast.makeText(getApplicationContext(), type_selectionne,
-	//				Toast.LENGTH_LONG).show();
-			adapter_list_view_types.add(new Fonctionnalite(R.drawable.delete,
-					type_selectionne));
+			//			Toast.makeText(getApplicationContext(), type_selectionne,
+			//				Toast.LENGTH_LONG).show();
+			adapter_list_view_types.add(new Fonctionnalite(R.drawable.delete,type_selectionne));
+			Toast.makeText(getApplicationContext(),"Ajout du type "+type_selectionne,Toast.LENGTH_SHORT).show();
 		} else if (v.getId() == R.id.bouton_validation_formulaire) {
-
+			
 			/**
 			 * Recuperer toutes les valeurs du formulaire et les soumettre a la
 			 * requete :
@@ -229,25 +229,25 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 				distance = Integer.parseInt(edit_text_distance.getText()
 						.toString());
 
-							// convertir la liste des types en concaténation dans une string
-			ArrayList<String> types_saisis = getArrayListeTypes();
-						
-			if (types_saisis.size() == 0) {
+				// convertir la liste des types en concaténation dans une string
+				ArrayList<String> types_saisis = getArrayListeTypes();
 
-				Toast.makeText(getApplicationContext(),
-						"Entrer au moins un type de batiment",
-						Toast.LENGTH_SHORT).show();
+				if (types_saisis.size() == 0) {
 
-			} else {
+					Toast.makeText(getApplicationContext(),
+							"Entrer au moins un type de batiment",
+							Toast.LENGTH_SHORT).show();
 
-				showBoiteChoix();
-			}
+				} else {
+
+					showBoiteChoix();
+				}
 			} catch (NumberFormatException e) {
 				Toast.makeText(getApplicationContext(),
 						"Entrer un entier pour la distance", Toast.LENGTH_SHORT)
 						.show();
 			}
-		
+
 			// Faire la requete
 
 			//
@@ -258,9 +258,9 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 		ArrayList<String> res = new ArrayList<String>();
 		for (int i = 0; i < adapter_list_view_types.getCount(); i++) {
 			res.add(adapter_list_view_types.getItem(i).title);// je sépare les
-																// types par un
-																// espaces, donc
-																// on aura :
+			// types par un
+			// espaces, donc
+			// on aura :
 			// res = Bar Restaurant Discothèque ... Ensuite FouilleDonnee va
 			// s'occuper de convertir en Bar+Restaurant+Discotèque
 		}
@@ -270,7 +270,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		//
-	
+
 		if (arg0.getId() == R.id.liste_types) {
 			// Idée : possibilité de mettre une dialog pour demander la
 			// confirmation a l'utilisateur
@@ -280,7 +280,7 @@ public class RecherchePerimetre extends Activity implements OnClickListener,
 					"Suppresion du type " + adapter_list_view_types.getItem(arg2).title,
 					Toast.LENGTH_SHORT).show();
 			adapter_list_view_types.remove(arg2);
-	
+
 			// list_types_selectionnes.getAdapter().no
 		}
 	}

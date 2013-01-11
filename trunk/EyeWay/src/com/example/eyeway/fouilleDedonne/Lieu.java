@@ -168,5 +168,9 @@ public class Lieu implements Serializable{
 	public String getWebsite() {
 		return website;
 	}
-
+	@Override
+	public boolean equals(Object o) {
+		Lieu l = (Lieu)o;
+		return this.name==l.getNom();
+	}
 }
