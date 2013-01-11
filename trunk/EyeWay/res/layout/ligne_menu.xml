@@ -1,30 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
-<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="fill_parent"
     android:layout_height="fill_parent"
 	android:background="@drawable/background_item1"
 	android:paddingTop="2dip"
 	android:paddingBottom="2dip"
+    android:orientation="horizontal"
+	android:gravity="center_vertical"
     >
 <ImageView
     android:id="@+id/icon_action"
     android:src="@drawable/default_image"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:paddingLeft="5dip"
-    android:layout_alignParentLeft="true"
-    android:layout_centerVertical="true"
+    android:layout_weight="0.4"
     />
   
 <TextView
     android:id="@+id/texte_ligne"
-    android:layout_width="wrap_content"
-    android:layout_height="fill_parent"
+    android:layout_width="fill_parent"
+    android:layout_height="wrap_content"
     android:textColor="#000000"
-    android:layout_toRightOf="@+id/icon_action"
-    android:layout_centerVertical="true"
+    android:textSize="17dp"
+   	android:layout_gravity="center_vertical"
     android:text="@string/defaut"
-    android:padding="10dp"
+	android:layout_margin="10dip"
+    android:layout_weight="1"
     >
 </TextView>
 <ImageView
@@ -32,7 +33,6 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:src="@drawable/arrow_image"
-    android:layout_alignParentRight="true"
-    android:layout_centerVertical="true"
+   android:layout_weight="0.8"
     />
-</RelativeLayout>
+</LinearLayout>
