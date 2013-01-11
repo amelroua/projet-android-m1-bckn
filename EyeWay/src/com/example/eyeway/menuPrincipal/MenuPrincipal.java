@@ -59,7 +59,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 	private ListView list_menu;
 	// GPS Location
 	GPSTracker gps; 
-	ArrayList<Fonctionnalite> tab_fonctionnalite =new ArrayList<Fonctionnalite>();
+	
 	ConnectionDetector cd ;
 	AlertDialogManager alert = new AlertDialogManager();
 	Boolean isInternetPresent = false ;
@@ -73,7 +73,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 		//setTheme(R.style.Theme_perso);
 		setContentView(R.layout.activity_menu_principal);
-		
+		ArrayList<Fonctionnalite> tab_fonctionnalite =new ArrayList<Fonctionnalite>();
 		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_par_mot_clef,getString(R.string.title_activity_recherche_par_mot_cle)));
 		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_dans_zone,getString(R.string.title_activity_recherche_perimetre)));
 		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_par_adresse,getString(R.string.title_activity_recherche_par_adresse)));
@@ -93,15 +93,10 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 		isInternetPresent = true ;//cd.isConnectionToInternet();
 
 		if(!isInternetPresent){
-
 			alert.showAlertDialog(MenuPrincipal.this, "Données Désactivées","Activer l'accés aux données sur le réseau mobile",false);
-
 		}else{
-
 			Log.d("GPS","la");
-
 			gps = new GPSTracker(this);
-
 
 		}
 
@@ -145,19 +140,19 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 				break;
 			case 4 : 
-
-				//Toast.makeText(getApplicationContext(),"Sauvegarde", Toast.LENGTH_SHORT).show();
+				
 				for(int i=0; i<10 ; i++){
 					MyLocation l=new MyLocation(1.0,1.0);
 					Geometry g=new Geometry(l);
 					s.sauvegarderLieu(new Lieu(""+i, "", "", "",g, "","",""));
 				}
-				//Toast.makeText(getApplicationContext(),"Chargement", Toast.LENGTH_SHORT).show();
-				ArrayList<Lieu> lieux=s.getLieuxEnregistres();
-
-				for(int i=0; i< lieux.size(); i++){
-					Toast.makeText(getApplicationContext(),"NomLieu recup : "+lieux.get(i).getNom(), Toast.LENGTH_SHORT).show();
-				}
+				
+				
+				
+				
+				monIntent= new Intent(this,GestionPointsInterets.class);
+				startActivity(monIntent);
+				
 				break;
 
 			}

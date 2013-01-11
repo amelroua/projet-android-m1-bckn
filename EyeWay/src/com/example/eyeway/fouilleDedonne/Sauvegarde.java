@@ -41,17 +41,19 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemClickListener;
 
 public class Sauvegarde {
-	
-	ArrayList<String> nomLieuxEnregistres;
-	ArrayList<String> nomPlaceDetailsEnregistres;
-	
+
+	private static ArrayList<String> nomLieuxEnregistres=new ArrayList<String>();
+	private static ArrayList<String> nomPlaceDetailsEnregistres=new ArrayList<String>();
+
 	Context fileContext; //nécessaire pour fileContext.openFileOutput
 	private static int lastIdLieu=0;
 	private static int lastIdPlaceDetail=0;
+	
+	//private static Sauvegarde instance=null;
+	
+	//impossible de faire le pattern singleton ...
 	public Sauvegarde(Context fileContext){
-		this.fileContext = fileContext;
-		nomLieuxEnregistres=new ArrayList<String>();
-		nomPlaceDetailsEnregistres=new ArrayList<String>();
+		this.fileContext=fileContext;
 	}
 
 	public void sauvegarderLieu(Lieu l){
@@ -109,7 +111,7 @@ public class Sauvegarde {
 		}
 		return data;
 	}
-	
+
 	private  Object lire(String nomFichier){
 		Object res=null;
 		try {
@@ -117,23 +119,23 @@ public class Sauvegarde {
 			ObjectInputStream is = new ObjectInputStream(fis);
 			res= is.readObject();
 			is.close();
-			
+
 		} catch (Exception e) {
 			Toast.makeText(fileContext.getApplicationContext(),"exception a la lecture "+e.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 		return res;
 	}
-	
+
 	private Lieu lireLieu(String nomLieu){
-			Lieu l=(Lieu)lire(nomLieu);
-			return l;
+		Lieu l=(Lieu)lire(nomLieu);
+		return l;
 	}
-	
+
 	private PlaceDetails lirePlaceDetails(String nomPlaceDetail){
 		PlaceDetails p=(PlaceDetails)lire(nomPlaceDetail);
 		return p;
 	}
-	
+
 	public ArrayList<Lieu> getLieuxEnregistres(){
 		ArrayList<Lieu> res=new ArrayList<Lieu>();
 		for(int i=0; i<nomLieuxEnregistres.size(); i++){
@@ -149,5 +151,23 @@ public class Sauvegarde {
 			res.add(p);
 		}
 		return res;
+	}
+
+	public void supprimerLieu(Lieu l){
+		ArrayList<Lieu> lieux=getLieuxEnregistres();
+		for(int i=0; i<lieux.size();i++){
+			if(lieux.get(i)==l){
+				lieux.remove(i);
+			}
+		}
+	}
+	public Lieu getLieuParNom(String nom){
+		ArrayList<Lieu> lieux=getLieuxEnregistres();
+		for(int i=0; i<lieux.size();i++){
+			if(nom.equals(lieux.get(i).getNom())){
+				return lieux.get(i);
+			}
+		}
+		return null;
 	}
 }

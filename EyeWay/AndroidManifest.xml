@@ -94,7 +94,10 @@
             android:label="@string/title_activity_recherche_par_adresse"
             android:windowSoftInputMode="stateHidden" >
         </activity>
-        
+        <activity
+            android:name=".menuPrincipal.GestionPointsInterets"
+            android:label="@string/title_activity_gerer_poi" >
+        </activity>
         <activity
             android:name=".Map.PlacesMapActivity"
             android:label="@string/title_activity_recherche_par_adresse"
