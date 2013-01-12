@@ -65,7 +65,7 @@ public class Sauvegarde {
 			b=getBytes(l);
 			fos.write(b);
 			fos.close();
-			Toast.makeText(fileContext.getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
+			Toast.makeText(fileContext.getApplicationContext(), "Point d'intêret ajouté", Toast.LENGTH_SHORT).show();
 			nomLieuxEnregistres.add(nomLieu);
 			lastIdLieu++;
 		}catch(Exception e){
@@ -81,7 +81,7 @@ public class Sauvegarde {
 			b=getBytes(p);
 			fos.write(b);
 			fos.close();
-			Toast.makeText(fileContext.getApplicationContext(), "OK", Toast.LENGTH_SHORT).show();
+			Toast.makeText(fileContext.getApplicationContext(), "Point d'intêret ajouté", Toast.LENGTH_SHORT).show();
 			nomLieuxEnregistres.add(nomPlaceDetails);
 		}catch(Exception e){
 			Toast.makeText(fileContext.getApplicationContext(), "Exception save", Toast.LENGTH_SHORT).show();

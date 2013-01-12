@@ -3,15 +3,18 @@ package com.example.eyeway.menuPrincipal;
 import java.util.ArrayList;
 
 import com.example.eyeway.R;
+import com.example.eyeway.Map.Map;
 import com.example.eyeway.fouilleDedonne.Lieu;
 import com.example.eyeway.fouilleDedonne.Lieu.Geometry;
 import com.example.eyeway.fouilleDedonne.Lieu.MyLocation;
 import com.example.eyeway.fouilleDedonne.Sauvegarde;
+import com.example.eyeway.realiteAugmente.RealiteAugmente;
 
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
@@ -23,25 +26,32 @@ import android.view.View.OnClickListener;
 import android.widget.AdapterView;
 import android.widget.EditText;
 import android.widget.ListView;
+import android.widget.TextView;
 import android.widget.AdapterView.OnItemClickListener;
 import android.widget.Toast;
 
 public class GestionPointsInterets extends Activity implements OnClickListener,OnItemClickListener{
-
+	
+	private Context mContext ;
 	private ListView list_poi;
-	Sauvegarde s=new Sauvegarde(this);
+	Sauvegarde s = new Sauvegarde(this);
 	private AdapterLieu adapter;
+
 	@Override
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 		setContentView(R.layout.activity_gestion_points_interets);
+		
+		mContext = this ;
+		
 		ArrayList<Lieu> lesLieux=new ArrayList<Lieu>();
 		lesLieux=s.getLieuxEnregistres();
 		adapter=new AdapterLieu(this,R.layout.ligne_lieu,lesLieux);
 		list_poi = (ListView)findViewById(R.id.liste_lieux);
 		list_poi.setAdapter(adapter);
 		list_poi.setOnItemClickListener(this);
+		
 		if(adapter.getCount()!=0){
 			list_poi.setBackgroundResource(R.drawable.border1);
 			Log.i("Adapter get count diff ", "Adapter get count diff");
@@ -60,6 +70,8 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 			String nom =adapter.getItem(arg2).getNom();
 			Toast.makeText(getApplicationContext(),"Clic sur le Lieu "+nom, Toast.LENGTH_SHORT).show();
 			Lieu l = s.getLieuParNom(nom); //faire le business avec le lieu : afficher l'alertdialog
+			afficherAlertDialogDetailsPoi(l);
+		
 		}
 	}
 	public void afficherAlertDialogDetailsPoi(final Lieu l){
@@ -75,6 +87,21 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 		// On donne un titre à l'AlertDialog
 		adb.setTitle("Détail d'un Point d'intérêt");
 
+		TextView t = (TextView) alertDialogView.findViewById(R.id.nom_poi);
+		t.setText(l.getNom());
+		
+		t = (TextView) alertDialogView.findViewById(R.id.description_poi);
+		t.setText(l.getVicinity());
+		
+		t = (TextView) alertDialogView.findViewById(R.id.adresse_poi);
+		t.setText(l.getFormatted_address());
+		
+		t = (TextView) alertDialogView.findViewById(R.id.num_tel_poi);
+		t.setText(l.getFormatted_phone_number());
+		
+		t = (TextView) alertDialogView.findViewById(R.id.site_poi);
+		t.setText(l.getWebsite());
+		
 		adb.setPositiveButton("Afficher ", new DialogInterface.OnClickListener() {
 
 			@Override
@@ -82,11 +109,11 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 
 				//TODO
 				//Appeler la méthode pour afficher un POI
-
+				showBoiteChoix(l);
 			}
 		});
 
-		adb.setNegativeButton("Supprimer ce Poi", new DialogInterface.OnClickListener() {
+		adb.setNegativeButton("Supprimer", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
@@ -101,6 +128,47 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 		adb.show();
 	}
 
+	
+	/**
+	 * Boite de dialogue qui s'ouvre lors du clic sur le calcul d'itinéraire
+	 */
+	void showBoiteChoix(final Lieu lieu) {
+
+		// Création de l'AlertDialog
+		AlertDialog.Builder adb = new AlertDialog.Builder(mContext);
+
+		// On donne un titre à l'AlertDialog
+		adb.setTitle("Choix Visualisation");
+
+		// On modifie l'icône de l'AlertDialog pour le fun ;)
+		adb.setIcon(R.drawable.info);
+
+		// adb.setCancelable(true);
+		String[] choix = { "Map", "Réalité augmenté" };
+
+		adb.setItems(choix, new DialogInterface.OnClickListener() {
+			public void onClick(DialogInterface dialog, int which) {
+				Intent intent;
+				if (which == 0) {
+
+					intent = new Intent(mContext, Map.class);
+				} else {
+					intent = new Intent(mContext,
+							RealiteAugmente.class);
+					intent.putExtra("methode","favoris");
+					intent.putExtra("lieu", lieu);
+				}
+				
+				startActivity(intent);
+
+				dialog.dismiss();
+			}
+		});
+
+		adb.show();
+	}
+	
+	
 	public void afficherAlertDialogSuppression(final Lieu l){
 		// Création de l'AlertDialog
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);	
@@ -117,7 +185,7 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				afficherAlertDialogSuppression(l);
+				afficherAlertDialogDetailsPoi(l);
 				return ;
 
 			}

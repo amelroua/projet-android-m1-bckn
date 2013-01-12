@@ -59,6 +59,7 @@ OnLongClickListener {
 	private Context ctx;
 	private LocationManager locationManager;
 	private ArrayList<Icon> icons;
+	private Lieu lieu ;
 	private boolean creation = true;
 	int rotation = 0;
 	private int distance ;
@@ -77,6 +78,9 @@ OnLongClickListener {
 
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_PROGRESS);
+
+		// On récupère le context
+		ctx = this;
 
 		// On initialise nos écouteurs
 		initialisationEcouteursGPS();
@@ -110,17 +114,26 @@ OnLongClickListener {
 
 			}else{
 
-				motCle = b.getString("motCle"); 
+				if(methode.equalsIgnoreCase("favoris")){
+
+					lieu = (Lieu) b.get("lieu");
+
+				
+
+				}else{
+
+
+					motCle = b.getString("motCle"); 
+				}
 			}
 		}
-
 		FrameLayout l = (FrameLayout) findViewById(R.id.main);
 
 		// On rend notre écran cliquable avec taphold
 		l.setOnLongClickListener(this);
 
 		//calling setContentView() after requesting
-		
+
 		setProgressBarVisibility(true);
 
 
@@ -198,11 +211,18 @@ OnLongClickListener {
 		this.icons = new ArrayList<Icon>();
 
 
-		new RequeteRecherche().execute(methode);
+		if(methode.equalsIgnoreCase("favoris")){
 
-		// On récupère le context
-		ctx = this;
+			Icon i = newIcons(lieu);
+			ajoutIcon(i);
+			findViewById(R.id.linearProgress).setVisibility(View.INVISIBLE);
+			setProgressBarVisibility(false);
 
+		}else{
+
+			new RequeteRecherche().execute(methode);
+
+		}
 		// On récupère la ta taille de l'écran
 		mScreenWidth = getScreenWidth();
 		mScreenHeight = getScreenHeight();
@@ -665,15 +685,15 @@ OnLongClickListener {
 
 				EditText webSite = (EditText) alertDialogView
 						.findViewById(R.id.webSite);
-							
-				Icon i = new Icon(ctx, im, nom.getText().toString(),
-						description.getText().toString(),"nouveau",adresse.getText().toString(), myLocation
-						.getLatitude(), myLocation
-						.getLongitude(), myLocation,phone.getText().toString(),webSite.getText().toString());
-				
+
+
 				Geometry g = new Geometry(new MyLocation(myLocation.getLatitude(),myLocation.getLongitude()));
-				Lieu l = new Lieu(nom.getText().toString(),"","",description.getText().toString(),g,adresse.getText().toString(),
+				ArrayList<String> types = new ArrayList<String>();
+				types.add("nouveau");
+				Lieu l = new Lieu(nom.getText().toString(),types,"","",description.getText().toString(),g,adresse.getText().toString(),
 						phone.getText().toString(),webSite.getText().toString());
+				
+				Icon i = newIcons(l);
 				
 				Sauvegarde sauvegarder = new Sauvegarde(getApplicationContext());
 				sauvegarder.sauvegarderLieu(l);
@@ -783,11 +803,11 @@ OnLongClickListener {
 				Log.d("Distance",distance +"");
 			}
 			else if (params[0].equals("recherche")){
-			
+
 				Log.d("motcle",motCle);
 				lieux = fd.getLieuParRecherche(motCle);
 			}
-			
+
 			return null;
 		}
 
@@ -819,7 +839,7 @@ OnLongClickListener {
 								}
 
 								if(findViewById(R.id.linearProgress) != null){
-									
+
 									findViewById(R.id.linearProgress).setVisibility(View.INVISIBLE);
 									setProgressBarVisibility(false);
 								}
