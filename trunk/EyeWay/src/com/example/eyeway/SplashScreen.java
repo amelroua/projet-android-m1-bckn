@@ -33,7 +33,7 @@ public class SplashScreen extends Activity {
         super.onCreate(savedInstanceState); 
         setContentView(R.layout.splash_screen); 
         Message msg = new Message(); 
-        msg.what = STOPSPLASH; 
+         msg.what = STOPSPLASH; 
         splashHandler.sendMessageDelayed(msg, SPLASHTIME); 
     }
 }
