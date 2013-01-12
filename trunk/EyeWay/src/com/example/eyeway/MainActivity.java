@@ -20,6 +20,7 @@ public class MainActivity extends Activity implements OnClickListener{
 	private Button map;
 	private Button fouille;
 	private Button linterface;
+	private Button splash;
 	
     @Override
     public void onCreate(Bundle savedInstanceState) {
@@ -29,10 +30,12 @@ public class MainActivity extends Activity implements OnClickListener{
         map=(Button) findViewById(R.id.map);
         fouille=(Button) findViewById(R.id.fouille);
         linterface=(Button) findViewById(R.id.linterface);
+        splash = (Button) findViewById(R.id.splash);
         realite.setOnClickListener(this);
         map.setOnClickListener(this);
         fouille.setOnClickListener(this);
         linterface.setOnClickListener(this);
+        splash.setOnClickListener(this);
     }
 
     @Override
@@ -59,6 +62,12 @@ public class MainActivity extends Activity implements OnClickListener{
 		if(v.getId()==linterface.getId()){
 			 Intent monIntent = new Intent(this,MenuPrincipal.class);
 			 startActivity(monIntent);  
+		}
+		
+		if(v.getId() == splash.getId()){
+			
+			 Intent monIntent = new Intent(this,SplashScreen.class);
+			 startActivity(monIntent); 
 		}
 	}
 

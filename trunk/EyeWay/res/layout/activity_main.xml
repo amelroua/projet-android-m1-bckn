@@ -3,34 +3,38 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent" >
 
-      <Button
+    <Button
         android:id="@+id/realite"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/realiteAugmente" 
-        />
-      
-         <Button
+        android:text="@string/realiteAugmente" />
+
+    <Button
         android:id="@+id/map"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/realite"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/map"
-         />
-         
-        <Button
+        android:text="@string/map" />
+
+    <Button
         android:id="@+id/fouille"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_below="@id/map"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/fouille" 
-        />
-        <Button
+        android:text="@string/fouille" />
+
+    <Button
         android:id="@+id/linterface"
-        android:layout_below="@id/fouille"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/linterface" 
-        />
+        android:layout_below="@id/fouille"
+        android:text="@string/linterface" />
+
+    <Button
+        android:id="@+id/splash"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@id/linterface"
+        android:text="Splash" />
 
 </RelativeLayout>
