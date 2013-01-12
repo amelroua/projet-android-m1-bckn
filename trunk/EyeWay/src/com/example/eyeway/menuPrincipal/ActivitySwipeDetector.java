@@ -21,8 +21,8 @@ public ActivitySwipeDetector(Activity activity){
 public void onRightToLeftSwipe(){
     Log.i(logTag, "RightToLeftSwipe!");
     Intent intent = new Intent(activity,MenuPrincipal.class);
-   
     activity.startActivity(intent);
+    activity.finish();
     //activity.doSomething();
 }
 

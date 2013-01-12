@@ -59,7 +59,7 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 	private ListView list_menu;
 	// GPS Location
 	GPSTracker gps; 
-	
+
 	ConnectionDetector cd ;
 	AlertDialogManager alert = new AlertDialogManager();
 	Boolean isInternetPresent = false ;
@@ -102,19 +102,14 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 	}
 
-	@Override
-	public void onResume(){
-		super.onResume();
-		gps = new GPSTracker(this);
-	}
-	
+
 	@Override
 	public void onPause(){
 		super.onPause();
 		if(gps != null)
 			gps.stopUsingGPS();
 	}
-	
+
 	@Override
 	public void onStop(){
 		super.onStop();
@@ -132,52 +127,59 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 		// TODO Auto-generated method stub
 
 	}
-	
+
 	@Override
 	public void onItemClick(AdapterView<?> arg0, View arg1, int arg2, long arg3) {
 		if(arg0.getId()==list_menu.getId()){
 			//if(v.getId()==R.id.gpsStatus.getId()){
-			Intent monIntent;
-			switch(arg2){
-			case 0 : 
-				alert.showRecherche(this);
-				break;
-			case 1 : 
-				monIntent= new Intent(this,RecherchePerimetre.class);
-				startActivity(monIntent);
-				break;
-			case 2 : 
-				monIntent= new Intent(this,RechercheAdresse.class);
-				startActivity(monIntent);
-				break;
 
-			case 3 : 
+			if(!gps.isGPSEnabled && !gps.isNetworkEnabled){
 
-				monIntent= new Intent(this,RealiteAugmente.class);
-				monIntent.putExtra("methode","instantane");
-				startActivity(monIntent);
+				gps = new GPSTracker(this);
+				
+			}else{
 
-				break;
-			case 4 : 
-				
-				Sauvegarde s = new Sauvegarde(this);
-				ArrayList<Lieu> lesLieux = s.getLieuxEnregistres();
-				
-				if(lesLieux.size() != 0){
-					
-				monIntent= new Intent(this,GestionPointsInterets.class);
-				monIntent.putExtra("lieux",lesLieux);
-				
-				startActivity(monIntent);
-				
-				}else{
-					
-					Toast.makeText(this,"Vous n'avez aucun POI favoris", Toast.LENGTH_LONG).show();
+				Intent monIntent;
+				switch(arg2){
+				case 0 : 
+					alert.showRecherche(this);
+					break;
+				case 1 : 
+					monIntent= new Intent(this,RecherchePerimetre.class);
+					startActivity(monIntent);
+					break;
+				case 2 : 
+					monIntent= new Intent(this,RechercheAdresse.class);
+					startActivity(monIntent);
+					break;
+
+				case 3 : 
+
+					monIntent= new Intent(this,RealiteAugmente.class);
+					monIntent.putExtra("methode","instantane");
+					startActivity(monIntent);
+
+					break;
+				case 4 : 
+
+					Sauvegarde s = new Sauvegarde(this);
+					ArrayList<Lieu> lesLieux = s.getLieuxEnregistres();
+
+					if(lesLieux.size() != 0){
+
+						monIntent= new Intent(this,GestionPointsInterets.class);
+						monIntent.putExtra("lieux",lesLieux);
+
+						startActivity(monIntent);
+
+					}else{
+
+						Toast.makeText(this,"Vous n'avez aucun POI favoris", Toast.LENGTH_LONG).show();
+					}
+					break;
+
 				}
-				break;
-
 			}
-
 		}
 	}
 }
