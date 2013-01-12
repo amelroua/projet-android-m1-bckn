@@ -103,6 +103,25 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 	}
 
 	@Override
+	public void onResume(){
+		super.onResume();
+		gps = new GPSTracker(this);
+	}
+	
+	@Override
+	public void onPause(){
+		super.onPause();
+		if(gps != null)
+			gps.stopUsingGPS();
+	}
+	
+	@Override
+	public void onStop(){
+		super.onStop();
+		if(gps != null)
+			gps.stopUsingGPS();
+	}
+	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		getMenuInflater().inflate(R.menu.activity_menu_principal, menu);
 		return true;
@@ -134,17 +153,27 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 			case 3 : 
 
-				monIntent= new Intent(this,PlacesMapActivity.class);
+				monIntent= new Intent(this,RealiteAugmente.class);
 				monIntent.putExtra("methode","instantane");
 				startActivity(monIntent);
 
 				break;
 			case 4 : 
 				
+				Sauvegarde s = new Sauvegarde(this);
+				ArrayList<Lieu> lesLieux = s.getLieuxEnregistres();
 				
+				if(lesLieux.size() != 0){
+					
 				monIntent= new Intent(this,GestionPointsInterets.class);
+				monIntent.putExtra("lieux",lesLieux);
+				
 				startActivity(monIntent);
 				
+				}else{
+					
+					Toast.makeText(this,"Vous n'avez aucun POI favoris", Toast.LENGTH_LONG).show();
+				}
 				break;
 
 			}

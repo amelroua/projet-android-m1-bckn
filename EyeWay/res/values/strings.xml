@@ -49,7 +49,7 @@
     <string name="codePostal">Code postal</string>
     <string name="loading">Recherche en cours</string>
     <string name="nom_liste_poi">Points d\'intérêt enregistrés</string>
-
+	<string name="sauvegarder">Sauvegarder</string>
     <string-array name="array_choix_position">
         <item>Autour de ma position</item>
         <item>Autour d\'une autre position</item>

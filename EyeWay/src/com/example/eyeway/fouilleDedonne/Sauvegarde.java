@@ -14,6 +14,7 @@ import java.io.IOException;
 import java.io.InputStream;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
+import java.io.Serializable;
 
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
 import com.example.eyeway.fouilleDedonne.Lieu;
@@ -40,8 +41,12 @@ import android.widget.Toast;
 import android.view.View.OnClickListener;
 import android.widget.AdapterView.OnItemClickListener;
 
-public class Sauvegarde {
+public class Sauvegarde implements Serializable{
 
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
 	private static ArrayList<String> nomLieuxEnregistres=new ArrayList<String>();
 	private static ArrayList<String> nomPlaceDetailsEnregistres=new ArrayList<String>();
 
