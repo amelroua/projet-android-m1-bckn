@@ -44,9 +44,8 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 		setContentView(R.layout.activity_gestion_points_interets);
 		
 		mContext = this ;
-		
-		ArrayList<Lieu> lesLieux=new ArrayList<Lieu>();
-		lesLieux=s.getLieuxEnregistres();
+		Bundle b = getIntent().getExtras();
+		ArrayList<Lieu> lesLieux=(ArrayList<Lieu>) b.get("lieux");
 		adapter=new AdapterLieu(this,R.layout.ligne_lieu,lesLieux);
 		list_poi = (ListView)findViewById(R.id.liste_lieux);
 		list_poi.setAdapter(adapter);
@@ -54,10 +53,6 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 		
 		if(adapter.getCount()!=0){
 			list_poi.setBackgroundResource(R.drawable.border1);
-			Log.i("Adapter get count diff ", "Adapter get count diff");
-		}else{
-			Log.i("Adapter get count 0", "Adapter get count 0");
-			Toast.makeText(getApplicationContext(),"Adapter get count 0", Toast.LENGTH_SHORT).show();
 		}
 	}
 
@@ -68,7 +63,6 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 		if(arg0.getId()==list_poi.getId()){
 
 			String nom =adapter.getItem(arg2).getNom();
-			Toast.makeText(getApplicationContext(),"Clic sur le Lieu "+nom, Toast.LENGTH_SHORT).show();
 			Lieu l = s.getLieuParNom(nom); //faire le business avec le lieu : afficher l'alertdialog
 			afficherAlertDialogDetailsPoi(l);
 		
@@ -85,7 +79,6 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 		adb.setView(alertDialogView);
 
 		// On donne un titre à l'AlertDialog
-		adb.setTitle("Détail d'un Point d'intérêt");
 
 		TextView t = (TextView) alertDialogView.findViewById(R.id.nom_poi);
 		t.setText(l.getNom());

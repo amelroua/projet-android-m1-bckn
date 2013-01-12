@@ -16,6 +16,7 @@ import android.os.AsyncTask;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.ListAdapter;
@@ -30,6 +31,7 @@ import com.example.eyeway.fouilleDedonne.DetailLieu;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
 import com.example.eyeway.fouilleDedonne.Lieu;
 import com.example.eyeway.fouilleDedonne.PlaceDetails;
+import com.example.eyeway.fouilleDedonne.Sauvegarde;
 import com.google.android.maps.GeoPoint;
 
 public class Icon extends LinearLayout {
@@ -520,6 +522,22 @@ public class Icon extends LinearLayout {
 
 			}
 		});
+		
+		if(!typeIcon.equalsIgnoreCase("nouveau")){
+			
+			Button b = (Button) alertDialogView.findViewById(R.id.sauvegarder);
+			b.setVisibility(View.VISIBLE);
+			b.setOnClickListener(new OnClickListener() {
+				
+				@Override
+				public void onClick(View v) {
+
+					Sauvegarde s = new Sauvegarde(ctx);
+					s.sauvegarderLieu(lieu);					
+				}
+			});
+			
+		}
 
 		adb.show();
 

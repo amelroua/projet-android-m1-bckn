@@ -67,6 +67,10 @@ OnLongClickListener {
 	ListeLieu lieux; 
 	PlaceDetails details;
 
+	private static final long MIN_DISTANCE_CHANGE_FOR_UPDATES = 10 ;
+
+	private static final long MIN_TIME_BW_UPDATES = 30000 ;
+	
 	public String KEY_REFERENCE = "reference"; // id of the place
 	public String KEY_NAME = "name"; // name of the place
 	ArrayList<String> types ;
@@ -165,11 +169,11 @@ OnLongClickListener {
 		locationManager = (LocationManager) this
 				.getSystemService(Context.LOCATION_SERVICE);
 
-		// On update le manager tout les 100 mili secondes
+		
 
 		// Avec le GPS
-		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,10000,
-				10, this);
+		locationManager.requestLocationUpdates(LocationManager.GPS_PROVIDER,MIN_TIME_BW_UPDATES,
+				MIN_DISTANCE_CHANGE_FOR_UPDATES, this);
 
 		// Avec le réseau
 		locationManager.requestLocationUpdates(
