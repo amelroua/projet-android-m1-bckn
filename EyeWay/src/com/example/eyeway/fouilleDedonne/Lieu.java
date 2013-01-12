@@ -31,8 +31,9 @@ public class Lieu implements Serializable{
 	 * @param geometry
 	 * @param formatted_address
 	 */
-	public Lieu(String name, String reference, String icon, String vicinity, Geometry geometry, String formatted_address,String phoneNumer,String website){
+	public Lieu(String name, List<String> types , String reference, String icon, String vicinity, Geometry geometry, String formatted_address,String phoneNumer,String website){
 		id="";
+		this.types = types;
 		this.name=name;
 		this.reference=reference;
 		this.icon=icon;

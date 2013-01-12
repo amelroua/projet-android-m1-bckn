@@ -31,6 +31,7 @@ public class AlertDialogManager implements OnClickListener{
 
 	private EditText edit_text_mot_cle;
 	private ImageView bouton_validation_formulaire;
+
 	
 	@SuppressWarnings("deprecation")
 	public void showAlertDialog(Context context,String title , String message,

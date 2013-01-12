@@ -48,6 +48,7 @@ public class Icon extends LinearLayout {
 	private PlaceDetails details;
 	private String webSite ;
 	private String phone ; 
+	private String typeIcon ;
 
 	public Icon(Context context, Activity a) {
 		super(context);
@@ -96,12 +97,13 @@ public class Icon extends LinearLayout {
 
 		}
 
+		Log.d("Log",type.toString());
 		creerIcon(context, im, l.getLatitude(), l.getLongitude(), myLocation, type.toString());
 
 	}
 
 	private void creerIcon(Context context, ImageView Imview, double latitude, double longitude,
-			Location myLocation,String type){
+			Location myLocation,final String type){
 
 		ctx = context;
 		label = new TextView(context);
@@ -125,7 +127,7 @@ public class Icon extends LinearLayout {
 
 		photoDescription = new ImageView(context);
 
-		if (Imview == null) {
+		if (Imview == null || typeTemp.equalsIgnoreCase("nouveau")) {
 
 			// On choisi l'icon en fonction du type
 			choixIcon(typeTemp);
@@ -141,21 +143,37 @@ public class Icon extends LinearLayout {
 
 		icon.setClickable(true);
 
+		typeIcon = typeTemp ;
+		Log.d("Je doit faire",type);
+		
+		if(typeIcon.equalsIgnoreCase("nouveau")){
+			
+			this.name = lieu.getNom();
+			this.adresse = lieu.getFormatted_address();
+			this.phone = lieu.getFormatted_phone_number();
+			this.webSite = lieu.getWebsite();
+			this.description = lieu.getVicinity();
+		}
+		
 		icon.setOnClickListener(new OnClickListener() {
 
 			public void onClick(View v) {
 
-				if(lieu != null && (webSite != null || phone != null)){
-
+				if(lieu != null && (webSite != null || phone != null) && !typeIcon.equalsIgnoreCase("nouveau")){
+					Log.d("retrouv", typeIcon);
 					new RequeteDetail().execute("details");
 
+				}else{
+					
+					Log.d("je passe la ", "ICI");
+					details = new PlaceDetails();
 				}
 				showBoiteInformation();
 
 			}
 		});
 
-	
+
 		// On ajoute l'icon et son label à la vue
 		this.addView(icon);
 		this.addView(label);
@@ -316,7 +334,13 @@ public class Icon extends LinearLayout {
 
 																									}else{
 
-																										icon.setBackgroundResource(R.drawable.img_epingle);
+																										if(type.equalsIgnoreCase("nouveau")){
+
+																											icon.setBackgroundResource(R.drawable.menu_favoris);
+
+																										}else{
+																											icon.setBackgroundResource(R.drawable.img_epingle);
+																										}
 																									}
 																								}
 																							}
@@ -455,7 +479,7 @@ public class Icon extends LinearLayout {
 
 		ImageView image = (ImageView) alertDialogView.findViewById(R.id.image);
 
-		if(lieu != null){
+		if(lieu != null && !typeIcon.equalsIgnoreCase("nouveau")){
 			image.setBackgroundDrawable(LoadImageFromWebOperations(lieu.getIcon()));
 			this.name = lieu.getNom();
 		}else{

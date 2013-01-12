@@ -141,14 +141,6 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 				break;
 			case 4 : 
 				
-				for(int i=0; i<10 ; i++){
-					MyLocation l=new MyLocation(1.0,1.0);
-					Geometry g=new Geometry(l);
-					s.sauvegarderLieu(new Lieu(""+i, "", "", "",g, "","",""));
-				}
-				
-				
-				
 				
 				monIntent= new Intent(this,GestionPointsInterets.class);
 				startActivity(monIntent);
