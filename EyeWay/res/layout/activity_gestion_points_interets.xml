@@ -40,6 +40,7 @@
 
     <ListView
         android:id="@+id/liste_lieux"
+        android:scrollingCache="false"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_below="@id/relative1"
