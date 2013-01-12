@@ -103,6 +103,12 @@
             android:label="@string/title_activity_recherche_par_adresse"
             android:windowSoftInputMode="stateHidden" >
         </activity>
+    
+     <activity
+            android:name=".SplashScreen"
+            android:label="@string/title_activity_recherche_par_adresse"
+            android:windowSoftInputMode="stateHidden" >
+        </activity>
     </application>
 
 </manifest>
