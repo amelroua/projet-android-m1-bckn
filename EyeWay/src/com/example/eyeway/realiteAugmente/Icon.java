@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable;
 import android.location.Location;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.view.Gravity;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -175,10 +176,15 @@ public class Icon extends LinearLayout {
 			}
 		});
 
-
+		LinearLayout l = new LinearLayout(ctx);
+		l.setOrientation(VERTICAL);
+		l.setGravity(Gravity.CENTER);
+		l.addView(icon);
+		l.addView(label);
 		// On ajoute l'icon et son label à la vue
-		this.addView(icon);
-		this.addView(label);
+		//this.addView(icon);
+		//this.addView(label);
+		this.addView(l);
 	}
 
 

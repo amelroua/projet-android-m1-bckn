@@ -254,11 +254,15 @@ OnLongClickListener {
 
 		if(taille > 1){
 
+			// On supprime pas la caméra
 			for (int i = 1 ; i < layoutMain.getChildCount() ; i++){
 				Log.d("beug","quand");
 				layoutMain.removeViewAt(i);
 			}
 		}
+		
+		initialisationFenetre();
+
 	}
 	/**
 	 * Permet d'afficher la boite de dialogue permettant de demander si
@@ -488,7 +492,7 @@ OnLongClickListener {
 			marginTop = -(int) ((roll - 90) / 90 * screenHeight);
 
 		// On change les marges
-		lp.setMargins(angle * screenWidth / 90, marginTop, 0, 0);
+		lp.setMargins((angle * screenWidth / 90) * -1, marginTop, 0, 0);
 
 		// On change la gravité pour le mettre au centre
 		lp.gravity = Gravity.CENTER;
@@ -583,7 +587,6 @@ OnLongClickListener {
 
 				Log.d("Recherche" ,"new POI");
 				reinitialiserFenetre();
-				initialisationFenetre();
 
 			}else{
 
