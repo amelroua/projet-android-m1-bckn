@@ -62,7 +62,7 @@ public class Sauvegarde implements Serializable{
 	public void sauvegarderLieu(Lieu l){
 		FileOutputStream fos=null;
 		try{
-			String nomLieu="lieu"+lastIdLieu;
+			String nomLieu=l.getNom();
 			fos = fileContext.openFileOutput(nomLieu, Context.MODE_PRIVATE);
 			byte[] b=null;
 			b=getBytes(l);
@@ -159,8 +159,17 @@ public class Sauvegarde implements Serializable{
 	public void supprimerLieu(Lieu l){
 		ArrayList<Lieu> lieux=getLieuxEnregistres();
 		for(int i=0; i<lieux.size();i++){
-			if(lieux.get(i)==l){
-				lieux.remove(i);
+			if(lieux.get(i).equals(l)){
+				fileContext.deleteFile(l.getNom());
+				 supprimerNomFichierLieu(l);
+				
+			}
+		}
+	}
+	public void supprimerNomFichierLieu(Lieu l){
+		for(int i=0; i<nomLieuxEnregistres.size();i++){
+			if(l.getNom().equals(nomLieuxEnregistres.get(i))){
+				nomLieuxEnregistres.remove(i);
 			}
 		}
 	}

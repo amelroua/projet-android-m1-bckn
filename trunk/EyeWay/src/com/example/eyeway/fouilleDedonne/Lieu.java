@@ -172,6 +172,6 @@ public class Lieu implements Serializable{
 	@Override
 	public boolean equals(Object o) {
 		Lieu l = (Lieu)o;
-		return this.name==l.getNom();
+		return this.name.equals(l.getNom());
 	}
 }
