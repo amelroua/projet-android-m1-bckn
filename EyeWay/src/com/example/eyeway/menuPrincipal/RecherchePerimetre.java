@@ -193,6 +193,9 @@ OnItemClickListener, OnItemSelectedListener {
 				if (which == 0) {
 
 					intent = new Intent(getApplicationContext(), Map.class);
+					intent.putExtra("methode", "proximite");
+					intent.putExtra("distance", distance);
+					intent.putExtra("types", getArrayListeTypes());
 				} else {
 					intent = new Intent(getApplicationContext(),
 							RealiteAugmente.class);

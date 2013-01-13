@@ -79,7 +79,6 @@ public class Map extends MapActivity implements LocationListener{
 		initialisationEcouteursGPS();
 
 		setContentView(R.layout.activity_map);
-
 		Bundle b = getIntent().getExtras();
 		methode = b.getString("methode");
 
@@ -127,12 +126,8 @@ public class Map extends MapActivity implements LocationListener{
 		mapView.setBuiltInZoomControls(true);
 		this.mc = mapView.getController();
 		this.mlo = new MyLocationOverlay(getApplicationContext(), mapView);
-		lm = (LocationManager) this.getSystemService(LOCATION_SERVICE);
 		mapView.getOverlays().add(mlo);
-		lm.requestLocationUpdates(LocationManager.GPS_PROVIDER, 10000, 0, this);
-		lm.requestLocationUpdates(LocationManager.NETWORK_PROVIDER, 10000, 0, this);
 		mlo.runOnFirstFix(new Runnable() {
-
 			public void run() {
 				// TODO Auto-generated method stub
 				mc.animateTo(mlo.getMyLocation());
@@ -142,6 +137,7 @@ public class Map extends MapActivity implements LocationListener{
 		mapView.getOverlays().add(mlo);
 		mlo.enableMyLocation();
 		mapView.invalidate();
+		initialisationFenetre();
 	}
 
 	@Override
@@ -149,7 +145,7 @@ public class Map extends MapActivity implements LocationListener{
 		getMenuInflater().inflate(R.menu.activity_map, menu);
 		return true;
 	}
-	
+
 	/**
 	 * Permet d'initialiser notre écran avec les icons
 	 */
@@ -240,7 +236,7 @@ public class Map extends MapActivity implements LocationListener{
 		List<Overlay> mapOverlays = mapView.getOverlays();
 		mapOverlays.add(lis);
 	}
-	
+
 	protected void onResume() {
 		super.onResume();
 

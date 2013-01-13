@@ -126,6 +126,8 @@ public class AlertDialogManager implements OnClickListener{
 				if (which == 0) {
 
 					intent = new Intent(mContext, Map.class);
+					intent.putExtra("methode", "recherche");
+					intent.putExtra("motCle", edit_text_mot_cle.getText().toString());
 				} else {
 					intent = new Intent(mContext,
 							RealiteAugmente.class);
