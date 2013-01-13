@@ -112,7 +112,7 @@ public class RechercheMotCle extends Activity implements OnClickListener
 		// TODO Auto-generated method stub
 	 if (v.getId() == R.id.bouton_validation_formulaire) {
 
-								
+		 		
 				showBoiteChoix();
 	
 	 }	

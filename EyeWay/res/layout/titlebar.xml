@@ -25,6 +25,6 @@
         android:layout_height="55dip"
         android:padding="1dip"
         android:layout_toLeftOf="@id/eyeWayTitle"
-        android:src="@drawable/iconresize" 
+        android:src="@drawable/eyeway3" 
         android:contentDescription="@string/logoApli"/>
 </RelativeLayout>
