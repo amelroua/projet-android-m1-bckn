@@ -63,7 +63,7 @@
             android:theme="@android:style/Theme.NoTitleBar.Fullscreen" >
         </activity>
         <activity
-            android:name=".Map.Map"
+            android:name=".map.Map"
             android:label="@string/title_activity_map" >
         </activity>
         <activity

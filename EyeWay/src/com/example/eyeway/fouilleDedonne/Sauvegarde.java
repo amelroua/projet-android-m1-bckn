@@ -3,8 +3,6 @@ package com.example.eyeway.fouilleDedonne;
 import java.util.ArrayList;
 
 import com.example.eyeway.R;
-import com.example.eyeway.Map.Map;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;

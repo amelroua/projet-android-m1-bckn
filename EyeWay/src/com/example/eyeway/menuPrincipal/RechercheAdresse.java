@@ -3,7 +3,7 @@ package com.example.eyeway.menuPrincipal;
 
 
 import com.example.eyeway.R;
-import com.example.eyeway.Map.Map;
+import com.example.eyeway.map.Map;
 import com.example.eyeway.realiteAugmente.RealiteAugmente;
 import com.google.api.client.util.escape.Escaper;
 
@@ -178,7 +178,12 @@ public class RechercheAdresse extends Activity implements OnClickListener
 				if (which == 0) {
 
 					intent = new Intent(getApplicationContext(), Map.class);
-				
+					intent.putExtra("methode", "recherche");
+					intent.putExtra("motCle", editTypesBatiments.getText().toString() + 
+							editVille.getText().toString() +
+							editNomRue.getText().toString() +
+							editCodePostal.getText().toString() +
+							editPays.getText().toString());
 				} else {
 					intent = new Intent(getApplicationContext(),
 							RealiteAugmente.class);

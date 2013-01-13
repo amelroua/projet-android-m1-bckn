@@ -1,7 +1,7 @@
 package com.example.eyeway;
 
-import com.example.eyeway.Map.Map;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
+import com.example.eyeway.map.Map;
 import com.example.eyeway.menuPrincipal.MenuPrincipal;
 import com.example.eyeway.realiteAugmente.RealiteAugmente;
 
