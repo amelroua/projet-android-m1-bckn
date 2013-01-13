@@ -38,7 +38,26 @@ Cette derniere permet de récupérer via une référence, une url poitant vers la ph
 
 === Les résultats obtenus ===
 
-L'usage de cette librairie nous renvoi les données au format JSON. Afin de les rendre utilisable, le résultat est directement transformer en classe par le biais d'un parseur.
+L'usage de cette librairie nous renvoi les données au format JSON. Afin de les rendre utilisable, le résultat est directement transformer en classe par le biais d'un parseur. Celui-ci est créer lors de la génération du transporteur HTTP dans la classe FouilleDonnee.
+
+```
+	public static HttpRequestFactory createRequestFactory(
+			HttpTransport transport) {
+		return transport.createRequestFactory(new HttpRequestInitializer() {
+					public void initialize(HttpRequest request) {
+						GoogleHeaders headers = new GoogleHeaders();
+						headers.setApplicationName("EyeWay");
+						headers.put("Content-Type", "application/json");
+						request.setHeaders(headers);
+	
+						// Important pour transformer le Json
+						JsonObjectParser parser = new JsonObjectParser(new JacksonFactory());
+			            request.setParser(parser);
+
+					}
+		});
+	}
+```
 
 
 === Le code ===
@@ -90,11 +109,6 @@ Voici les trois requêtes concernant la récupération de point d'intérêts
 	 * @return une liste de Lieu 
 	 */
 	public ListeLieu getLieuParRecherche(String query) { 
-		/*
-		 * Exemple d'une requete qui marche : les restaurants d'olivet
-		 * https://maps.googleapis.com/maps/api/place/textsearch/json?query=restaurant+olivet&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
-		 */		
-
 		try {
 
 			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
@@ -127,14 +141,6 @@ Voici les trois requêtes concernant la récupération de point d'intérêts
 	 * @param reference : l'identifiant unique du lieu
 	 */
 	public PlaceDetails getDetails(String reference) {
-		/* il nous faut une classe qui contienne les champs de l'adresse tels que numero de rue, nom de la rue...
-		 *
-		 * J'ai hésité a utiliser reverse geocoding pour faire ceci mais il ne faut pas : reverse geocoding fais une approximation a partir des coordonnées et renvoie plusieurs résultats
-		 * alors que place/details travail sur la référence (qui est unique) et ne retourne qu'un resultat
-		 *
-		 * Exemple de requete qui marche : 
-		 * https://maps.googleapis.com/maps/api/place/details/json?reference=CpQBggAAAGAqhZ-mEBAbbEvpYxwLkfs268DA44qO4IIISsKMjFodvHpu_eEdoefg3sn9g-nRwUo6Uc2XcIXZ4uJlq6-LlkzalDfcOn6XLwboK-x53pWyQDowTzGyj6HXJSUATDK0_pgxRXM6hKjKpYmZHERQ9LTwuXz3A4jlvCv1nuZ2klI3jlitoQgUk2A1AqMUNFybSBIQQWJrTEvNEKOOE0kZZwDoOxoUU2jguW8ph6uwfincnrSd6VK_Img&sensor=true&language=fr&key=AIzaSyDjWK46sXjISDvz38EsP0N-YegOAU_I0Cs
-		 */
 		try {
 
 			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
@@ -296,7 +302,7 @@ public class Lieu implements Serializable{
 
 ==== ListeLieu ====
 
-Cette classe correspondant à la racine du Json, le status nous permet de savoir comment la requête s'est déroulée, next_page_token permet d'avoir acccès au vingt résultats suivants dans une limite de 60 par requêtes et la liste de Lieu contient tous les lieux que la requête a demandée.
+Cette classe correspondant à la racine du Json, le status nous permet de savoir comment la requête s'est déroulée, next_page_token permet d'avoir acccès au 20 résultats suivants dans une limite de 60 par requêtes et la liste de Lieu contient tous les lieux que la requête a demandée.
 
 ```
 public class ListeLieu implements Serializable {
@@ -349,7 +355,7 @@ Ces classes forment la liaison entre notre application et les serveurs de Google
 
 == Et pourquoi pas quitter Google ? ==
 
-Les plateformes Google étant gratuits et mondialement connu, ils doivent donc limiter les usages de leurs services, alors autres que récupérer toutes vos informations, ce dernier bride le nombre de requêtes pour chaque services, dans notre cas nous atteignons la barre de 1000 requêtes par jour, ridicule. 
+Les plateformes à Google étant gratuites et mondialement connu, ils doivent donc limiter les usages de leurs services, alors autres que récupérer toutes vos informations, ce dernier bride le nombre de requêtes pour chaque services, dans notre cas nous atteignons la barre de 1000 requêtes par jour, ridicule. 
 
 Il nous est possible de dépasser cette limitation mais tout en restant « gratuit » par l'enregistrement d'une carte bancaire, impensable pour nous. De ce faite, vous pensions à nouveau migrer vers un autre hébergeur pour ce service.
 
