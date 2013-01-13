@@ -344,7 +344,7 @@ public class Icon extends LinearLayout {
 
 																										if(type.equalsIgnoreCase("nouveau")){
 
-																											icon.setBackgroundResource(R.drawable.menu_favoris);
+																											icon.setBackgroundResource(R.drawable.favoris);
 
 																										}else{
 																											icon.setBackgroundResource(R.drawable.img_epingle);
