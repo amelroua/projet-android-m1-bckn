@@ -27,6 +27,7 @@ public class FouilleDonnee {
 	private static final String PLACES_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/search/json?";
 	private static final String PLACES_TEXT_SEARCH_URL = "https://maps.googleapis.com/maps/api/place/textsearch/json?";
 	private static final String PLACES_DETAILS_URL = "https://maps.googleapis.com/maps/api/place/details/json?";
+	private static final String PLACES_PHOTOS = "https://maps.googleapis.com/maps/api/place/photo?";
 
 	public static String [] types_place_api= {
 		"bank",
@@ -312,6 +313,41 @@ public class FouilleDonnee {
 
 		} catch (Exception e) {
 			Log.e("Error in Perform Details", e.getMessage());
+			return null;
+		}
+	}
+	
+	/**
+	 * Renvoie l'url de la photo qui correspond à la référence avec une taille en px
+	 * @param reference (obligatoire)
+	 * @param maxHeight	(0 si facultatif)
+	 * @param maxWidth (0 si facultatif)
+	 * @return url de la photo
+	 */
+	public String getPhoto(String reference,int maxHeight, int maxWidth) {
+		try {
+
+			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
+			HttpRequest request = httpRequestFactory
+					.buildGetRequest(new GenericUrl(PLACES_PHOTOS));
+
+
+			request.getUrl().put("reference", reference);
+			if(maxHeight!=0) {
+				request.getUrl().put("maxheight", maxHeight);
+			}
+			if(maxWidth !=0) {
+				request.getUrl().put("maxwidth", maxWidth);
+			}
+
+			completePlaceQuery(request.getUrl());
+			
+			String lien = request.execute().toString();
+			
+			return lien;
+
+		} catch (Exception e) {
+			Log.e("Error in Perform Photo", e.getMessage());
 			return null;
 		}
 	}
