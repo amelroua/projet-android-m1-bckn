@@ -27,7 +27,7 @@ import android.widget.Toast;
 
 import com.example.eyeway.FouilleTest;
 import com.example.eyeway.R;
-import com.example.eyeway.Map.Map;
+import com.example.eyeway.map.Map;
 import com.example.eyeway.fouilleDedonne.DetailLieu;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
 import com.example.eyeway.fouilleDedonne.Lieu;
@@ -602,6 +602,10 @@ public class Icon extends LinearLayout {
 
 	// ------------- GETTERS AND SETTERS --------------------
 
+	public String getName() {
+		return this.name;
+	}
+	
 	public double getLatitude() {
 
 		return this.geoPoint.getLatitudeE6();
