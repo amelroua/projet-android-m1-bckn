@@ -3,7 +3,7 @@ package com.example.eyeway.menuPrincipal;
 
 
 import com.example.eyeway.R;
-import com.example.eyeway.Map.Map;
+import com.example.eyeway.map.Map;
 import com.example.eyeway.realiteAugmente.RealiteAugmente;
 import android.os.Bundle;
 import android.app.Activity;
@@ -89,6 +89,8 @@ public class RechercheMotCle extends Activity implements OnClickListener
 				if (which == 0) {
 
 					intent = new Intent(getApplicationContext(), Map.class);
+					intent.putExtra("methode", "recherche");
+					intent.putExtra("motCle", edit_text_mot_cle.getText().toString());
 				} else {
 					intent = new Intent(getApplicationContext(),
 							RealiteAugmente.class);

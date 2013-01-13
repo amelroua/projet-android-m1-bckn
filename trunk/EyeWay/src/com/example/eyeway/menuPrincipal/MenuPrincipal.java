@@ -3,9 +3,6 @@ package com.example.eyeway.menuPrincipal;
 import java.util.ArrayList;
 
 import com.example.eyeway.R;
-import com.example.eyeway.Map.Map;
-import com.example.eyeway.Map.PlacesMapActivity;
-
 import java.io.ByteArrayOutputStream;
 import java.io.File;
 import java.io.FileInputStream;

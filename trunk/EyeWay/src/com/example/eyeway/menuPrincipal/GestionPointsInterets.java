@@ -3,7 +3,7 @@ package com.example.eyeway.menuPrincipal;
 import java.util.ArrayList;
 
 import com.example.eyeway.R;
-import com.example.eyeway.Map.Map;
+import com.example.eyeway.map.Map;
 import com.example.eyeway.fouilleDedonne.Lieu;
 import com.example.eyeway.fouilleDedonne.Lieu.Geometry;
 import com.example.eyeway.fouilleDedonne.Lieu.MyLocation;

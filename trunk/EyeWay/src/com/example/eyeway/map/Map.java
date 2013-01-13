@@ -119,7 +119,7 @@ public class Map extends MapActivity implements LocationListener{
 				}
 			}
 		}
-
+		//rrrrrrrrrrrrrrrrr
 		//récupération de l'id de la carte
 		mapView = (MapView) findViewById(R.id.mapView);
 		Drawable drawable = this.getResources().getDrawable(R.drawable.ic_action_search);

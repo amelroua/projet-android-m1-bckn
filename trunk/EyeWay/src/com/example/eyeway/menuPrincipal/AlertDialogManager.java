@@ -1,7 +1,7 @@
 package com.example.eyeway.menuPrincipal;
 
 import com.example.eyeway.R;
-import com.example.eyeway.Map.Map;
+import com.example.eyeway.map.Map;
 import com.example.eyeway.realiteAugmente.RealiteAugmente;
 
 import android.app.Activity;

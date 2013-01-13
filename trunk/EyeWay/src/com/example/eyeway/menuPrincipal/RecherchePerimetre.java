@@ -6,7 +6,7 @@ import java.util.Set;
 import android.app.Fragment;
 
 import com.example.eyeway.R;
-import com.example.eyeway.Map.Map;
+import com.example.eyeway.map.Map;
 import com.example.eyeway.R.layout;
 import com.example.eyeway.R.menu;
 import com.example.eyeway.fouilleDedonne.FouilleDonnee;
