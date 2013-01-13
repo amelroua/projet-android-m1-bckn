@@ -145,6 +145,8 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 				if (which == 0) {
 
 					intent = new Intent(mContext, Map.class);
+					intent.putExtra("methode","favoris");
+					intent.putExtra("lieu", lieu);
 				} else {
 					intent = new Intent(mContext,
 							RealiteAugmente.class);
@@ -164,8 +166,7 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 	
 	public void afficherAlertDialogSuppression(final Lieu l){
 		// Création de l'AlertDialog
-		AlertDialog.Builder adb = new AlertDialog.Builder(this);
-		final Context  context=this;
+		AlertDialog.Builder adb = new AlertDialog.Builder(this);	
 		//AlertDialog alertDialog = new AlertDialog.Builder(this).create();
 		adb.setTitle("Supprimer un Point d'intérêt");
 		adb.setMessage("Etes vous sur de vouloir désinstaller ce point d'intérêt ?");
@@ -173,7 +174,6 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 			public void onClick(DialogInterface dialog, int which) {
 				// here you can add functions
 				s.supprimerLieu(l);
-				Toast.makeText(context,"Favoris supprimé avec succès", Toast.LENGTH_SHORT).show();
 			}
 		});
 		adb.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {

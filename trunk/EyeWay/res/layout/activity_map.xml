@@ -1,15 +1,14 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent" >
+	xmlns:tools="http://schemas.android.com/tools"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent" >
 
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_centerHorizontal="true"
-        android:layout_centerVertical="true"
-        android:padding="@dimen/padding_medium"
-        android:text="@string/map"
-        tools:context=".Map" />
+	<com.google.android.maps.MapView
+		android:id="@+id/mapView"
+		android:layout_width="fill_parent"
+		android:layout_height="fill_parent"
+		android:apiKey="08JAQ_M49L9ivgK56S48TPsJBNMqFpaYa9ykImA"
+		android:clickable="true"
+		android:state_enabled="true" />
 
 </RelativeLayout>
