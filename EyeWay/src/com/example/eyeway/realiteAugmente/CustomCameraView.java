@@ -77,8 +77,10 @@ SurfaceHolder.Callback {
 
 	@Override
 	public void surfaceDestroyed(SurfaceHolder holder) {
+		if(camera != null){
 		camera.stopPreview();
 		camera.release();
-	}
+		}
+		}
 
 }

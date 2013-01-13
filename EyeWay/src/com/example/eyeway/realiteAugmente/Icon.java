@@ -569,12 +569,21 @@ public class Icon extends LinearLayout {
 				details=fd.getDetails(lieu.getReference());
 				Log.d("Null ?", (details == null) +"");
 				if(details != null){
-
+					if(lieu != null){
+						lieu.name = details.result.getNom();
+						lieu.vicinity = details.result.getTypes().get(0);
+						lieu.formatted_address = details.result.getFormatted_address();
+						lieu.website = details.result.getWebsite();
+						lieu.formatted_phone_number = details.result.getFormatted_phone_number();
+						
+					}	
 					Log.d("web", ""+details.result.getWebsite());
+					
 					adresse = details.result.getFormatted_address();
 					webSite = details.result.getWebsite();
 					phone = details.result.getFormatted_phone_number();
 					details.status = "execute";
+					
 					Log.d("adresse", details.result.getFormatted_address() + " ja");
 				}
 
