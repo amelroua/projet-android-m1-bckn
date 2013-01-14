@@ -1,0 +1,12 @@
+\chapter*{Introduction}
+\addcontentsline{toc}{chapter}{Introduction}
+
+\paragraph{}
+Notre projet consiste à créer un \textbf{GPS piéton}. Ce GPS offrira plusieurs possibilités, deux principales
+seront de retrouver des points d'intérêts, que nous appelleront par la suite \textbf{POI}, sur une carte ou à l'aide de la
+réalité augmentée. Nous avons décidé d'utiliser Google API pour notre application. Ce choix est dû principalement au fait que certains 
+membres du groupe ont déjà une premiere expérience sur ces API. 
+
+\paragraph{}
+Trois grandes idées de travails sont ressorties la récupérations de POI via le service Google, la réalité augmentée en utilisant la caméra, 
+et le travail de calcul d'itinéraire sur la Map.

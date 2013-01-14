@@ -1,0 +1,18 @@
+\chapter{Gestion de la carte}
+
+\subsection{La carte}
+On utilise la carte de l'api google maps. L'ativité qui gère la carte devra utiliser la classe MapActivity au lieu d'Activity.\\
+
+L'utilisateur a besoin de pouvoir zoommer sur la carte, pour cela on utilise la fonction  mapView.setBuiltInZoomControls(true) qui nous permet le zoom et aussi cette fonction permet au téléphone qui n'on pas de multitouch de pour zoomer grâce au boutonnqui s'affiche suite au clic sur la carte. \\
+
+Ensuite nous avons besoin d'un controleur qui va nous permettre de façon interne de pourvoir effectuer un zoom ou de placer la carte sur un point précis. Par exemple au premier affichage de la carte, on va centrer la carte sur notre possition. \\
+
+L'objet MyLocationOverlay va nous permetre de connaitre la position de l'utilisateur et aussi d'ajouter un overlay à la carte qui sera la position de l'utilisateur. \\
+
+\subsection{Gestion des POI}
+
+Un point d'intéret sera caractérisé par un OverlayItem qui sera afficher sur la carte. pour stocker nos points d'intérets, on a créé la classe ListItemizedOverlay qui contient une liste de tout les POI. Cette classe contient un Drawable qui sera l'icone associé à notre point. \\
+
+L'utilisateur pour cliquer sur chacun de ces points. ainsi il accedera aux informations de ce point, donc l'adresse, numéro de téléphone, ... Ensuite depuis cette fenêtre il pourra décider de créer un itinéraire vers ce point en mode statique, il y aura juste le tracé de l'itinéraire sur la carte. Sinon l'utilisateur pourra choisir d'utiliser la navigation. \\
+
+ 
