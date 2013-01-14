@@ -29,6 +29,7 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.Color;
 import android.util.Log;
 import android.view.Menu;
@@ -70,13 +71,20 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 
 		//setTheme(R.style.Theme_perso);
 		setContentView(R.layout.activity_menu_principal);
+		
 		ArrayList<Fonctionnalite> tab_fonctionnalite =new ArrayList<Fonctionnalite>();
 		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_par_mot_clef,getString(R.string.title_activity_recherche_par_mot_cle)));
 		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_dans_zone,getString(R.string.title_activity_recherche_perimetre)));
 		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_par_adresse,getString(R.string.title_activity_recherche_par_adresse)));
 		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_recherche_instantanee,getString(R.string.title_activity_navigation_instantane)));
 		tab_fonctionnalite.add(new Fonctionnalite(R.drawable.menu_favoris,getString(R.string.title_activity_gerer_poi)));
-		ListAdapter adapter=new ListAdapter(this,R.layout.ligne_menu,tab_fonctionnalite);
+		ListAdapter adapter=null;
+		if(isTablet(this)){
+			adapter=new ListAdapter(this,R.layout.ligne_menu,tab_fonctionnalite);
+		}else{
+			adapter=new ListAdapter(this,R.layout.ligne_menu_mobile,tab_fonctionnalite);
+		}
+		
 		list_menu = (ListView)findViewById(R.id.liste_fonctions);
 		manager= (LocationManager) getSystemService(Context.LOCATION_SERVICE);
 		//View header = (View)getLayoutInflater().inflate(R.layout.ligne_menu, null);
@@ -98,7 +106,11 @@ public class MenuPrincipal extends Activity implements OnClickListener,OnItemCli
 		}
 
 	}
-
+	public boolean isTablet(Context context) {
+	    boolean xlarge = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == 4);
+	    boolean large = ((context.getResources().getConfiguration().screenLayout & Configuration.SCREENLAYOUT_SIZE_MASK) == Configuration.SCREENLAYOUT_SIZE_LARGE);
+	    return (xlarge || large);
+	}
 
 	@Override
 	public void onPause(){
