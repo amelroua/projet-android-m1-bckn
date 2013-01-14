@@ -1,0 +1,75 @@
+\documentclass[12pt,a4paper,utf8x]{report}
+\usepackage [frenchb]{babel}
+					
+% Pour pouvoir utiliser 
+\usepackage{graphicx}
+%\usepackage[utf8x]{inputenc}
+
+					
+\usepackage{url} % Pour avoir de belles url
+\usepackage {geometry}
+\usepackage {setspace}
+					
+% Pour mettre du code source
+\usepackage{listings}
+\usepackage{color}
+\usepackage{verbatim}
+\usepackage{fancyvrb}
+
+%% couleur java %%
+\definecolor{javared}{rgb}{0.6,0,0} % for strings
+\definecolor{javagreen}{rgb}{0.25,0.5,0.35} % comments
+\definecolor{javapurple}{rgb}{0.5,0,0.35} % keywords
+\definecolor{javadocblue}{rgb}{0.25,0.35,0.75} % javadoc
+
+\lstset{
+	language=Java,
+	basicstyle=\footnotesize,
+	numbers=left,
+	numberstyle=\normalsize,
+	breaklines=true,  
+	numbersep=5pt,
+	stepnumber=5,
+	firstnumber=1,
+ 	numberfirstline=false,
+	frame=single, 
+	tabsize=2,
+	keywordstyle=\color{javapurple}\bfseries,
+	stringstyle=\color{javared},
+	commentstyle=\color{javagreen},
+	morecomment=[s][\color{javadocblue}]{/**}{*/},
+}
+
+\fvset{
+	frame=single,
+	fontsize==\footnotesize , 
+	numbers=left,
+}
+%MODIF TITLE BY KEVIN
+\title{Rapport}
+\begin{document}
+\maketitle
+\clearpage
+
+%FIN MODIF
+\tableofcontents
+\clearpage
+
+% Pour avoir un interligne de 1,5
+\begin{onehalfspace}
+\input{intro}
+\clearpage
+\input{repartition}
+\clearpage
+\input{requete}
+\clearpage
+\input{map}
+\clearpage				
+\input{realite}
+\clearpage
+\input{layout}
+\clearpage
+%\input{conclusion}
+
+\end{onehalfspace}
+\end{document}

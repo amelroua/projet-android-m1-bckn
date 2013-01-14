@@ -1,0 +1,360 @@
+= Récupération des informations de lieu =
+
+Un des points important du sujet est la récupérations de points d'intérêts. Pour ce faire il nous fallait utiliser des services en ligne, mais quel service ?
+
+== Quelle API choisir ? ==
+
+Dans un premier temps, nous avions opter pour une solution se dissociant de Google, OpenStreetMap. Après quelques recherches infructueuses de librairies ou d'explications claires, l'équipe décida de migrer vers une API déjà connu de certains membres, Google API.
+
+== Google Place ==
+
+Parmi les nombreuses fonctionnalités que propose le géant de l'internet, une en particulière a retenu notre attention, une librairie permettant de récupérer les informations des lieux, Google Place API. Cette dernier nous permet de consulter, comme sur les applications maps du même groupe, les caractéristiques des lieux enregistrés dans leur base de données.
+
+== Comment cela fonctionne-t-il ? ==
+
+Le principe de l'API de d'envoyer des requêtes http au serveur afin de recevoir les points d'intérêts demandés.
+
+=== les différents requêtes ===
+
+Nous utilisons quatres types de requêtes pour ce service.
+
+==== Les recherches de proximité ====
+
+La recherche de proximité permet la récupération de tous points d'intérêts (cinéma,banque ...) dans un rayon maximal de 50km autour de la position de l'utilisateur.
+
+==== Les recherches par texte ====
+
+Cette partie permet a l'utilisateur de recherche un lieu a partir du texte entrée.
+Par exemple, s'il saisit « Pizza Orléans », il retournera les lieux en rapport avec pizza et Orléans.
+
+==== La demande de détails ====
+
+Cette requête est très utile car par défaut, nous récupérons un lieu vraiment basique (nom, adresse, etc). Elle nous permet de compléter le lieu avec des informations complémentaires qui vont du site internet jusqu'aux commentaires ajouté par les utilisateurs de Google en passant par les horaires d'ouverture.
+Dans notre cas nous utilisons que des informations simple comme le site web.
+
+==== La récupération de photo ====
+
+Cette derniere permet de récupérer via une référence, une url poitant vers la photo d'un lieu.
+
+=== Les résultats obtenus ===
+
+L'usage de cette librairie nous renvoi les données au format JSON. Afin de les rendre utilisable, le résultat est directement transformer en classe par le biais d'un parseur. Celui-ci est créer lors de la génération du transporteur HTTP dans la classe FouilleDonnee.
+
+```
+	public static HttpRequestFactory createRequestFactory(
+			HttpTransport transport) {
+		return transport.createRequestFactory(new HttpRequestInitializer() {
+					public void initialize(HttpRequest request) {
+						GoogleHeaders headers = new GoogleHeaders();
+						headers.setApplicationName("EyeWay");
+						headers.put("Content-Type", "application/json");
+						request.setHeaders(headers);
+	
+						// Important pour transformer le Json
+						JsonObjectParser parser = new JsonObjectParser(new JacksonFactory());
+			            request.setParser(parser);
+
+					}
+		});
+	}
+```
+
+
+=== Le code ===
+
+Comme tous service de Google l'exige, il a fallu enregistrer le projet afin d'obtenir une clé nous autorisant à se connecter aux serveurs. La norme Android spécifie que les requêtes doivent être faites en tâches asynchrones donc afin d'utiliser cette partie elle doit être appellée dans une classe asynchrone.
+
+==== FouilleDeDonnée ====
+
+Voici les trois requêtes concernant la récupération de point d'intérêts
+
+```
+	public ListeLieu getLieuProximiteParType(double lat,double lng,ArrayList<String> types,int distance) {
+		try {
+
+			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
+			HttpRequest request = httpRequestFactory
+					.buildGetRequest(new GenericUrl(PLACES_SEARCH_URL));
+
+
+			request.getUrl().put("location", lat + "," + lng);
+			request.getUrl().put("radius", distance); // in meters
+
+			if(types != null && types.size()>0) {
+				types=FrancaisToApi(types);
+				request.getUrl().put("types", typesFormatUrl(types));
+			}
+		
+			completePlaceQuery(request.getUrl());
+			Log.d("url",request.getUrl().toString());
+			ListeLieu list = request.execute().parseAs(ListeLieu.class);
+			return list;
+
+		} catch (HttpResponseException e) {
+            Log.e("Error:", e.getMessage());
+        } catch (IOException e) {
+			e.printStackTrace();
+		//} catch (InterruptedException e) {
+			//e.printStackTrace();
+        } 
+		return null;
+	}
+
+
+	/**
+	 * Text Search Requests : recherche d'un lieu grâce a des mots clés
+	 * match query avec n'importe quel champs
+	 * Ex : pizza in New York
+	 * @param query : les mots clés (parametre requis)
+	 * @return une liste de Lieu 
+	 */
+	public ListeLieu getLieuParRecherche(String query) { 
+		try {
+
+			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
+			HttpRequest request = httpRequestFactory
+					.buildGetRequest(new GenericUrl(PLACES_TEXT_SEARCH_URL));
+
+			query=chaineFormatUrl(query);
+			
+			request.getUrl().put("query", query);
+
+			completePlaceQuery(request.getUrl());
+			
+			
+			ListeLieu list = request.execute().parseAs(ListeLieu.class);
+			return list;
+
+		} catch (HttpResponseException e) {
+            Log.e("Error:", e.getMessage());
+        } catch (IOException e) {
+			e.printStackTrace();
+		} 
+		return null;
+	}
+
+
+	/**
+	 * Demande les details du lieu
+	 * @param reference : l'identifiant unique du lieu
+	 */
+	public PlaceDetails getDetails(String reference) {
+		try {
+
+			HttpRequestFactory httpRequestFactory = createRequestFactory(HTTP_TRANSPORT);
+			HttpRequest request = httpRequestFactory
+					.buildGetRequest(new GenericUrl(PLACES_DETAILS_URL));
+
+
+			request.getUrl().put("reference", reference);
+
+			completePlaceQuery(request.getUrl());
+			
+			Log.d("URL details",request.getUrl().toString());
+			PlaceDetails place = request.execute().parseAs(PlaceDetails.class);
+			
+			return place;
+
+		} catch (Exception e) {
+			Log.e("Error in Perform Details", e.getMessage());
+			return null;
+		}
+	}
+```
+
+
+==== Lieu ====
+
+Sur chaque membre de la classe nous ajoutons l'annotation @Key afin que le parseur remplisse chaque champs de la classe avec le code JSon. Afin de filtrer les informations dont nous n'avons pas besoin, comme les commentaires d'utilisateurs de Google, il suffit de ne pas mettre de champs correspondant.
+
+```
+//Il faut que cette classe soit serializable pour appliquer le writeObject() dessus
+public class Lieu implements Serializable{
+
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+
+
+	public Lieu(){
+
+	}
+	/**
+	 * L utilisateur veut enregistrer sa position actuelle comme favoris
+	 * Il saisis certains champs seulement, et l'id n'est pas connu
+	 * @param name
+	 * @param reference
+	 * @param icon
+	 * @param vicinity
+	 * @param geometry
+	 * @param formatted_address
+	 */
+	public Lieu(String name, List<String> types , String reference, String icon, String vicinity, Geometry geometry, String formatted_address,String phoneNumer,String website){
+		id="";
+		this.types = types;
+		this.name=name;
+		this.reference=reference;
+		this.icon=icon;
+		this.vicinity=vicinity;
+		this.geometry=geometry;
+		this.formatted_address=formatted_address;
+		this.formatted_phone_number = phoneNumer;
+		this.website = website;
+	}
+
+	@Key	
+	public String id;
+
+	@Key
+	public String name;
+
+	@Key
+	public String reference;
+
+	@Key
+	public String icon;
+
+	@Key
+	public String vicinity;
+
+	@Key
+	public Geometry geometry;
+
+	@Key
+	public String formatted_address;
+	
+	@Key 
+	public List<Photo> photos;
+	
+	@Key
+	public List<String> types;
+
+	/** DETAILS */
+	@Key
+	public String formatted_phone_number;
+
+	@Key
+	public String website;
+
+	@Override
+	public String toString() {
+		return id+" "+name+" "+icon;
+	}
+
+
+	public static class Geometry implements Serializable
+	{
+		private static final long serialVersionUID = -1846546423355113268L;
+		
+		@Key
+		public MyLocation location;
+		
+		public Geometry(){
+			
+		}
+		
+		public Geometry(MyLocation location){
+			this.location=location;
+		}
+
+	}
+
+	public static class MyLocation implements Serializable
+	{
+		private static final long serialVersionUID = -745398283024148157L;
+		
+		@Key
+		public double lat;
+
+		@Key
+		public double lng;
+		
+		public MyLocation(){
+			
+		}
+		
+		public MyLocation(double lat, double lng){
+			this.lat=lat;
+			this.lng=lng;
+		}
+		
+		
+	}
+
+	public double getLatitude() {
+		return geometry.location.lat;
+	}
+
+	public double getLongitude() {
+		return geometry.location.lng;
+	}
+
+	@Override
+	public boolean equals(Object o) {
+		Lieu l = (Lieu)o;
+		return this.name==l.getNom();
+	}
+}
+```
+
+==== ListeLieu ====
+
+Cette classe correspondant à la racine du Json, le status nous permet de savoir comment la requête s'est déroulée, next_page_token permet d'avoir acccès au 20 résultats suivants dans une limite de 60 par requêtes et la liste de Lieu contient tous les lieux que la requête a demandée.
+
+```
+public class ListeLieu implements Serializable {
+ 
+	private static final long serialVersionUID = -1467727864221797449L;
+
+	@Key
+    public String status;
+	
+	@Key
+	public String next_page_token;
+ 
+    @Key
+    public List<Lieu> results;
+ 
+}
+```
+
+==== PlaceDetails ====
+
+Cette classe, comme ListeLieu correspondant a la racine du retour de notre requête concernant la demande de détails sur un lieu, elle nous revoit le Lieu complètement remplis.
+
+
+```
+public class PlaceDetails implements Serializable {
+ 
+	private static final long serialVersionUID = -4377663422871979816L;
+
+	@Key
+    public String status;
+ 
+    @Key
+    public Lieu result;
+    
+    public String getId(){
+    	return result.getId();
+    }
+    @Override
+    public String toString() {
+        if (result!=null) {
+            return result.toString();
+        }
+        return super.toString();
+    }
+}
+```
+
+
+Ces classes forment la liaison entre notre application et les serveurs de Google. Mais existe-t-il d'autres hébergeurs pour ce type de services ?
+
+== Et pourquoi pas quitter Google ? ==
+
+Les plateformes à Google étant gratuites et mondialement connu, ils doivent donc limiter les usages de leurs services, alors autres que récupérer toutes vos informations, ce dernier bride le nombre de requêtes pour chaque services, dans notre cas nous atteignons la barre de 1000 requêtes par jour, ridicule. 
+
+Il nous est possible de dépasser cette limitation mais tout en restant « gratuit » par l'enregistrement d'une carte bancaire, impensable pour nous. De ce faite, vous pensions à nouveau migrer vers un autre hébergeur pour ce service.
+
+En effet, il existe FourSquare ou Yahoo GeoPlanet, qui propose les mêmes fonctionnalités. Si l'envie en prenait aux développeurs de migrer vers ces plateformes, il ne suffirait que de modifier les fonctions associés aux requêtes afin de se désenchaîner de ce géant.
