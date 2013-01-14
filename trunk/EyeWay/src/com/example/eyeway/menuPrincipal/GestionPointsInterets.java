@@ -44,8 +44,9 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 		setContentView(R.layout.activity_gestion_points_interets);
 		
 		mContext = this ;
-		Bundle b = getIntent().getExtras();
-		ArrayList<Lieu> lesLieux=(ArrayList<Lieu>) b.get("lieux");
+		//Bundle b = getIntent().getExtras();
+		//ArrayList<Lieu> lesLieux=(ArrayList<Lieu>) b.get("lieux");
+		ArrayList<Lieu> lesLieux=s.getLieuxEnregistres();
 		adapter=new AdapterLieu(this,R.layout.ligne_lieu,lesLieux);
 		list_poi = (ListView)findViewById(R.id.liste_lieux);
 		list_poi.setAdapter(adapter);
@@ -64,11 +65,11 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 
 			String nom =adapter.getItem(arg2).getNom();
 			Lieu l = s.getLieuParNom(nom); //faire le business avec le lieu : afficher l'alertdialog
-			afficherAlertDialogDetailsPoi(l);
+			afficherAlertDialogDetailsPoi(l,arg2);
 		
 		}
 	}
-	public void afficherAlertDialogDetailsPoi(final Lieu l){
+	public void afficherAlertDialogDetailsPoi(final Lieu l,final int pos){
 		LayoutInflater factory = LayoutInflater.from(this);
 		final View alertDialogView = factory.inflate(R.layout.alertdialog_details_poi,null);
 
@@ -110,7 +111,7 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				afficherAlertDialogSuppression(l);
+				afficherAlertDialogSuppression(l,pos);
 
 				return ;
 
@@ -164,23 +165,29 @@ public class GestionPointsInterets extends Activity implements OnClickListener,O
 	}
 	
 	
-	public void afficherAlertDialogSuppression(final Lieu l){
+	public void afficherAlertDialogSuppression(final Lieu l,final int pos){
 		// Création de l'AlertDialog
 		AlertDialog.Builder adb = new AlertDialog.Builder(this);	
 		//AlertDialog alertDialog = new AlertDialog.Builder(this).create();
+		final Context context=this;
 		adb.setTitle("Supprimer un Point d'intérêt");
 		adb.setMessage("Etes vous sur de vouloir désinstaller ce point d'intérêt ?");
 		adb.setPositiveButton("Oui", new DialogInterface.OnClickListener() {
 			public void onClick(DialogInterface dialog, int which) {
 				// here you can add functions
 				s.supprimerLieu(l);
+				adapter.remove(pos);
+				adapter.notifyDataSetChanged();
+				Toast.makeText(context,"Favoris supprimé avec succès", Toast.LENGTH_SHORT).show();
+				
 			}
 		});
 		adb.setNegativeButton("Annuler", new DialogInterface.OnClickListener() {
 
 			@Override
 			public void onClick(DialogInterface dialog, int which) {
-				afficherAlertDialogDetailsPoi(l);
+				afficherAlertDialogDetailsPoi(l,pos);
+				
 				return ;
 
 			}
